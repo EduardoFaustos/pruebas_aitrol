@@ -12,6 +12,7 @@ class Ct_Acreedores extends Model
      * @var string
      */
     protected $table = 'ct_acreedores';
+    
 
     /**
      * The attributes that aren't mass assignable.

@@ -19,6 +19,7 @@ class Af_Activo_Archivos extends Model
     * @var array
     */
     protected $guarded = [];
+    //aqui
 
 
     
