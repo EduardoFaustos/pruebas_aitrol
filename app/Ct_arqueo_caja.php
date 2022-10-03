@@ -14,7 +14,7 @@ class Ct_arqueo_caja extends Model
     protected $table = 'ct_arqueo_caja';
 
     /**
-    * The attributes that aren't mass assignable.sss
+    * The attributes that aren't mass assignable.sss//
     *
     * @var array
     */
