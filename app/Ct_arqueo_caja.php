@@ -20,5 +20,12 @@ class Ct_arqueo_caja extends Model
     */
     protected $guarded = [];
 
+    public function detalles()
+    {
+        return $this->hasMany('Sis_medico\Ct_Arqueo_Caja_Detalle','id_arqueo_caja');   
+}
+
+ 
+    
 
 }

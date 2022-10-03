@@ -119,6 +119,10 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes_web_kardex();
         $this->mapWebRoutes_rol();
         $this->mapWebRoutes_api_facturacion();
+        $this->mapWebRoutes_web_hospital();
+        $this->mapWebRoutes_web_hospital_laboratorio();
+        $this->mapWebRoutes_web_Emergencia();
+
         // servicios
 
         $this->mapWebRoutes_web_servicios();
@@ -644,5 +648,26 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web', 'cors')
             ->namespace($this->namespace)
             ->group(base_path('routes/planilla_labs/web_planilla_labs.php'));
+    }
+
+    protected function mapWebRoutes_web_hospital()
+    {
+        Route::middleware('web', 'cors')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/hospital/web_hospital.php'));
+    }
+
+    protected function mapWebRoutes_web_hospital_laboratorio()
+    {
+        Route::middleware('web', 'cors')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/hospital/laboratorio/web_laboratorio.php'));
+    }
+
+    protected function mapWebRoutes_web_Emergencia()
+    {
+        Route::middleware('web', 'cors')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/hospital/emergencia/web_emergencia.php'));
     }
 }
