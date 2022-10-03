@@ -1,0 +1,48 @@
+<?php
+
+return [
+   //admision index
+   'GenerarEtiqueta'             =>'Generate Label',
+   'Resumen'                     =>'Summary',
+   'DatosPaciente'               =>'Patient Data',
+   'Continuar'                   =>'Continue',
+   'Paciente'                    =>'Patient',
+   'Seguro'                      =>'insurance',
+    'Procedimientos'             =>'procedures',
+    'FechaImprimible'            =>'Printable Date',
+    'Empresa'                    =>'Company',
+    //admision index _tb
+    'DocumentaciónRequerida'     =>'Required documents',
+    'Ch.List'                    =>'Ch.List',
+    'P.Entrega'                  =>'Delivery point',
+    'P.Recibe'                   =>'Receiving point',
+    'Fecha/HoraEntrega'          =>'Date/Time Delivery',
+    'Archivo'                    =>'File',
+    'Acción'                     =>'Action',
+    'ADMISIÓNDELPACIENTE'        =>'Patient admission',
+    'Descargar'                  =>'download',
+    //admision base
+    'ControldeDocumentos'        =>'Documents control',
+    'Documentos'                 =>'Documents',
+    //admision certificado_hc4
+    'CertificadoMédico'          =>'Medical certificate',
+    'Doctor'                     =>'Doctor',
+    'Fecha'                      =>'Date',
+    'InicioConsulta'             =>'query start',
+    'FindeConsulta'              =>'End of Consultation',
+    'DescansoMédico'             =>'medical rest',
+    'Observación'                =>'Observation',
+    'Familiar'                   =>'Family',
+    'Diagnóstico'                =>'Diagnosis',
+    'Generar'                    =>'generate',
+    'Cerrar'                     =>'Close',
+    'Desde'                      =>'since',
+    'Hasta'                      =>'until',
+    'Institución/Empresa'        =>'Institution/Company',
+    'Sube'                       =>'Upload',
+    'AlSistema'                  =>'To System',
+    'SubirImagen'                =>'Upload Image',
+    'SubeEscaneoAlSistema'       =>'Upload Scan To System',
+    'SubirEscaneo'               =>'Upload Scan',
+    'DescargarArchivo'           =>'Download File',
+];

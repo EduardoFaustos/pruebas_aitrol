@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../../../.."
+		},
+		{
+			"path": "../../../../../../../Users/macbook/Downloads/vuexy-admin-6.5/vuexy-admin-v6.5/html-version"
+		},
+		{
+			"path": "../../../../../portoviejo"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true,
+		"files.autoSave": "off",
+		"files.autoSaveDelay": 10000
+	}
+}

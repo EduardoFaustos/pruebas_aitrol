@@ -1,0 +1,388 @@
+ListingKeyNumeric
+BañosCompletos
+BañosHalf
+BañosTotalEntero
+DormitoriosTotal
+BuildingAreaFuente
+BuildingAreaTotal
+CompradorAgenciaCompensación
+CompradorAgenciaCompensaciónTipo
+BuyerAgentFullName
+BuyerAgentMlsId
+BuyerOfficeMlsId
+BuyerOfficeName
+Ciudad
+fecha de cierre
+CoListAgentFullNameCoListAgentFullName
+CoListAgentMlsId
+Enfriamiento
+condado o parroquia
+Direcciones
+Calefacción
+InternetAddressDisplayYN
+InternetValoración automatizadaVisualizaciónYN
+InternetConsumidorComentarioYN
+InternetEnteroListadoPantallaYN
+Latitud
+ListAgentFullName
+ListAgentKeyNumeric
+ListAgentMlsId
+ListingId
+ListOfficeKeyNumeric
+ListOfficeMlsId
+ListaOficinaNombre
+Precio de lista
+Salón
+Longitud
+MlsStatus
+ModificationTimestampModificationTimestamp
+Número de parcela
+FotosChangeTimestamp
+FotosRecuento
+Código postal
+Código Postal Plus4
+AnteriorPrecio de lista
+PriceChangeTimestamp
+PropertySubType
+Tipo de propiedad
+Comentarios públicos
+CompraContratoFecha
+Estado estándar
+Estado o Provincia
+HistoriasTotal
+CalleDirPrefijo
+CalleDirSufijo
+Nombre de la calle
+Número de calle
+CalleNúmeroNumérico
+CalleSufijo
+Distribuir a
+Unidad numérica
+Año de construcción
+Estado anterior
+AccesibilidadCaracterísticas
+AccesibilidadCaracterísticasYN
+AccesorioUnidadSF
+AccesorioUnitType
+AccesorioUnidadYN
+AcresFondoTierra
+AcresCultivado
+AcresIrrigado
+AcresPastos
+AéreaFotoDisponibleYN
+EDADexenciónYN
+AppFeePayableTo
+AppFeePlus18YrsYN
+ElectrodomésticosYN
+Accesorios
+Importe de la tarifa de la aplicación
+Tarifa de solicitudYN
+TasadorNombre
+Estilo arquitectónico
+Cuota de asociación
+AsociaciónFrecuenciaFrecuencia
+AsociaciónCuotaIncluye
+AssociationType
+Garaje adjuntoYN
+SubastaYN
+Fecha disponible
+Arrendamiento mensual promedio
+EnMarketDate
+HorseAmenities
+SótanoYN
+BañosTotalDecimal
+Número de edificio
+EdificioUso
+Nombre del Negocio
+Tipo de negocio
+CompradorFinanciamiento
+CompradorEquipoClave
+BuyerTeamKeyNumeric
+Nombre del equipo del comprador
+Tasa de capitalización
+CocheraEspacios
+Altura del techo
+ComercialCaracterísticas
+Características de la comunidad
+CompensaciónPagada
+NombreComplejo
+ConsentimientoparaRegistrodeVisitantes
+Materiales de construcción
+Información de contingencia
+País
+Espacios Cubiertos
+CropRetireProgramYN
+Cultivos
+Uso actual
+Cantidad del depósito
+DepósitoMascota
+Estado del desarrollo
+DOCBOX_GUID
+DocBox_ModificationTimestamp
+DocBox_NumMlsDocumentos
+DocBox_NumPrivateDocuments
+DocBox_NumPublicDocuments
+MuellePermitidoYN
+DocumentManagerMLSCount
+DocumentManagerPrivateCount
+DocumentManagerPublicCount
+DocumentManagerTotalCount
+DocumentosDisponible
+Compensación de variable dualYN
+Servidumbres
+Escuela primaria
+ElementarySchoolName
+Funciones de ahorro de energía
+Exclusiones
+ExpirationDateOption
+ExteriorCaracterísticas
+FarmRanchCaracterísticas
+Esgrima
+FHA_VA_ApprovedComplexNumber
+ChimeneaCaracterísticas
+ChimeneasTotal
+Piso
+FloorLocationNumber
+FundaciónDetalles
+CargaPuertas
+Pies de fachada
+Longitud del frente
+AmuebladoYN
+Longitud del garaje
+GarajeEspacios
+Ancho del garaje
+GarajeYN
+VerdeEnergíaEficiente
+VerdeEnergíaGeneración
+VerdeInteriorAireCalidad
+Paisajismo Verde
+VerdeSostenibilidad
+VerdeAguaConservación
+GastosAnualesBrutos
+Ingreso bruto anual
+Multiplicador de ingresos brutos
+Escuela secundaria
+Nombre de la escuela secundaria
+HOAManagementCompany
+HOAGestiónEmpresaTeléfono
+fecha de espera
+TransacciónIncluye
+Gastos de seguro
+Características interiores
+Nombre de la escuela intermedia
+Nombre de la escuela secundaria
+LagoBombaYN
+TerrenoArrendamientoYN
+LavanderíaCaracterísticas
+Área alquilable
+Condiciones de arrendamiento
+ArrendamientoExpirationDate
+LeaseRateMax
+LeaseRateMin
+Plazo del arrendamiento
+Tipo de arrendamiento
+Nombre del prestamista
+ListAgentMLSProvider
+ListingTerms
+ListaMLSProveedor
+ListSource
+ListSourceOriginal
+ListSourceVendor
+ListTeamKey
+ListTeamKeyNumeric
+ListTeamName
+Préstamo1Cantidad
+Préstamo1InterésTasa
+Préstamo1años
+Balance de prestamo
+PréstamoInterésTasa
+Pago de préstamo
+tipo de pago de préstamo
+tipo de préstamo
+KeyboxNumber
+LockBoxType
+Características del lote
+Numero de lote
+Tamaño del lote
+Tamaño del loteAcres
+ÁreaTamañoLote
+Dimensiones del tamaño del lote
+Tamaño del loteFuente
+Tamaño del lotePies cuadrados
+Unidades de tamaño de lote
+LotesVendidoPaquete
+LotesVendidosSeparados
+Escuela Intermedia o Junior
+Nombre de la escuela intermedia
+MLSNumberVentaOArrendamiento
+Dinero requerido
+Tarifa mensual por mascota
+Compañía hipotecaria
+Fecha de mudanza
+MultiParcelIDYN
+Zonificación múltipleYN
+MunicipalUtilityDistritoYN
+Ingresos netos de operaciones
+Tarifa por mascota no reembolsableYN
+AvisoVigilanciaDispositivosPresente
+NúmeroDeGraneros
+NúmeroDeEdificios
+NúmeroDeDíasInvitadosPermitidos
+NúmeroDeÁreasDeComida
+NúmeroDeLagos
+NumberOfLeaseableSpaces
+NumberOfLivingAreas
+NúmeroDeLotes
+NúmeroDeMascotasPermitidas
+NúmeroDeResidencias
+NúmeroDeMetrosDeAguaSeparados
+NúmeroDeEspaciosArrendados
+NúmeroDePuestosEnGranero1
+NúmeroDePuestosEnGranero2
+NúmeroDePuestosEnGranero3
+NúmeroDeTanquesYEstanques
+NúmeroDeUnidadesTotal
+NúmeroDeVehículos
+NúmeroDePozos
+Tasa de ocupación
+Nombre del ocupante
+OcupanteTeléfonoAlternativa
+Tipo de ocupante
+EstacionamientoAbiertoEspacios
+Estacionamiento abiertoYN
+Gastos Operativos Incluye
+Fecha de hipoteca original
+Otras estructuras
+Nombre del dueño
+PropietarioPaga
+PropietarioPermisoParaVideoYN
+PropietarioTeléfono
+PropietarioTeléfonoAlternativa
+ParcelNumber2
+EstacionamientoCaracterísticas
+Mascotas permitidas
+DesarrolloPlanificado
+EnchapadoFronteraLímite
+PiscinaCaracterísticas
+PiscinaYN
+Posesión
+Uso posible
+Nombre de la escuela primaria
+PrivadaOficinaObservaciones
+Propiedad AdjuntaYN
+Nombre del rancho
+RangoPrecioYN
+Restricciones
+RETSUpdateTransactionYN
+Evaluación VialYN
+CarreteraFrontajeDistancia
+RoadFrontageType
+RoadSurfaceType
+Techo
+Distrito escolar
+Segunda HipotecaYN
+Características de seguridad
+Contribuciones del vendedor
+SeniorCommunityYN
+Nombre de la escuela secundaria superior
+Alcantarillado
+MostrandoContactoTeléfono
+MostrandoContactoTeléfonoExt
+Mostrando tipo de contacto
+MostrandoInstrucciones
+MostrandoInstruccionesAsegurado
+MostrandoRequisitos
+SmartHomeCaracterísticasApporPassYN
+Tipo de suelo
+Notas especiales
+Entidades de impuestos especiales
+SQFTBruto
+Estilo estructural
+SubagenciaCompensación
+Tipo de compensación de subagencia
+SubdivididoYN
+SubdivisionName
+Derechos de superficie
+bloque de impuestos
+TaxLegalDescription
+Tenencia
+InquilinoPaga
+Programa de asistencia de tercerosYN
+TítuloEmpresaCierre
+TítuloEmpresaUbicación
+TítuloEmpresaTeléfono
+TítuloEmpresaPreferido
+Topografía
+Tipo de transacción
+Impuestos no exentos
+URLNonPublic1
+URLNonPublic2
+URLNonPublic3
+URLNonPublic4
+URLNonPublic5
+USProperty_MUI
+Utilidades
+Vegetación
+VirtualTourURLCon marca
+VirtualTourURLSin marca
+WalkScore
+Nombre del cuerpo de agua
+WaterfrontCaracterísticas
+Frente al marYN
+WillSubdivide
+WillSubdivideYN
+AñoConstruidoDetalles
+ZonificaciónDescripción
+GeocodificaciónConfianza
+Clave de propiedad
+Coincidencia de propiedad
+CompradorOficinaGerente
+BuyerOfficeManagerKeyNumeric
+CompradorOficinaAdministradorLicencia
+BuyerOfficeManagerMLSID
+CompradorOficinaGerenteTeléfono
+CoBuyerOfficeManager
+CoBuyerOfficeManagerKeyNumeric
+CoBuyerOfficeManagerLicencia
+CoBuyerOfficeManagerMLSID
+CoCompradorOficinaGerenteTeléfono
+CoListOfficeManager
+CoListOfficeManagerKeyNumeric
+CoListOfficeManagerLicencia
+CoListOfficeManagerMLSID
+CoListaOficinaGerenteTeléfono
+CaballoPermitidoYN
+ListOfficeGerente
+ListOfficeManagerKeyNumeric
+ListOfficeManagerLicencia
+ListOfficeManagerMLSID
+ListaOficinaGerenteTeléfono
+ListaPrecioBajo
+ListaPrecioBajoSistema
+Otro equipo
+Características del patio y el porche
+Características de la ventana
+LockBoxUbicación
+PropertyAssociationFeeType
+GranerosCuenta
+Recuento de verificación verde
+ArrendamientoTérminoDescripción
+OcupanteTeléfono
+AlquiladoPrecioUnidades
+NúmeroDeEspaciosDeEstacionamiento
+CerradoComentarios
+RATIO_ClosePrice_By_LotSizeAcres
+RATIO_Precio_Actual_Por_Tamaño_de_LoteAcres
+RATIO_ListPrice_By_LotSizeAcres
+ConstrucciónMaterialesParedes
+SubastaAltoPrecio
+MostrandoAsistióYN
+Código de acceso
+CompradorAgenteMensajes de textoPermitidoYN
+CoBuyerAgentTextingPermitidoYN
+CoListAgentTextingPermitidoYN
+GarajeAltura
+ListAgentTextingPermitidoYN
+Propiedad gestionada por
+Niveles
+lote de impuestos

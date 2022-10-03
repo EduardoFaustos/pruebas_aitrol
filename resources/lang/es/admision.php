@@ -1,0 +1,48 @@
+<?php
+
+return [
+    //admision index
+   'GenerarEtiqueta'             =>'Generar Etiqueta',
+   'Resumen'                     =>'Resumen',
+   'DatosPaciente'               =>'Datos Paciente',
+   'Continuar'                   =>'Continuar',
+   'Paciente'                    =>'Paciente',
+   'Seguro'                      =>'Seguro',
+    'Procedimientos'             =>'Procedimientos',
+    'FechaImprimible'            =>'Fecha Imprimible',
+    'Empresa'                    =>'Empresa',
+    //admision index _tb
+    'DocumentaciónRequerida'     =>'Documentación requerida',
+    'Ch.List'                    =>'Ch.List',
+    'P.Entrega'                  =>'P.Entrega',
+    'P.Recibe'                   =>'P. Recibe',
+    'Fecha/HoraEntrega'          =>'Fecha/Hora Entrega',
+    'Archivo'                    =>'Archivo',
+    'Acción'                     =>'Acción',
+    'ADMISIÓNDELPACIENTE'        =>'Admision del paciente',
+    'Descargar'                  =>'Descargar',
+    //admision base
+    'ControldeDocumentos'        =>'Control de Documentos',
+    'Documentos'                 =>'Documentos',
+    //admision certificado_hc4
+    'CertificadoMédico'          =>'Certificado Médico',
+    'Doctor'                     =>'Doctor',
+    'Fecha'                      =>'Fecha',
+    'InicioConsulta'             =>'Inicio Consulta',
+    'FindeConsulta'              =>'Fin de Consulta',
+    'DescansoMédico'             =>'Descanso Médico',
+    'Observación'                =>'Observación',
+    'Familiar'                   =>'Familiar',
+    'Diagnóstico'                =>'Diagnóstico',
+    'Generar'                    =>'Generar',
+    'Cerrar'                     =>'Cerrar',
+    'Desde'                      =>'Desde',
+    'Hasta'                      =>'Hasta',
+    'Institución/Empresa'        =>'Institución/Empresa',
+    'Sube'                       =>'Sube',
+    'AlSistema'                  =>'Al Sistema',
+    'SubirImagen'                =>'Subir Imagen',
+    'SubeEscaneoAlSistema'       =>'Sube Escaneo Al Sistema',
+    'SubirEscaneo'               =>'Subir Escaneo',
+    'DescargarArchivo'           =>'Descargar Archivo',
+];

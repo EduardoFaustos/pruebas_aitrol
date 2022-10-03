@@ -1,0 +1,206 @@
+@extends('ticket_permiso.base')
+@section('action-content')
+@php
+$rolUsuario = Auth::user()->id_tipo_usuario;
+//dd($rolUsuario);
+@endphp
+<style>
+    .stilos:focus {
+
+        background: whitesmoke;
+    }
+
+    #estilos:hover {
+        color: blanchedalmond;
+    }
+
+    th {
+
+        text-align: center;
+        font-size: 12px;
+    }
+
+    td {
+        text-align: center;
+        font-size: 12px;
+    }
+</style>
+<section class="content">
+    <div class="box">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3 class="box-title">{{trans('tecnicof.permitapplication')}} </h3>
+                </div>
+                @if($rolUsuario=='20' || $rolUsuario=='1')
+                <div class="col-md-4" style="text-align: right">
+                    <a class="btn btn-success" href="{{route('ticketpermisos.create')}}">{{trans('tecnicof.permitcreation')}}</a>
+
+                </div>
+                @endif
+
+
+            </div>
+        </div>
+
+        <!-- /.box-header -->
+        <div class=" box-body">
+            <div class="row">
+                <form action="{{route('ticketpermisos.buscador')}}" method="POST">
+                    {{ csrf_field() }}
+                    <div class="col-md-3">
+                        <label for="fecha" class="col-md-12 control-label">{{trans('tecnicof.from')}}</label>
+                        <div class="col-md-12">
+                            <input style="text-align: center;line-height:10px;" value="{{$desde}}" type="date" name="desde" id="desde" class="form-control">
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fecha" class="col-md-12 control-label">{{trans('tecnicof.to')}}</label>
+                        <div class="col-md-12">
+                            <input style="text-align: center;line-height:10px;" value="{{$hasta}}" type="date" name="hasta" id="hasta" class="form-control">
+
+                        </div>
+                    </div>
+                    @if($rolUsuario == 1 || $rolUsuario == 20 )
+                    <div class="col-md-3">
+                        <label for="usuario" class="col-md-12 control-label">{{trans('tecnicof.id')}}</label>
+                        <div class="col-md-12">
+                            <input type="text" name="id_usuario" id="id_usuario" class="form-control" value="{{$cedula}}">
+                            <div id="resultado">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="tipos" class="col-md-12 control-label">{{trans('tecnicof.type')}}</label>
+                        <div class="col-md-12">
+                            <select class="form-control" name="permiso" id="permiso">
+                                <option value="">{{trans('tecnicof.select')}}</option>
+                                <option @if($permiso=='PERMISO POR FALLECIMIENTO' ) selected @endif value="PERMISO POR FALLECIMIENTO">{{trans('tecnicof.deathleave')}}</option>
+                                <option @if($permiso=='PERMISO POR MATERNIDAD' ) selected @endif value="PERMISO POR MATERNIDAD">{{trans('tecnicof.maternityleave')}}</option>
+                                <option @if($permiso=='PERMISO POR PATERNIDAD' ) selected @endif value="PERMISO POR PATERNIDAD">{{trans('tecnicof.paternityleave')}}</option>
+                                <option @if($permiso=='CALAMIDAD DOMESTICA' ) selected @endif value="CALAMIDAD DOMESTICA">{{trans('tecnicof.domesticcalamity')}}</option>
+                                <option @if($permiso=='OLVIDO DE MARCACION' ) selected @endif value="OLVIDO DE MARCACION">{{trans('tecnicof.forgetfulnessofmarking')}}</option>
+                                <option @if($permiso=='PERMISO MEDICO' ) selected @endif value="PERMISO MEDICO">{{trans('tecnicof.medicalleave')}}</option>
+                                <option @if($permiso=='PERMISO PERSONAL' ) selected @endif value="PERMISO PERSONAL">{{trans('tecnicof.personalleave')}}</option>
+                                <option @if($permiso=='COMISION DE SERVICIOS' ) selected @endif value="COMSION DE SERVICIOS">{{trans('tecnicof.servicecommission')}}</option>
+                                <option @if($permiso=='VACACIONES' ) selected @endif value="VACACIONES">{{trans('tecnicof.vacations')}}</option>
+                                <option @if($permiso=='ATRASOS' ) selected @endif value="ATRASOS">{{trans('tecnicof.delays')}}</option>
+                                <option @if($permiso=='TELETRABAJO' ) selected @endif value="TELETRABAJO">{{trans('tecnicof.teletrabajo')}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="tipos" class="col-md-12 control-label">{{trans('tecnicof.state')}}</label>
+                        <div class="col-md-12">
+                            <select class="form-control" name="estado" id="estado">
+                                <option @if($estado=='0' ) selected @endif value="0">{{trans('tecnicof.unattended')}}</option>
+                                <option @if($estado=='1' ) selected @endif value="1">{{trans('tecnicof.attended')}}</option>
+                                <option @if($estado=='2' ) selected @endif value="2">{{trans('tecnicof.all')}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    @endif
+
+                    <div class="col-md-2" style=" text-align: center;">
+                        <br>
+                        <button type="submit" class="btn btn-primary btn-sm" id="boton_buscar" onclick="changeExcel('b')">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </div>
+                    <input type="hidden" name="excel" id="excel" value="0">
+                    <div class="col-md-2" style=" text-align: center;">
+                        <br>
+                        <button type="submit" class="btn btn-info" onclick="changeExcel('e')"><i class="fa fa-file-excel-o" aria-hidden="true"> {{trans('tecnicof.reports')}}</i> </button>
+                    </div>
+                </form>
+            </div>
+            <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                            <thead style="background-color: #337ab7;color:white;">
+                                <tr role="row" id="cabezera">
+                                    <th class="th">Fecha</th>
+                                    @if($rolUsuario == 1 || $rolUsuario == 20 )<th class="th">{{trans('tecnicof.user')}}</th>@endif
+                                    @if($rolUsuario != 1 || $rolUsuario != 20 ) <th class="th">{{trans('tecnicof.request')}}</th>@endif
+                                    @if($rolUsuario != 1 || $rolUsuario != 20 ) <th class="th">{{trans('tecnicof.reason')}}</th>@endif
+                                    @if($rolUsuario == 1 || $rolUsuario == 20 )<th class="th">{{trans('tecnicof.departament')}}</th>@endif
+                                    <th class="th">APROBACION</th>
+                                    <th class="th">Estado</th>
+                                    @if($rolUsuario == 1 || $rolUsuario == 20 ) <th class="th">{{trans('tecnicof.action')}}</th> @endif
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpo">
+                                @foreach($datos as $value)
+
+                                <tr>
+                                    <td>{{substr($value->fecha_registro,0,11)}}</td>
+                                    @if($rolUsuario == 1 || $rolUsuario == 20 )<td style="text-align: left;">{{$value->cedula}}-{{$value->nombre->nombre1}} {{$value->nombre->nombre2}} {{$value->nombre->apellido1}} {{$value->nombre->apellido2}}</td>@endif
+                                    <td>{{$value->id}}</td>
+                                    @if($rolUsuario != 1 || $rolUsuario != 20 ) <td>{{$value->tipo_permiso}}</td>@endif
+                                    @if($rolUsuario == 1 || $rolUsuario == 20 )<td>{{$value->departamento}}</td>@endif
+                                    <td @if(($value->estado_solicitud)==0) bgcolor='#F93333' @elseif(($value->estado_solicitud)==1) bgcolor='#71CD1B' @elseif(($value->estado_solicitud)=='-1') bgcolor='#F9DB33' @endif>@if($value->estado_solicitud == 0) {{trans('tecnicof.notapproved')}} @elseif($value->estado_solicitud == '-1') {{trans('tecnicof.attend')}} @else  {{trans('tecnicof.approved')}} @endif </td>
+                                    <td @if(($value->estado_solicitud)==0) bgcolor='#FFFFFF' @elseif(($value->estado_solicitud)==1) bgcolor='#FFFFFF'@elseif(($value->estado_solicitud)=='-1') @endif>@if($value->estado_solicitud == -1) {{trans('tecnicof.attend')}} @else {{trans('tecnicof.attended')}} @endif </td>
+                                    @if($rolUsuario == 1 || $rolUsuario == 20 )
+                                    <td><a class="btn btn-warning" href="{{route('ticketpermisos.editar',['id'=>$value->id])}}"><i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i></a>
+                                        <a class="btn btn-success" target="_blank" href="{{route('ticketpermisos.permisos_pdf',['id'=>$value->id])}}"><i class="fa fa-file-pdf-o " aria-hidden="true"></i></a>
+                                        @if($value->ruta_archivo != null || $value->ruta_archivo != '')
+                                        <a target="_blank" class="btn btn-primary" href="{{route('ticketpermisos.ver_pdf',['id'=>$value->id])}}"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                        @endif
+                                    </td> @endif
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.11.0/sweetalert2.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script text="text/javascript">
+    function changeExcel(l) {
+        if (l === 'e') {
+            document.getElementById("excel").value = 1;
+        }else{
+            document.getElementById("excel").value = 0;
+        }
+
+    }
+    document.getElementById("resultado").style.visibility = "hidden";
+    $('.select2').select2({
+        tags: false
+    });
+
+    $(document).ready(function() {
+        $('#example2').DataTable({
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'responsive': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+            'sInfoEmpty': false,
+            'sInfoFiltered': false,
+            'language': {
+                "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
+            }
+        });
+    });
+
+    function verifica_fechas() {
+        if (Date.parse($("#fecha_desde").val()) > Date.parse($("#fecha_hasta").val())) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Verifique el rango de fechas y vuelva consultar'
+            });
+        }
+    }
+</script>
+
+
+@endsection

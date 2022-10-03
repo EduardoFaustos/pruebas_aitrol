@@ -1,0 +1,13 @@
+.env
+/test
+/node_modules
+/vendor
+Homestead.json
+Homestead.yaml
+/bootstrap
+/composer.lock
+composer.json
+/public
+/storage
+storage
+database/

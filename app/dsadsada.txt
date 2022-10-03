@@ -1,0 +1,7 @@
+comprobante de retencion 
+
+cambios//
+traer el nombre y sucursal directo de la variaable de ssesion de la empresa
+
+y el generador de secuencia que sea distintoo de la factura
+arreglar banco ojoooo

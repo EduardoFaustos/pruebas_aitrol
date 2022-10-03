@@ -1,0 +1,35 @@
+<?php
+
+namespace Sis_medico;
+
+use Illuminate\Database\Eloquent\Model;
+
+class FarmaSubcategoria extends Model
+{
+    //
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'farma_subcategoria';
+
+
+    /**
+    * The attributes that aren't mass assignable.
+    *
+    * @var array
+    */
+    protected $guarded = [];
+
+    public function categoria()
+    {
+        return $this->belongsTo('Sis_medico\FarmaCategorias','id_categoria'); 
+    }
+
+    public function productos()
+    {
+        return $this->hasMany('Sis_medico\FarmaProductoCategoria','id_subcategoria'); 
+    }
+
+}

@@ -1,0 +1,100 @@
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Password Reset Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are the default lines which match reasons
+    | that are given by the password broker for a password update attempt
+    | has failed, such as for an invalid token or invalid new password.
+    |
+    */
+    'contable'         => 'Accountant',
+    'aporte_salario'   => 'Salaries',
+    'buscar'           => 'Search',
+    'tipo'             => 'Type',
+    'seleccione'       => 'Select',
+    'agregar'             => 'Add',
+    'listado'             => 'List',
+    'valor'             => 'Value',
+    'activo'             => 'Active',
+    'registros'             => 'Records',
+    'eliminar_registro' => 'Do You want to delete the record',
+    'si'             => 'Yes',
+    'registro_eliminado' => 'Record deleted',
+    'eliminado'            => 'Deleted',
+    'de'             => 'from',
+    'nomina' => 'Nomina',
+    'empleado' => 'Employee',
+    'lista_nomina' => 'List',
+    'agregar_empleado' => 'Add Employee',
+    'lista_empleados' => 'Employees List',
+    'cedula' => 'Id',
+    'buscador_empleado' => 'Employee search',
+    'identificacion' => 'Id',
+    'lista_empleado' => 'Employees List',
+    'ingrese' => 'Enter',
+    'cargo' => 'Charge',
+    'sueldo_fijo' => 'fixed salary',
+    'estado' => 'Status',
+    'fecha_ingreso' => 'Date of entry',
+    'saldos_prestamos' => 'Loan balances',
+    'saldo_inicial' => 'Initial balance',
+    'acciones' => 'Actions',
+    'opciones' => 'Options',
+    'visualizar' => 'View',
+    'eliminar' => 'Delete',
+    'nuevo_rol' => 'New payment role',
+    'reporte_saldo_prestamos' => 'Loan balances Report',
+    'prestamos' => 'Loans',
+    'otros_anticipos' => 'Other advances',
+    'saldos_iniciales' => 'Initial balance',
+    'inactivo' => 'Inactive',
+    'empresa' => 'Company',
+    'anio' => 'Year',
+    'generar_roles' => 'Generate payment roles',
+    'archivo' => 'Archivo',
+    'subir_horas_extras' => 'Upload overtime',
+    'quirografario' => 'Government loans',
+    'hipotecario' => 'Mortgage loan',
+    'subir_prestamos' => 'Upload overtime',
+    'enero' => 'Januray',
+    'febrero' => 'Februray',
+    'marzo' => 'March',
+    'abril' => 'April',
+    'mayo' => 'May',
+    'junio' => 'June',
+    'julio' => 'July',
+    'agosto' => 'August',
+    'septiembre' => 'September',
+    'octubre' => 'October',
+    'noviembre' => 'November',
+    'diciembre' => 'December',
+    'mes' => 'Month',
+    'empleado' => 'Employee',
+    'sueldo' => 'Salary',
+    'extras' => 'Extras',
+    'ingresos' => 'Entry',
+    'saldos' => 'Balances',
+    'egresos' => 'Expenses',
+    'neto' => 'Net',
+    'aprobado' => 'Approved',
+    'accion' => 'Action',
+    'control_rol_empresa' => 'Company role control',
+    'cuenta_destino' => 'Target account', 
+    'generar_asientos_mensual' => 'Monthly accounting entry',
+    'rol_pagos' => 'Payment role',
+    'buscador_rol_pago' => 'Payment role search',
+    'imprimir_rol_pago' => 'Payment role print',
+    'generar_asiento' => 'Accounting entry',
+    'exportar' => 'Export',
+    'fecha_asiento' => 'Date',
+    'caja_sucursal' => 'Cash Branch',
+ 
+  
+];
+
+?>
