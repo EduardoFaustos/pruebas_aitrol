@@ -25,6 +25,7 @@ use Sis_medico\Pedido;
 use Sis_medico\Movimiento_Paciente;
 use Sis_medico\Proveedor;
 use Sis_medico\Empresa;
+use Sis_medico\InvContableCab;
 // use Sis_medico\InvTipoMovimiento;
 use Sis_medico\invTipoMovimiento;
 
@@ -53,34 +54,35 @@ class InvIngresoEgresoVarioController extends Controller
         }
     }
 
-    public function index(Request $request){ 
-        
+    public function index(Request $request)
+    {
+
         $mes = date('m');
         $fecha_desde = "";
         $fecha_hasta = "";
         $busq = array();
 
-        if(isset($request->fecha_desde)|| !is_null($request->fecha_desde)){
+        if (isset($request->fecha_desde) || !is_null($request->fecha_desde)) {
             $fecha_desde = date("Y-m-d", strtotime($request->fecha_desde));
         }
 
-        if(isset($request->fecha_hasta)|| !is_null($request->fecha_hasta)){
+        if (isset($request->fecha_hasta) || !is_null($request->fecha_hasta)) {
             $fecha_hasta = date("Y-m-d", strtotime($request->fecha_hasta));
         }
-        
-        $busq =[
+
+        $busq = [
             'fecha_desde' => $fecha_desde,
             'fecha_hasta' => $fecha_hasta
         ];
-        
+
         $movimientos      = InvCabMovimientos::ingresosEgresosVarios($fecha_desde, $fecha_hasta);
-        
+
         // return view('insumos/transito/index_transito',compact('transito','traslados', 'busq'));
-        return view('inventario/ing_egr_vario/index',compact('movimientos', 'busq'));
+        return view('inventario/ing_egr_vario/index', compact('movimientos', 'busq'));
     }
 
     public function crear()
-    {   
+    {
         if ($this->rol()) {
             return response()->view('errors.404');
         }
@@ -89,12 +91,14 @@ class InvIngresoEgresoVarioController extends Controller
         $empresa     = Empresa::all();
         $bod_princ   = Bodega::where('estado', '1')->where('id', env('BODEGA_PRINCIPAL', 1))->first();
         $documentos  = InvDocumentosBodegas::where('id_inv_tipo_movimiento', 1)->where('id_inv_tipo_movimiento', 1)->whereIn('id', [1, 2, 3, 4])->get();
-        return view('inventario/ing_egr_vario/crear', ['bodegas' => $bodegas, 'proveedores' => $proveedores,
-            'empresa' => $empresa, 'doc_bodega'  => $documentos, 'bodega_principal' => $bod_princ]);
+        return view('inventario/ing_egr_vario/crear', [
+            'bodegas' => $bodegas, 'proveedores' => $proveedores,
+            'empresa' => $empresa, 'doc_bodega'  => $documentos, 'bodega_principal' => $bod_princ
+        ]);
     }
 
     public function guardar(Request $request)
-    { 
+    {
         $ip_cliente = $_SERVER["REMOTE_ADDR"];
         $idusuario  = Auth::user()->id;
         $id_empresa = Session::get('id_empresa');
@@ -123,36 +127,34 @@ class InvIngresoEgresoVarioController extends Controller
                 $this->validate($request, $prules, $pmsn);
             }
         }
-        if ($request['id_proveedor']=="0"){
+        if ($request['id_proveedor'] == "0") {
             $request['id_proveedor'] = '9999999999999';
         }
         $tipo = $request['tipo'];
-        if ($tipo=='I') { 
+        if ($tipo == 'I') {
             $leyenda = 'INV';
-        } if ($tipo == 'E') { 
+        }
+        if ($tipo == 'E') {
             $leyenda = 'EGV';
         }
-        if ($tipo == 'R'){
+        if ($tipo == 'R') {
             $leyenda = 'IVR';
         }
-        if ($tipo == 'C'){
+        if ($tipo == 'C') {
             $leyenda = 'EVC';
         }
-        if ($tipo == 'N'){
+        if ($tipo == 'N') {
             $leyenda = 'ENR';
         }
         $leyenda .= date('YmdHis');
-       // dd($tipo);
-
+        // dd($tipo);
         $tipo_movimiento = invTipoMovimiento::where('tipo', $tipo)->first();
-        
         //dd($tipo_movimiento);
-        
-        $input = [  
+        $input = [
             'id_proveedor'    => $request['id_proveedor'],
             //'tipo'            => $request['tipo_'], 
-            'pedido'          => $leyenda, 
-            'factura'         => $leyenda, 
+            'pedido'          => $leyenda,
+            'factura'         => $leyenda,
             'fecha'           => date('Y-m-d'),
             'vencimiento'     => date('Y-m-d'),
             'id_bodega'       => $request['bodega_recibe'],
@@ -177,36 +179,36 @@ class InvIngresoEgresoVarioController extends Controller
             $id_pedido = Pedido::insertGetId($input);
             // GUARDO EN LA TABLA DE MOVIMIENTOS DE INVENTARIO //
             //      INGRESO LA CABECERA DEL MOVIMIENTO       //
-            if ($tipo=='I') {
+            if ($tipo == 'I') {
                 $docu = InvDocumentosBodegas::where('abreviatura_documento', 'INV')->first();
                 $leyenda = 'INGRESO';
-            } if ($tipo == 'E') {
+            }
+            if ($tipo == 'E') {
                 $docu = InvDocumentosBodegas::where('abreviatura_documento', 'EGV')->first();
                 $leyenda = 'EGRESO';
-            } if ($tipo == 'R') {
+            }
+            if ($tipo == 'R') {
                 $docu = InvDocumentosBodegas::where('abreviatura_documento', 'IVR')->first();
                 $leyenda = 'ING REGALO';
-            } if ($tipo == 'C') {
+            }
+            if ($tipo == 'C') {
                 $docu = InvDocumentosBodegas::where('abreviatura_documento', 'EVC')->first();
                 $leyenda = 'EGR CONSUMIBLE';
-            } if ($tipo == 'N') {
+            }
+            if ($tipo == 'N') {
                 $docu = InvDocumentosBodegas::where('abreviatura_documento', 'ENR')->first();
                 $leyenda = 'EGR NO CONSUMIBLE';
-            } 
-
+            }
             if (!isset($docu->id)) {
                 $data['msj']   = 'error';
                 $data['error'] = 'No existe el documento de bodega. ';
                 return response()->json($data);
             }
             $secuencia = InvDocumentosBodegas::getSecuecia($docu->id, $request['bodega_recibe']);
-            
-
             if ($secuencia != 0) {
                 $transaccion = InvTransaccionesBodegas::where('id_documento_bodega', $docu->id)
-                                                        ->where('id_bodega', $request['bodega_recibe'])
-                                                        ->first();
-
+                    ->where('id_bodega', $request['bodega_recibe'])
+                    ->first();
                 $doc_bodega                         = InvDocumentosBodegas::find($docu->id);
                 $cab_mov_inv                        = new InvCabMovimientos;
                 $cab_mov_inv->id_documento_bodega   = $docu->id;
@@ -223,7 +225,6 @@ class InvIngresoEgresoVarioController extends Controller
                 $cab_mov_inv->total                 = $request['total'];
                 $cab_mov_inv->id_pedido             = $id_pedido;
                 $cab_mov_inv->id_empresa            = Session::get('id_empresa');
-          
                 $cab_mov_inv->ip_creacion           = $ip_cliente;
                 $cab_mov_inv->ip_modificacion       = $ip_cliente;
                 $cab_mov_inv->id_usuariocrea        = $idusuario;
@@ -234,7 +235,7 @@ class InvIngresoEgresoVarioController extends Controller
             for ($i = 0; $i < $variable; $i++) {
                 $visibilidad = $request['visibilidad' . $i];
                 if ($visibilidad == 1) {
-                    
+
                     $cant_uso = 0;
                     $iva      = 0;
                     $producto = Producto::find($request['id' . $i]);
@@ -278,7 +279,7 @@ class InvIngresoEgresoVarioController extends Controller
                     ];
                     $id_movimiento      = DB::table('movimiento')->insertGetId($input2);
                     $id_producto        = $request['id' . $i];
-                    $producto           = Producto::find($id_producto); 
+                    $producto           = Producto::find($id_producto);
                     $cantidad_producto  = $producto->cantidad;
                     $nueva_cantidad     = $cantidad_producto + 1;
 
@@ -308,27 +309,24 @@ class InvIngresoEgresoVarioController extends Controller
                         $det_mov_inv->descuento              = $request['descuento' . $i];
                         $det_mov_inv->iva                    = $iva;
                         $det_mov_inv->total                  = $det_mov_inv->subtotal + $det_mov_inv->iva;
-                        $det_mov_inv->motivo                 = $leyenda.' VARIO';
+                        $det_mov_inv->motivo                 = $leyenda . ' VARIO';
                         $det_mov_inv->id_detalle_pedido      = $id_movimiento;
                         $det_mov_inv->ip_creacion            = $ip_cliente;
                         $det_mov_inv->ip_modificacion        = $ip_cliente;
                         $det_mov_inv->id_usuariocrea         = $idusuario;
                         $det_mov_inv->id_usuariomod          = $idusuario;
                         $det_mov_inv->save();
-
                     }
-
-                    
                 }
             }
 
             // MOVIMIENTO EN KARDEX
             $kardex = InvKardex::setKardex($cab_mov_inv->id);
             // CONTABILIDAD
-            // $id_asiento              = InvContableCab::setAsientoContablePedido($cab_mov_inv->id);
-            // $cab_mov_inv->id_asiento = $id_asiento;
-            // $cab_mov_inv->save();
-            
+            $id_asiento              = InvContableCab::setAsientoContablePedido($cab_mov_inv->id);
+            $cab_mov_inv->id_asiento = $id_asiento;
+            $cab_mov_inv->save();
+
             DB::commit();
             // DB::rollBack();
             $data['msj'] = 'ok';
@@ -344,19 +342,21 @@ class InvIngresoEgresoVarioController extends Controller
     }
 
     public function editar($id)
-    {   
+    {
         if ($this->rol()) {
             return response()->view('errors.404');
         }
         $cab_movimiento = InvCabMovimientos::find($id);
-        $pedido         = Pedido::find($cab_movimiento->id_pedido); 
+        $pedido         = Pedido::find($cab_movimiento->id_pedido);
         $bodegas        = Bodega::where('estado', '1')->whereNull('deleted_at')->get();
         $proveedores    = Proveedor::where('estado', '1')->get();
         $empresa        = Empresa::all();
         $bod_princ      = Bodega::where('estado', '1')->where('id', env('BODEGA_PRINCIPAL', 1))->first();
-        $documentos     = InvDocumentosBodegas::where('id_inv_tipo_movimiento', 1)->where('id_inv_tipo_movimiento', 1)->whereIn('id', [1, 2, 3, 4,5,6])->get();
-        return view('inventario/ing_egr_vario/editar', ['bodegas' => $bodegas, 'proveedores' => $proveedores,
-            'empresa' => $empresa, 'doc_bodega'  => $documentos, 'bodega_principal' => $bod_princ, 'pedido'=>$pedido, 'cab_movimiento'=>$cab_movimiento]);
+        $documentos     = InvDocumentosBodegas::where('id_inv_tipo_movimiento', 1)->where('id_inv_tipo_movimiento', 1)->whereIn('id', [1, 2, 3, 4, 5, 6])->get();
+        return view('inventario/ing_egr_vario/editar', [
+            'bodegas' => $bodegas, 'proveedores' => $proveedores,
+            'empresa' => $empresa, 'doc_bodega'  => $documentos, 'bodega_principal' => $bod_princ, 'pedido' => $pedido, 'cab_movimiento' => $cab_movimiento
+        ]);
     }
 
     public function actualizar(Request $request)
@@ -377,27 +377,28 @@ class InvIngresoEgresoVarioController extends Controller
                     'lote' . $i . '.required'              => 'Ingrese el numero de Lote.',
                     'fecha_vencimiento' . $i . '.required' => 'Ingrese la fecha de vencimiento.',
 
-                ]; 
+                ];
 
                 $this->validate($request, $prules, $pmsn);
             }
         }
-        if ($request['id_proveedor']=="0"){
+        if ($request['id_proveedor'] == "0") {
             $request['id_proveedor'] = '9999999999999';
         }
         $tipo = $request['tipo'];
-        if ($tipo=='I') { 
+        if ($tipo == 'I') {
             $leyenda = 'INV';
-        }if ($tipo == 'E') { 
+        }
+        if ($tipo == 'E') {
             $leyenda = 'EGV';
         }
-        if ($tipo == 'R'){
+        if ($tipo == 'R') {
             $leyenda = 'IVR';
         }
-        if ($tipo == 'C'){
+        if ($tipo == 'C') {
             $leyenda = 'EVC';
         }
-        if ($tipo == 'N'){
+        if ($tipo == 'N') {
             $leyenda = 'ENR';
         }
         DB::beginTransaction();
@@ -407,7 +408,7 @@ class InvIngresoEgresoVarioController extends Controller
             $pedido->observaciones      = $request['observaciones'];
             $pedido->save();
             // movimiento de inventario cabecera //
-            $cab_mov_inv                = InvCabMovimientos::where('id_pedido',$pedido->id)->first();
+            $cab_mov_inv                = InvCabMovimientos::where('id_pedido', $pedido->id)->first();
             $cab_mov_inv->observacion   = $request['observaciones'];
             $cab_mov_inv->save();
             // dd($request);
@@ -416,26 +417,24 @@ class InvIngresoEgresoVarioController extends Controller
                 $visibilidad = $request['visibilidad' . $i];
                 if ($visibilidad == 1) {
                     // movimientos
-                    $movimiento         = Movimiento::find($request['id_movimiento'.$i]);
-                    $movimiento->lote   = $request['lote'.$i];
-                    $movimiento->fecha_vencimiento   = $request['fecha_vencimiento'.$i];
+                    $movimiento         = Movimiento::find($request['id_movimiento' . $i]);
+                    $movimiento->lote   = $request['lote' . $i];
+                    $movimiento->fecha_vencimiento   = $request['fecha_vencimiento' . $i];
                     $movimiento->save();
                     // actualizar lote y fecha de vencimiento 
-                    $dets_mov            = InvDetMovimientos::where('serie',$movimiento->serie)->get();
+                    $dets_mov            = InvDetMovimientos::where('serie', $movimiento->serie)->get();
                     foreach ($dets_mov as $det) {
-                        $det->lote            = $request['lote'.$i];
-                        $det->fecha_vence     = $request['fecha_vencimiento'.$i];
+                        $det->lote            = $request['lote' . $i];
+                        $det->fecha_vence     = $request['fecha_vencimiento' . $i];
                         $det->save();
                     }
-                    $inv_series          = InvInventarioSerie::where('serie',$movimiento->serie)->get();
+                    $inv_series          = InvInventarioSerie::where('serie', $movimiento->serie)->get();
                     foreach ($inv_series as $det) {
-                        $det->lote            = $request['lote'.$i];
-                        $det->fecha_vence     = $request['fecha_vencimiento'.$i];
+                        $det->lote            = $request['lote' . $i];
+                        $det->fecha_vence     = $request['fecha_vencimiento' . $i];
                         $det->save();
                     }
-
                 }
-
             }
             $data['msj'] = 'ok';
             return response()->json($data);
@@ -460,23 +459,22 @@ class InvIngresoEgresoVarioController extends Controller
             $cabcera->save();
             $this->eliminar_pedido($id_pedido);
         }
-
     }
 
     public function eliminar_pedido($id)
     {
         DB::beginTransaction();
-        try {  
-            $pedido_v       = Pedido::find($id); 
+        try {
+            $pedido_v       = Pedido::find($id);
             $productos = Movimiento::where('id_pedido', $id)->get();
             // movimientos inventario 
-            $inv_movimientos = InvCabMovimientos::where('id_pedido',$id)->get();
+            $inv_movimientos = InvCabMovimientos::where('id_pedido', $id)->get();
             foreach ($inv_movimientos as $mov) {
                 $movimiento = InvCabMovimientos::find($mov->id);
                 $movimiento->id_pedido = null;
                 $movimiento->save();
             }
-            
+
             $detalles = Detalle_Pedido::where('id_pedido', $id)->get();
             foreach ($detalles as $row) {
                 $detalle            = Detalle_Pedido::find($row->id);
@@ -490,11 +488,11 @@ class InvIngresoEgresoVarioController extends Controller
                 $producto->save();
                 $movimiento = Movimiento::find($value->id);
                 $movimiento->delete();
-            } 
+            }
             $pedido = Pedido::find($id);
             $pedido->delete();
             DB::commit();
-            return "okay"; 
+            return "okay";
             // DB::rollBack();
             return "no";
         } catch (\Exception $e) {
@@ -503,39 +501,4 @@ class InvIngresoEgresoVarioController extends Controller
             return $e->getMessage();
         }
     }
-    public function pdf_acta_de_entrega($id,Request $request)
-    {   
-        $mes = date('m');
-        $fecha_desde = "";
-        $fecha_hasta = "";
-        $busq = array();
-        
-
-        if(isset($request->fecha_desde)|| !is_null($request->fecha_desde)){
-            $fecha_desde = date("Y-m-d", strtotime($request->fecha_desde));
-        }
-
-        if(isset($request->fecha_hasta)|| !is_null($request->fecha_hasta)){
-            $fecha_hasta = date("Y-m-d", strtotime($request->fecha_hasta));
-        }
-        
-        $busq =[
-            'fecha_desde' => $fecha_desde,
-            'fecha_hasta' => $fecha_hasta
-        ];
-
-        $id_empresa  = $request->session()->get('id_empresa');
-        $empresa     = Empresa::where('id', $id_empresa)->where('estado', '1')->first();
-        $movimientos = InvCabMovimientos::ingresosEgresosVarios($fecha_desde, $fecha_hasta);
-        $rec = InvDetMovimientos::where('id_inv_cab_movimientos', $request->id)
-            ->join('producto as p', 'inv_det_movimientos.id_producto', 'p.id')
-            ->select('inv_det_movimientos.serie', 'p.nombre', 'inv_det_movimientos.lote', 'inv_det_movimientos.cantidad', 'inv_det_movimientos.cant_uso', 'inv_det_movimientos.total')
-            ->get();
-        $vistaurl = "inventario.acta_entrega.pdf_acta_entrega";
-        $view     = \View::make($vistaurl, compact( 'empresa', 'movimientos','rec'))->render();
-        $pdf  = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view)->setPaper('a4', 'landform');
-        return $pdf->stream('Acta_Entrega_Insumos.pdf');
-    }
-
 }
