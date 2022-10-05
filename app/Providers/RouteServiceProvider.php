@@ -122,6 +122,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes_web_hospital();
         $this->mapWebRoutes_web_hospital_laboratorio();
         $this->mapWebRoutes_web_Emergencia();
+        $this->mapWebRoutes_web_hospital_admin();
 
         // servicios
 
@@ -669,5 +670,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web', 'cors')
             ->namespace($this->namespace)
             ->group(base_path('routes/hospital/emergencia/web_emergencia.php'));
+    }
+
+    protected function mapWebRoutes_web_hospital_admin()
+    {
+        Route::middleware('web', 'cors')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/hospital_admin/web_hospital_admin.php'));
     }
 }

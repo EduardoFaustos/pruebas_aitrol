@@ -48,8 +48,7 @@ class QuirofanoController extends Controller
      */
 
     public function quirofano($tipo)
-    {
-
+    {   
         //tipo 1 cirugia 0 imagenes
         $id_usuario = Auth::user()->id;
 
@@ -61,6 +60,7 @@ class QuirofanoController extends Controller
         $fecha_hasta = date('Y-m-d');
 
         $agendas_pac = [];
+      
 
         if ($tipo == 1) {
             $agendas_pac = Agenda::where('agenda.estado', '1')
@@ -89,7 +89,7 @@ class QuirofanoController extends Controller
                 ->where('agenda.ho_tipo', '0')
                 ->select('p.id', 'p.nombre1', 'p.nombre2', 'p.apellido1', 'p.apellido2', 'p.fecha_nacimiento', 'agenda.fechaini', 'agenda.fechafin', 'agenda.proc_consul', 'agenda.id as id_agenda', 'agenda.cortesia', 'd.nombre1 as dnombre1', 'd.apellido1 as dapellido1', 'se.nombre as seguro_nombre', 'em.nombre_corto as empresa_nombre', 'h.hcid', 'agenda.omni', 'agenda.estado_cita', 'agenda.tc', 'agenda.teleconsulta')->Orderby('agenda.fechaini', 'asc')->get();
         }
-
+        
         $agendas_proc = null;
         foreach ($agendas_pac as $pac) {
             if ($pac->proc_consul == '1') {
@@ -109,12 +109,13 @@ class QuirofanoController extends Controller
                 }
             }
         }
-
+    
         return view('hospital/quirofano/quirofano', ['agendas_pac' => $agendas_pac, 'agendas_proc' => $agendas_proc, 'especialidades' => $especialidades, 'seguros' => $seguros, 'doctores' => $doctores, 'fecha_desde' => $fecha_desde, 'fecha_hasta' => $fecha_hasta, 'tipo' => $tipo]);
     }
 
-    public function buscar_quirofano(Request $request, $tipo)
+    public function buscar_quirofano($tipo, Request $request )
     {
+        
         //tipo 1: cirugia, 0: imagenes
         $fecha_desde = $request['fecha_desde'];
         $fecha_hasta = $request['fecha_hasta'];

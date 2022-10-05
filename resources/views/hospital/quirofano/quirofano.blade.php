@@ -32,6 +32,7 @@
 							</div>
 							<div class="card card-success">
                                 <div class="col-md-12">
+                                
                                     <form id="form_buscar" method="POST" action="{{route('quirofano.buscar_quirofano',['tipo' => $tipo])}}">
                                         {{ csrf_field() }}
                                         <div class="form-row">
@@ -42,6 +43,7 @@
                                                     <input type="text"  data-input="true" class="form-control input-sm flatpickr-basic active" name="fecha_desde" id="fecha_desde" autocomplete="off" value="{{$fecha_desde}}">
                                                 </div>
                                             </div>
+                                            
                                             <div class="form-group col-md-3" style="padding-left: 0px;padding-right: 0px;">
                                                 <label class="col-md-4 control-label">{{trans('Fecha Hasta')}}</label>
                                                 <div class="col-md-9">
@@ -73,6 +75,7 @@
                                                 </div>
                                             </div>
                                             
+                                            
                                             <div class="form-group col-md-2" style="padding-left: 0px;padding-right: 0px;">
                                                 <label class="col-md-5 control-label">{{trans('Especialidad')}}</label>
                                                 <div class="col-md-9">
@@ -84,9 +87,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-
                                             
-
                                             <div class="form-group col-md-2" style="padding-left: 0px;padding-right: 0px;">
                                                 <label class="col-md-4 control-label">{{trans('Seguro')}}</label>
                                                 <div class="col-md-9">
@@ -98,6 +99,7 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            
 
                                             <div class="form-group col-md-1">
                                                 <br>
@@ -105,6 +107,8 @@
                                             </div>
                                         </div>
                                     </form>
+
+                                    
                                 </div>
 								<div class="card-body no-padding">
 									<div class="card-body table-responsive">
@@ -125,7 +129,6 @@
 											</thead>
 											<tbody>
 												@foreach($agendas_pac as $value)
-
                                                     @php
                                                         $solicitud = Sis_medico\Ho_Solicitud::where('id_agenda',$value->id_agenda)->first();
                                                     @endphp
@@ -188,8 +191,6 @@
                                                                 <a type="button" class="btn btn-info" id="btn_detalle" href="{{route('quirofano.quirofano_paciente',['tipo' => $tipo,'id_solicitud' => $solicitud->id])}}">Ver Detalle</a>
                                                                 <a href="{{route('hospital.formulario008_pdf', ['id_solicitud' => $solicitud->id])}}" target="_blank"class="btn btn-info btn-xs" ><i class="fa fa-download"></i> {{trans('emergencia.Formulario008')}}</a>
                                                             @endif
-
-                                                           
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -198,18 +199,10 @@
 									</div>
 								</div>
 							</div>
-
 						</div>
 					</div>
-
 				</div>
 			</div>
-
-
-
-
-
-
 		</div>
 	</section>
 </div>
