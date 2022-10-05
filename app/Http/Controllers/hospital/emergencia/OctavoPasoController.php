@@ -29,7 +29,7 @@ class OctavoPasoController extends Controller
     }
     public function index(Request $request)
     {
-
+//
         $colores=Ho_Colores008::where('estado','1')->get();
         $ho= Ho_Lesiones008::where('id_008',$request['ep'])->first();
         return view('hospital.octavopaso',['colores'=>$colores,'ho'=>$ho]);
