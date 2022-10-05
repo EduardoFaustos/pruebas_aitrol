@@ -211,6 +211,34 @@ class TipoSugerenciaController extends Controller
 
         return view('rrhh/listado_encuesta', [ 'encuesta'=>$encuesta, 'grupopregunta'=>$grupopregunta]);
     }
+
+    public function listado_index(){
+        $encuestas = Master_encuesta::where('estado', 1)->get();
+
+        return view('rrhh/listado_index',['encuestas'=>$encuestas]);
+    }
+
+
+    public function listado_detalle($id, Request $request){
+                
+        $grupopregunta = GrupoPregunta::all();
+
+        $anio = $request->anio;
+        $mes = $request->mes;
+
+        if (!is_null($anio)) {
+            $anio = date("Y");
+        }
+
+        if (!is_null($mes)) {
+            $mes = date("m");
+        }
+        
+        $encuesta = Encuesta_1::where('id_area')->where('mes', $mes)->where('anio', $anio)->get();
+
+        return view('rrhh/nuevo_listado_encuesta', [ 'encuesta'=>$encuesta, 'grupopregunta'=>$grupopregunta]);
+    }
+
     public function rrhh_estadisticas (Request $request){
         $anio=$request['anio'];
         $mes=$request['mes'];

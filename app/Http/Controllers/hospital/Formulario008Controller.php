@@ -41,6 +41,7 @@ use Sis_medico\Ho_Glasgow;
 use Sis_medico\Ho_Lesiones008;
 use Sis_medico\Ho_Traspaso_Sala008;
 use PDF;
+use Sis_medico\Log_usuario;
 
 class Formulario008Controller extends Controller
 {

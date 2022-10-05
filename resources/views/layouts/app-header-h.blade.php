@@ -23,13 +23,13 @@ $id_empresa = "0992704152001";
             <ul class="nav navbar-nav d-xl-none">
                 <li class="nav-item"><a class="nav-link menu-toggle" href="javascript:void(0);"><i class="ficon" data-feather="menu"></i></a></li>
             </ul>
-            <ul class="nav navbar-nav bookmark-icons">
+            <!-- <ul class="nav navbar-nav bookmark-icons">
                 <li class="nav-item d-none d-lg-block"><a class="nav-link" href="app-email.html" data-toggle="tooltip" data-placement="top" title="Email"><i class="ficon" data-feather="mail"></i></a></li>
                 <li class="nav-item d-none d-lg-block"><a class="nav-link" href="app-chat.html" data-toggle="tooltip" data-placement="top" title="Chat"><i class="ficon" data-feather="message-square"></i></a></li>
                 <li class="nav-item d-none d-lg-block"><a class="nav-link" href="app-calendar.html" data-toggle="tooltip" data-placement="top" title="Calendar"><i class="ficon" data-feather="calendar"></i></a></li>
                 <li class="nav-item d-none d-lg-block"><a class="nav-link" href="app-todo.html" data-toggle="tooltip" data-placement="top" title="Todo"><i class="ficon" data-feather="check-square"></i></a></li>
-            </ul>
-            <ul class="nav navbar-nav">
+            </ul> -->
+            <!-- <ul class="nav navbar-nav">
                 <li class="nav-item d-none d-lg-block"><a class="nav-link bookmark-star"><i class="ficon text-warning" data-feather="star"></i></a>
                     <div class="bookmark-input search-input">
                         <div class="bookmark-input-icon"><i data-feather="search"></i></div>
@@ -37,20 +37,20 @@ $id_empresa = "0992704152001";
                         <ul class="search-list search-list-bookmark"></ul>
                     </div>
                 </li>
-            </ul>
+            </ul> -->
         </div>
         <ul class="nav navbar-nav align-items-center ml-auto">
             <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-style"><i class="ficon" data-feather="{{$classicon}}"></i></a></li>
-            <li class="nav-item nav-search"><a class="nav-link nav-link-search"><i class="ficon" data-feather="search"></i></a>
+            <!-- <li class="nav-item nav-search"><a class="nav-link nav-link-search"><i class="ficon" data-feather="search"></i></a>
                 <div class="search-input">
                     <div class="search-input-icon"><i data-feather="search"></i></div>
                     <input class="form-control input" type="text" placeholder="Explora el Sistema..." tabindex="-1" data-search="search">
                     <div class="search-input-close"><i data-feather="x"></i></div>
                     <ul class="search-list search-list-main"></ul>
                 </div>
-            </li>
+            </li> -->
 
-            <li class="nav-item dropdown dropdown-notification mr-25"><a class="nav-link" href="javascript:void(0);" data-toggle="dropdown"><i class="ficon" data-feather="bell"></i><span class="badge badge-pill badge-danger badge-up">5</span></a>
+            <!-- <li class="nav-item dropdown dropdown-notification mr-25"><a class="nav-link" href="javascript:void(0);" data-toggle="dropdown"><i class="ficon" data-feather="bell"></i><span class="badge badge-pill badge-danger badge-up">5</span></a>
                 <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                     <li class="dropdown-menu-header">
                         <div class="dropdown-header d-flex">
@@ -88,11 +88,11 @@ $id_empresa = "0992704152001";
                                 </div>
                             </div>
                         </a>
-                        
+
                     </li>
                     <li class="dropdown-menu-footer"><a class="btn btn-primary btn-block" href="javascript:void(0)">Leer todas las notificaciones</a></li>
                 </ul>
-            </li>
+            </li> -->
             <li class="nav-item dropdown dropdown-user"><a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="user-nav d-sm-flex d-none"><span class="user-name font-weight-bolder">{{ Auth::user()->nombre1}} {{Auth::user()->apellido1}}</span><span class="user-status">{{ Auth::user()->id_tipo}}</span></div><span class="avatar"><img class="round" src="{{asset('/avatars').'/'.$imagen}}" alt="avatar" height="40" width="40"><span class="avatar-status-online"></span></span>
                 </a>
@@ -197,18 +197,18 @@ $id_empresa = "0992704152001";
         <div class="shadow-bottom"></div>
         <!-- Horizontal menu content-->
         <div class="navbar-container main-menu-content" data-menu="menu-container">
-            <!-- include includes/mixins-->
+            
             <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
-                <!-- {{route('hospital.quirofano',['tipo' => 0])}} -->
-                <li class="dropdown nav-item col-md-2 col-xs-12"><a class="nav-link dropdown-toggle d-flex align-items-center" href="#"><i data-feather="layers"></i><span >Procedimientos</span></a>
-                <ul class="dropdown-menu">
+                
+                <li class="dropdown nav-item col-md-2 col-xs-12"><a class="nav-link dropdown-toggle d-flex align-items-center" href="#"><i data-feather="layers"></i><span>Procedimientos</span></a>
+                    <ul class="dropdown-menu">
                         <li data-menu=""><a class="dropdown-item d-flex align-items-center" href="{{route('hospital.quirofano',['tipo' => 1])}}" data-toggle="dropdown" data-i18n="Email"><i class="fa fa-stethoscope"></i><span data-i18n="Email">Cirugia</span></a>
                         </li>
                         <li data-menu=""><a class="dropdown-item d-flex align-items-center" href="{{route('hospital.quirofano',['tipo' => 0])}}" data-toggle="dropdown" data-i18n="Chat"><i data-feather="image"></i><span data-i18n="Chat">Imagen</span></a>
                         </li>
                     </ul>
                 </li>
-                <li class=" nav-item col-md-2 col-xs-12"><a class=" nav-link d-flex align-items-center" href="{{route('hospital_laboratorio.index')}}" ><i class="fa fa-flask"></i><span data-i18n="flask">Laboratorio</span></a>
+                <li class=" nav-item col-md-2 col-xs-12"><a class=" nav-link d-flex align-items-center" href="{{route('hospital_laboratorio.index')}}"><i class="fa fa-flask"></i><span data-i18n="flask">Laboratorio</span></a>
                     <ul class="dropdown-menu">
                         <li data-menu=""><a class="dropdown-item d-flex align-items-center" href="app-email.html" data-toggle="dropdown" data-i18n="Email"><i data-feather="mail"></i><span data-i18n="Email">Email</span></a>
                         </li>
@@ -374,9 +374,8 @@ $id_empresa = "0992704152001";
                         </li>
                     </ul>
                 </li>
-<!--                 <li class="nav-item col-md-2 col-xs-12"><a class="nav-link d-flex align-items-center" href="{{route('hospital.quirofano',['tipo' => 1])}}"><i class="fa fa-stethoscope"></i><span data-i18n="Forms &amp; Tables">Cirugia</span></a>
-                </li> -->
-                <li class="nav-item col-md-2 col-xs-12" ><a class="nav-link d-flex align-items-center" href="{{route('hospitalizacion.master')}}" ><i class="fa fa-procedures"></i><span data-i18n="Pages">Hospitalizacion</span></a>
+
+                <li class="nav-item col-md-2 col-xs-12"><a class="nav-link d-flex align-items-center" href="{{route('hospitalizacion.master')}}"><i class="fa fa-procedures"></i><span data-i18n="Pages">Hospitalizacion</span></a>
                 </li>
                 <li class="nav-item col-md-2 col-xs-12"><a class="nav-link d-flex align-items-center" href="{{route('hospital.emergencia')}}"><i class="fa fa-briefcase-medical"></i><span data-i18n="Charts &amp; Maps">Emergencia</span></a>
                     <ul class="dropdown-menu">
@@ -392,9 +391,9 @@ $id_empresa = "0992704152001";
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item col-md-2 col-xs-12" ><a class="nav-link d-flex align-items-center" href="{{route('hospital.gcuartos')}}" ><i class="fa fa-calendar"></i><span data-i18n="Pages">Recepcion</span></a>
+                <li class="nav-item col-md-2 col-xs-12"><a class="nav-link d-flex align-items-center" href="{{route('hospital.gcuartos')}}"><i class="fa fa-calendar"></i><span data-i18n="Pages">Recepcion</span></a>
                 </li>
-                
+
             </ul>
         </div>
     </div>

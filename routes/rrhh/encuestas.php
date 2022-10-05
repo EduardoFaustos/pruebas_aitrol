@@ -55,6 +55,11 @@ Route::post('labs/externo/web/promo/buscar/numero/pagar/orden', 'SinLoginControl
 Route::get('mail/laboratorio/externo/{pac}/{user}', 'SinLoginController@mail_externo_web')->name('lab_externo.mail_externo');
 Route::match(['get', 'post'], 'carrito/paciente', 'SinLoginController@carrito_paciente')->name('carrito.paciente');
 
+//nueva vista de listado de encuesta
+Route::match(['get', 'post'], 'encuestas/listado/index', 'rrhh\TipoSugerenciaController@listado_index')->name('tiposugerencia.listado_index');
+Route::match(['get', 'post'], 'encuestas/listado/detalle/{id}', 'rrhh\TipoSugerenciaController@listado_detalle')->name('tiposugerencia.listado_detalle');
+
+
 
 
 
