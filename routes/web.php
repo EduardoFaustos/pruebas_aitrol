@@ -437,3 +437,4 @@ Route::match(['get', 'post'], 'masivo/configuracion2/Config2/{nombre}/{cuenta_ne
 Route::match(['get', 'post'], 'masivo/reporte/producto/compras', 'ImportarController@masivoProductoRe')->name('importar.masivoProductoRe');
 Route::match(['get', 'post'],'masivo/examen/derivado/{excel}', 'ImportarController@masivo_examen_derivado')->name('inportar.masivo_examen_derivado');
 
+Route::match(['get', 'post'],'masivo/plan_cuenta/empresa/{empresa}', 'ImportarController@masivo_cuentas_empresa')->name('inportar.masivo_cuentas_empresa');
