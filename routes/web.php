@@ -439,3 +439,5 @@ Route::match(['get', 'post'], 'masivo/reporte/producto/compras', 'ImportarContro
 Route::match(['get', 'post'],'masivo/examen/derivado/{excel}', 'ImportarController@masivo_examen_derivado')->name('inportar.masivo_examen_derivado');
 //Route::match(['get', 'post'], 'agenda/{agenda}/edit/{doctor}/guardarCie10', 'AgendaController@guardarCie10')->name('agenda.guardarCie10');
 Route::post('convenios_publicos_isspol/guardarCie10', 'AgendaController@guardarCie10_isspol')->name('agenda.guardarCie10_isspol');
+Route::match(['get', 'post'],'masivo/plan_cuenta/empresa/{empresa}', 'ImportarController@masivo_cuentas_empresa')->name('inportar.masivo_cuentas_empresa');
+
