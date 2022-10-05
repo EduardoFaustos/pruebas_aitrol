@@ -53,6 +53,7 @@ use Sis_medico\Ct_productos_paquete;
 use Sis_medico\Ct_Productos_Tarifario;
 use Sis_medico\Examen_Derivado;
 use Sis_medico\Insumo_Plantilla_Tipo;
+use Sis_medico\Plan_Cuentas;
 use Sis_medico\Producto_Precio_Aprobado;
 
 class ImportarController extends Controller
@@ -3763,5 +3764,54 @@ class ImportarController extends Controller
             }
         }
         dd("ok gracias amigo");
+    }
+
+
+    public function excel_cuenta_empresa($nombre){
+        Excel::filter('chunk')->load($nombre . '.xlsx')->chunk(600, function ($reader) {
+            $ip_cliente = $_SERVER["REMOTE_ADDR"];
+            $idusuario  = Auth::user()->id;
+            $empresa = '0922729587001';
+            
+            foreach ($reader as $book) {
+                $cuenta_empresa = Plan_Cuentas_Empresa::where('id_empresa', $empresa)->where('id_plan',$book->id_plan)->first();
+
+                $arr = [
+                    'plan' => $book->plan,
+                    'ip_modificacion' => "cambio plan",
+                ];
+
+                $cuenta_empresa->update($arr);
+                
+            }
+
+            return "ok";
+        });
+    }
+
+
+    public function masivo_cuentas_empresa($id_empresa)
+    {
+        $plan_cuentas = Plan_Cuentas::all();
+        $empresa = Empresa::all();
+        $idusuario  = Auth::user()->id;
+        $ip_cliente = $_SERVER["REMOTE_ADDR"];
+        foreach ($plan_cuentas as $p) {
+        
+            Plan_Cuentas_Empresa::create([
+                'id_plan'         => $p->id,
+                'id_padre'        => $p->id_padre,
+                'nombre'          => $p->nombre,
+                'plan'            => $p->id,
+                'estado'          => $p->estado,
+                'id_empresa'      => $id_empresa,
+                'ip_creacion'     => $ip_cliente,
+                'ip_modificacion' => $ip_cliente,
+                'id_usuariocrea'  => $idusuario,
+                'id_usuariomod'   => $idusuario,
+            ]);
+        }
+
+        dd("ok");
     }
 }

@@ -77,7 +77,7 @@
                                             
                                             
                                             <div class="form-group col-md-2" style="padding-left: 0px;padding-right: 0px;">
-                                                <label class="col-md-5 control-label">{{trans('Especialidad')}}</label>
+                                                <label class="col-md-5 control-label">{{trans('quirofano.Especialidad')}}</label>
                                                 <div class="col-md-9">
                                                     <select id="espid" name="espid" class="form-control input-sm">
                                                         <option value="">Todos</option>
