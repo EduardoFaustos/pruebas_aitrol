@@ -36,7 +36,7 @@ Route::match(['get', 'post'], 'tipo/search', 'Insumos\TipoController@search')->n
 
 //productos
 Route::resource('producto', 'Insumos\ProductoController');
-//Route::match(['get', 'post'],'producto/dar_baja', 'Insumos\ProductoController@bajar_producto')->name('producto.dar_baja');
+//Route::match(['get', 'post'],'producto/insumos/reporte/descargar_dar_baja', 'Insumos\ProductoController@bajar_producto')->name('producto.insumos/reporte/descargar_dar_baja');
 Route::match(['get', 'post'], 'producto_search/search', 'Insumos\ProductoController@search')->name('producto.search');
 Route::match(['get', 'post'], 'producto/codigo_datos/', 'Insumos\ProductoController@codigo')->name('producto.codigo');
 Route::match(['get', 'post'], 'producto_activo/listar/activos', 'Insumos\ProductoController@listar')->name('producto.listar');
@@ -75,9 +75,6 @@ Route::match(['get', 'post'], 'codigo/barras/', 'Insumos\ProductoController@codi
 Route::match(['get', 'post'], 'codigo/barras/imprimir/{id}', 'Insumos\ProductoController@imprimirbarras')->name('barra.generar');
 Route::match(['get', 'post'], 'codigo/barras/pedido/{id}', 'Insumos\ProductoController@pedido')->name('pedido.seguimiento');
 
-Route::match(['get', 'post'], 'codigo/barras/reportePedido/excel/{id}', 'Insumos\ProductoController@reportePedido')->name('insumos.producto.reportePedido');
-
-
 //productos en transito
 Route::resource('transito', 'Insumos\TransitoController');
 Route::match(['get', 'post'], 'producto/transito/nombre_encargado/', 'Insumos\TransitoController@nombre')->name('transito.nombre');
@@ -93,7 +90,7 @@ Route::get('transito/descarga/excel', 'contable\TipoTarjetaController@descarga_e
 Route::get('producto/descarga/archivo', 'Insumos\ProductoController@reporte')->name('producto.reporte');
 Route::get('producto/dar/baja/', 'Insumos\ProductoController@bajar_producto')->name('producto_dar_baja');
 Route::match(['get', 'post'], 'reporte/insumo/dado_de_baja', 'Insumos\ReportesController@reporte_dar_baja')->name('reporte.dar_baja');
-Route::match(['get', 'post'], 'insumos/reporte/descargar_dar_baja', 'Insumos\ReportesController@descargar_dar_baja')->name('descarga.dar_baja.index');
+Route::match(['get', 'post'], 'nuevo_insumos/reporte/descargar_dar_baja', 'Insumos\ReportesController@descargar_dar_baja')->name('descarga.dar_baja.index');
 
 
 
@@ -137,6 +134,10 @@ Route::match(['get', 'post'], 'reporte/producto/buscador_usos_excel', 'Insumos\R
 
 Route::match(['get', 'post'], 'reporte/equipo/buscador_usos_excel', 'Insumos\ReportesController@buscador_equipo_excel')->name('reporte.buscador_equipo_excel');
 
+Route::match(['get', 'post'], 'reporte/producto/buscador_usos_procedimientos', 'Insumos\ReportesController@buscador_usos_procedimientos')->name('reporte.buscador_usos_procedimientos');
+Route::match(['get', 'post'], 'reporte/producto/buscador_usos_procedimientos/excel', 'Insumos\ReportesController@reporte_usos_procedimientos')->name('reporte.reporte_usos_procedimientos');
+
+
 Route::get('producto/editar/pedido/{id}', 'Insumos\IngresoController@editar_pedido')->name('ingreso.editar_pedido');
 Route::post('producto/ingresar/actualizar/', 'Insumos\IngresoController@actualizar_pedido')->name('ingreso.actualizar_pedido');
 Route::post('producto/ingresar/create/Fact', 'Insumos\IngresoController@generar_factura')->name('ingreso.generar_facturas');
@@ -147,7 +148,7 @@ Route::get('producto/buscador/usos/modal/{id}', 'Insumos\ReportesController@moda
 
 Route::match(['get', 'post'], 'proveedor/validar/ruc', 'Insumos\ProveedorController@validar_ruc')->name('proveedor.validar_ruc');
 
-//plantillas insumos 
+//plantillas insumos
 Route::match(['get', 'post'], 'insumos/plantillas', 'Insumos\PlantillaController@index')->name('plantilla.index');
 Route::get('insumos/plantillas/crear', 'Insumos\PlantillaController@crear_plantilla')->name('plantilla.crear');
 Route::post('insumo/items', 'Insumos\PlantillaController@buscar_item')->name('planilla.find_item');
@@ -193,7 +194,6 @@ Route::get('insumos/existencias', 'Insumos\InventarioController@index')->name('i
 Route::match(['get', 'post'],'insumos/existencias/show', 'Insumos\InventarioController@show')->name('insumos.inventario.show');
 Route::get('insumos/busqueda', 'Insumos\InventarioController@busqueda')->name('insumos.inventario.busqueda');
 Route::match(['get', 'post'], 'insumos/busquedaserie', 'Insumos\InventarioController@busquedaserie')->name('insumos.inventario.busqueda.serie');
-Route::match(['get', 'post'], 'insumos/kardex/exportar/nuevo', 'Insumos\KardexController@exportar')->name('insumos.kardex.exportar');
 
 /*Inventario Serie */
 Route::get('insumos/existencias/serie', 'Insumos\InventarioSerieController@index')->name('insumos.inventario_serie.index');
@@ -240,36 +240,27 @@ Route::match(['get', 'post'],'insumos/reprocesaRoxicaina', 'Inventario\InvProces
 Route::match(['get', 'post'],'insumos/trasladoMasivoBodega1', 'Inventario\InvProcesosController@trasladoMasivoBodega1')->name('insumos.inventario.traslado.masivo.bodega1');
 
 Route::match(['get', 'post'],'insumos/plantillas/comprobar', 'Insumos\PlantillaControlController@comprobar')->name('plantilla.comprobar');
-# PACIETE DEL DIA 
+# PACIETE DEL DIA
 Route::match(['get', 'post'], 'transito/paciente/dia/agregar/medicamento', 'Insumos\TransitoController@agregarMedicamentoPacienteDia')->name('transito.agregar.medicamento.paciente.dia');
 # PDF PLANILLAS
-Route::get('contable/planilla/costo/detalle/pdf/{id_venta}/{id_hc_procedimiento}', 'Insumos\PlantillaController@imprimirPlanillaCostoDetalle')->name('planilla.costo.detalle.pdf'); 
-Route::get('contable/planilla/venta/detalle/pdf/{id_venta}/{id_hc_procedimiento}', 'Insumos\PlantillaController@imprimirPlanillaVentaDetalle')->name('planilla.venta.detalle.pdf'); 
-Route::get('contable/planilla/venta/vs/costo/detalle/pdf/{id_venta}/{id_hc_procedimiento}', 'Insumos\PlantillaController@imprimirPlanillaVentaVsCostoDetalle')->name('planilla.venta.vs.compra.detalle.pdf'); 
+Route::get('contable/planilla/costo/detalle/pdf/{id_venta}/{id_hc_procedimiento}', 'Insumos\PlantillaController@imprimirPlanillaCostoDetalle')->name('planilla.costo.detalle.pdf');
+Route::get('contable/planilla/venta/detalle/pdf/{id_venta}/{id_hc_procedimiento}', 'Insumos\PlantillaController@imprimirPlanillaVentaDetalle')->name('planilla.venta.detalle.pdf');
+Route::get('contable/planilla/venta/vs/costo/detalle/pdf/{id_venta}/{id_hc_procedimiento}', 'Insumos\PlantillaController@imprimirPlanillaVentaVsCostoDetalle')->name('planilla.venta.vs.compra.detalle.pdf');
 # Planillas para el sector publico NO FUNCAN LOPEZ
 Route::get('contable/planilla/ventap/detalle/pdf/{id_venta}/{id_hc_procedimiento}', 'Insumos\PlantillaController@imprimirPlanillaVentapDetalle' )->name('planilla.ventap.detalle.pdf');
 Route::get('contable/planilla/ventap/vs/costop/detalle/pdf/{id_venta}/{id_hc_procedimiento}', 'Insumos\PlantillaController@imprimirPlanillaVentapVsCostopDetalle')->name('planilla.ventap.vs.comprap.detalle.pdf');
-# TOMA FISICA INVENTARIO 
-Route::match(['get', 'post'],'insumos/tomafisica/proceso/{file}/{id_bodega}', 'Insumos\TomaFisicaController@proceso')->name('insumos.tomafisica.proceso'); 
+# TOMA FISICA INVENTARIO
+Route::match(['get', 'post'],'insumos/tomafisica/proceso/{file}/{id_bodega}', 'Insumos\TomaFisicaController@proceso')->name('insumos.tomafisica.proceso');
 # PROCESOS
-Route::match(['get', 'post'],'insumos/proceso/reingreso/{id_movimiento}', 'Inventario\InvProcesosController@reingreso')->name('inventario.proceso.reingreso'); 
+Route::match(['get', 'post'],'insumos/proceso/reingreso/{id_movimiento}', 'Inventario\InvProcesosController@reingreso')->name('inventario.proceso.reingreso');
 # INGRESOS Y EGRESOS VARIOS
 Route::match(['get', 'post'],'inventario/ingresos/egresos/varios', 'Inventario\InvIngresoEgresoVarioController@index')->name('inventario.ingresos.egresos.varios');
 Route::get('inventario/ingresos/egresos/crear', 'Inventario\InvIngresoEgresoVarioController@crear')->name('inventario.ingresos.egresos.crear');
-Route::match(['get', 'post'],'inventario/ingresos/egresos/guardar', 'Inventario\InvIngresoEgresoVarioController@guardar')->name('inventario.ingresos.egresos.guardar');
+Route::post('inventario/ingresos/egresos/guardar', 'Inventario\InvIngresoEgresoVarioController@guardar')->name('inventario.ingresos.egresos.guardar');
 Route::get('inventario/ingresos/egresos/editar/{id}', 'Inventario\InvIngresoEgresoVarioController@editar')->name('inventario.ingresos.egresos.editar');
 Route::post('inventario/ingresos/egresos/actualizar', 'Inventario\InvIngresoEgresoVarioController@actualizar')->name('inventario.ingresos.egresos.actualizar');
 
 
-//Acta de Entrega
-Route::match(['get', 'post'],'insumos/acta_de_entrega.pdf', 'insumos\ProductoController@pdf_acta_de_entrega')->name('producto.pdf_acta_de_entrega');
-
 Route::match(['get', 'post'],'insumos/egresoprocedimiento/excelMaterialesUtilizados', 'Insumos\InsumosController@excelMaterialesUtilizados')->name('insumos.insumos.excelMaterialesUtilizados');
-//Acta de Entrega
-
-//Route::match(['get', 'post'],'inventario/acta_entrega/pdf_acta_entrega/{id}', 'Inventario\InvIngresoEgresoVarioController@pdf_acta_de_entrega')->name('inventario.acta_entrega.pdf_acta_entrega');
-
-Route::match(['get', 'post'],'inventario/acta_entrega/pdf_acta_entrega/{id}', 'Inventario\InvIngresoEgresoVarioController@pdf_acta_de_entrega')->name('inventario.acta_entrega.pdf_acta_entrega');
-
-Route::match(['get', 'post'],'insumos/valida/numero/pedido', 'Insumos\IngresoController@validarNumeroPedido')->name('insumos.ingreso.validarNumeroPedido');
+Route::match(['get', 'post'], 'codigo/barras/reportePedido/excel/{id}', 'Insumos\ProductoController@reportePedido')->name('insumos.producto.reportePedido');
 

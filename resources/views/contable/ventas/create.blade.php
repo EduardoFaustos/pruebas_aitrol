@@ -612,7 +612,6 @@
                             <td id="copagoTotal" class="text-right px-1">0.00</td>
                             <input type="hidden" name="totalc" id="totalc" class="hidden">
                         </tr>
-
                     </tfoot>
                 </table>
             </div>

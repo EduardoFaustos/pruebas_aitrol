@@ -31,4 +31,5 @@ Route::get('contable/conciliacion/update_pendiente/{id}','contable\ConciliacionB
 Route::match(['get', 'post'], 'contable/banco/conciliacion/excel_pendientes', 'contable\ConciliacionBancariaController@excel_pendientes')->name('conciliacionbancaria.excel_pendientes');
 Route::match(['get', 'post'], 'contable/banco/conciliacion/meses_conciliados', 'contable\ConciliacionBancariaController@meses_conciliados')->name('conciliacionbanc.meses_conciliados');
 Route::match(['get', 'post'], 'contable/banco/conciliacion/anular_mes/{id}', 'contable\ConciliacionBancariaController@anular_mes')->name('conciliacionbanc.anular_mes');
+Route::match(['get', 'post'], 'contable/banco/conciliacion/pdf_pendientes', 'contable\ConciliacionBancariaController@pdf_pendientes')->name('conciliacionbanc.pdf_pendientes');
 

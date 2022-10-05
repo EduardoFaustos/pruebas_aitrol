@@ -104,36 +104,36 @@
                                 </div>
                                 <div class="col-md-4 col-xs-2 px-1">
                                     <label class="label_header" style="padding-left: 0px">{{trans('contableM.estado')}}</label>
-                                    <input class="col-md-12 col-xs-12 form-control" style="@if(($retenciones->estado!=0)) background-color: green; @else background-color: red;  @endif" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                    <input class="col-md-12 col-xs-12 form-control" style="@if(($retenciones->estado!=0)) background-color: green; @else background-color: red;  @endif" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                                 </div>
                                 <div class="col-md-4 col-xs-2 px-1">
                                     <label class="label_header">{{trans('contableM.asiento')}}</label>
-                                    <input type="text" class="col-md-12 form-control" id="id_asiento" value="{{$retenciones->id_asiento_cabecera}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                    <input type="text" class="col-md-12 form-control" id="id_asiento" value="{{$retenciones->id_asiento_cabecera}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                                 </div>
                                 <div class="col-md-4 px-1">
                                     <label class="control-label label_header">{{trans('contableM.fecha')}}</label>
-                                    <input type="date" class="form-control " name="fecha_cambio" onchange="cambio()" value="{{$retenciones->fecha}}" id="fecha_cambio" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                    <input type="date" class="form-control " name="fecha_cambio" onchange="cambio()" value="{{$retenciones->fecha}}" id="fecha_cambio" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                                 </div>
                                 <div class="col-md-4 px-1">
                                     <label class="control-label label_header">{{trans('contableM.secuencia')}}</label>
-                                    <input type="text" class="form-control " name="secuencial" value="@if(!is_null($retenciones)) {{$retenciones->secuencia}} @endif" id="secuencial" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                    <input type="text" class="form-control " name="secuencial" value="@if(!is_null($retenciones)) {{$retenciones->secuencia}} @endif" id="secuencial" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                                 </div>
 
                                 <div class="col-md-4 px-1">
                                     <label class="control-label label_header">{{trans('contableM.NVALORDELAFACTURA')}}</label>
-                                    <input type="text" class="form-control " value="@if(isset($compras)) {{$compras->total_final}} @endif" name="valor_factura" id="valor_factura" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                    <input type="text" class="form-control " value="@if(isset($compras)) {{$compras->total_final}} @endif" name="valor_factura" id="valor_factura" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                                 </div>
                                 <div class="col-md-4 px-1">
                                     <label class="control-label label_header">{{trans('contableM.proveedor')}}</label>
-                                    <input type="text" class="form-control " name="proveedor_modal" value="@if(!is_null($retenciones)) {{$retenciones->id_proveedor}} @endif" id="proveedor_modal" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                    <input type="text" class="form-control " name="proveedor_modal" value="@if(!is_null($retenciones)) {{$retenciones->id_proveedor}} @endif" id="proveedor_modal" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                                 </div>
                                 <div class="col-md-4 px-1">
                                     <label class="control-label label_header">{{trans('contableM.concepto')}}</label>
-                                    <input type="text" class="form-control " name="concepto" value="@if(isset($compras)) {{$compras->observacion}} @endif" id="concepto" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                    <input type="text" class="form-control " name="concepto" value="@if(isset($compras)) {{$compras->observacion}} @endif" id="concepto" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                                 </div>
                                 <div class="col-md-4 px-1">
                                     <label class="control-label label_header">N° AUTORIZACIÓN DE RETENCIÓN</label>
-                                    <input type="text" class="form-control " name="nro_autorizacion" id="nro_autorizacion" value="@if(!is_null($retenciones)) {{$retenciones->autorizacion}} @endif" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                    <input type="text" class="form-control " name="nro_autorizacion" id="nro_autorizacion" value="@if(!is_null($retenciones)) {{$retenciones->autorizacion}} @endif" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                                 </div>
                             </div>
                         </div>
@@ -154,11 +154,11 @@
                                     @if(isset($detalle))
                                     @foreach($detalle as $value )
                                     <tr class="well">
-                                        <td> <input style="width: 102%;" type="text" class="form-control" value="{{$value->base_imponible}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
-                                        <td> <input style="width: 102%;" type="text" class="form-control" value="{{$value->tipo}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
-                                        <td> <input style="width: 102%;" type="text" class="form-control" value="{{$value->porcentajer->codigo}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>></td>
-                                        <td> <input style="width: 102%;" type="text" class="form-control" value="{{$value->porcentajer->valor}} %" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
-                                        <td> <input style="width: 102%;" type="text" class="form-control" value="{{$value->totales}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
+                                        <td> <input style="width: 102%;" type="text" class="form-control" value="{{$value->base_imponible}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
+                                        <td> <input style="width: 102%;" type="text" class="form-control" value="{{$value->tipo}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
+                                        <td> <input style="width: 102%;" type="text" class="form-control" value="{{$value->porcentajer->codigo}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>></td>
+                                        <td> <input style="width: 102%;" type="text" class="form-control" value="{{$value->porcentajer->valor}} %" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
+                                        <td> <input style="width: 102%;" type="text" class="form-control" value="{{$value->totales}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
                                     </tr>
                                     @endforeach
                                     @endif
@@ -167,13 +167,13 @@
                                 </tfoot>
                             </table>
                         </div>
-                        <input type="hidden" name="id_rentecion" id="id_retencion" value={{$id}} <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
-                        <input type="hidden" name="cuenta_renta" id="cuenta_renta" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                        <input type="hidden" name="id_rentecion" id="id_retencion" value={{$id}} <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
+                        <input type="hidden" name="cuenta_renta" id="cuenta_renta" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                         <input type="hidden" name="cuenta_iva" id="cuenta_iva">
-                        <input type="hidden" name="eliminados" id="eliminados" value="0" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
-                        <input type="hidden" name="id_proveedor" id="id_proveedor" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
-                        <input type="hidden" name="id_compra" id="id_compra" value="0" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
-                        <input type="hidden" name="id_fact_contable" id="id_fact_contable" value="0" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                        <input type="hidden" name="eliminados" id="eliminados" value="0" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
+                        <input type="hidden" name="id_proveedor" id="id_proveedor" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
+                        <input type="hidden" name="id_compra" id="id_compra" value="0" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
+                        <input type="hidden" name="id_fact_contable" id="id_fact_contable" value="0" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                 </form>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <div class="form-row">
@@ -185,19 +185,19 @@
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label class="label_header">{{trans('contableM.totalrfir')}}</label>
-                            <input class="form-control " value="@if(!is_null($retenciones)) {{$retenciones->valor_fuente}} @endif" type="text" name="total_rfirt" id="total_rfirt" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                            <input class="form-control " value="@if(!is_null($retenciones)) {{$retenciones->valor_fuente}} @endif" type="text" name="total_rfirt" id="total_rfirt" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
 
                         </div>
                         <div class="form-group col-md-3 px-0">
                             <label for="total_abonos" class="label_header">{{trans('contableM.totalrfiva')}}</label>
-                            <input class="form-control " value="@if(!is_null($retenciones)) {{$retenciones->valor_iva}} @endif" type="text" name="total_rfivat" id="total_rfivat" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                            <input class="form-control " value="@if(!is_null($retenciones)) {{$retenciones->valor_iva}} @endif" type="text" name="total_rfivat" id="total_rfivat" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
 
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12" style="margin-top:20px">
                     <label class="control-label">{{trans('contableM.DetallededeudasdelProveedor')}}</label>
-                    <input type="hidden" name="total_factura" id="total_factura" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                    <input type="hidden" name="total_factura" id="total_factura" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
 
                 </div>
                 <div class="col-12 ">
@@ -224,14 +224,14 @@
 
                                 <tr class="well">
                                     <!--AQUI VA EL DETALLE DE LAS RETENCIONES -->
-                                    <td> <input class="form-control input-sm" type="text" name="vence{{$cont}}" value="@if(isset($compras)) {{$compras->f_caducidad}} @endif" id="vence{{$cont}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
-                                    <td> <input class="form-control input-sm" type="text" name="tipo{{$cont}}" value="@if(isset($compras)) @if(($compras->tipo)==1) COM-FA @else COM-FACT @endif @endif" id="tipo{{$cont}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
-                                    <td> <input class="form-control input-sm" type="text" name="numero{{$cont}}" value="@if(isset($compras)) {{$compras->numero}} @endif" id="numero{{$cont}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
-                                    <td> <input class="form-control input-sm" type="text" name="concepto{{$cont}}" value="@if(isset($compras)) {{$compras->observacion}} @endif" id="concepto{{$cont}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
-                                    <td> <input class="form-control input-sm" style="background-color: #c9ffe5; " type="text" name="div{{$cont}}" id="div{{$cont}}" value="$" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
-                                    <td> <input class="form-control input-sm" style="background-color: #c9ffe5;" type="text" name="saldo{{$cont}}" value="@if(isset($compras)) {{$compras->total_final}} @endif" id="saldo{{$cont}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
-                                    <td> <input class="form-control input-sm" style="background-color: #c9ffe5;  text-align: center;" value="{{number_format($cont,2)}}" type="text" name="abono{{$cont}}" id="abono{{$cont}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>></td>
-                                    <td> <input class="form-control input-sm" style="text-align: center; width: 85%;" type="text" value="{{number_format($tot,2)}}" name="abono_base{{$cont}}" id="abono_base{{$cont}}" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>> </td>
+                                    <td> <input class="form-control input-sm" type="text" name="vence{{$cont}}" value="@if(isset($compras)) {{$compras->f_caducidad}} @endif" id="vence{{$cont}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
+                                    <td> <input class="form-control input-sm" type="text" name="tipo{{$cont}}" value="@if(isset($compras)) @if(($compras->tipo)==1) COM-FA @else COM-FACT @endif @endif" id="tipo{{$cont}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
+                                    <td> <input class="form-control input-sm" type="text" name="numero{{$cont}}" value="@if(isset($compras)) {{$compras->numero}} @endif" id="numero{{$cont}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
+                                    <td> <input class="form-control input-sm" type="text" name="concepto{{$cont}}" value="@if(isset($compras)) {{$compras->observacion}} @endif" id="concepto{{$cont}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
+                                    <td> <input class="form-control input-sm" style="background-color: #c9ffe5; " type="text" name="div{{$cont}}" id="div{{$cont}}" value="$" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
+                                    <td> <input class="form-control input-sm" style="background-color: #c9ffe5;" type="text" name="saldo{{$cont}}" value="@if(isset($compras)) {{$compras->total_final}} @endif" id="saldo{{$cont}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
+                                    <td> <input class="form-control input-sm" style="background-color: #c9ffe5;  text-align: center;" value="{{number_format($cont,2)}}" type="text" name="abono{{$cont}}" id="abono{{$cont}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>></td>
+                                    <td> <input class="form-control input-sm" style="text-align: center; width: 85%;" type="text" value="{{number_format($tot,2)}}" name="abono_base{{$cont}}" id="abono_base{{$cont}}" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>> </td>
                                 </tr>
 
 
@@ -247,38 +247,38 @@
                             <div class="form-group col-md-2 px-0">
 
                                 <label for="total_ingresos" class="label_header">{{trans('contableM.totalegreso')}}</label>
-                                <input class="form-control input-sm" type="text" name="total_egreso" value="{{number_format($cont,2)}}" id="total_egreso" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                <input class="form-control input-sm" type="text" name="total_egreso" value="{{number_format($cont,2)}}" id="total_egreso" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
 
                             </div>
                             <div class="form-group col-md-2 px-0">
 
                                 <label for="credito_aplicado" class="label_header">{{trans('contableM.debitoaplicado')}}</label>
-                                <input class="form-control input-sm" olor: red; text-align: right;" value="{{number_format($cont,2)}}" type="text" name="debito_aplicado" value="0.00" id="debito_aplicado" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                <input class="form-control input-sm" olor: red; text-align: right;" value="{{number_format($cont,2)}}" type="text" name="debito_aplicado" value="0.00" id="debito_aplicado" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
 
                             </div>
                             <div class="form-group col-md-2 px-0">
 
                                 <label for="total_deudas" class="label_header">{{trans('contableM.totaldeudas')}}</label>
-                                <input class="form-control input-sm" type="text" name="total_deudas" value="{{number_format($tot,2)}}" id="total_deudas" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                <input class="form-control input-sm" type="text" name="total_deudas" value="{{number_format($tot,2)}}" id="total_deudas" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
 
                             </div>
                             <div class="form-group col-md-2 px-0">
 
                                 <label for="total_abonos" class="label_header">{{trans('contableM.totalabonos')}}</label>
-                                <input class="form-control input-sm" type="text" name="total_abonos" value="{{number_format($tot,2)}}" id="total_abonos" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                                <input class="form-control input-sm" type="text" name="total_abonos" value="{{number_format($tot,2)}}" id="total_abonos" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                             </div>
                         </div>
                         <div class="form-group col-md-2 px-0">
 
                             <label for="nuevo_saldo" class="label_header">{{trans('contableM.nuevosaldo')}}</label>
-                            <input class="form-control input-sm" type="text" name="nuevo_saldo" value="{{number_format($cont,2)}}" id="nuevo_saldo" readonly <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                            <input class="form-control input-sm" type="text" name="nuevo_saldo" value="{{number_format($cont,2)}}" id="nuevo_saldo" readonly <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
 
                         </div>
                         <div class="form-group col-md-2">
-                            <input type="hidden" name="retencion_fuente" id="retencion_fuente" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
-                            <input type="hidden" name="retencion_ivas" id="retencion_ivas" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
-                            <input type="hidden" name="retencion_totales" id="retencion_totales" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
-                            <input type="hidden" name="electronica" id="electronica" value="{{$retenciones->electronica}}" <?= $retenciones->doc_electronico == 0 ? 'disabled' : ($retenciones->doc_electronico == 5 ? 'disabled' : ''); ?>>
+                            <input type="hidden" name="retencion_fuente" id="retencion_fuente" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
+                            <input type="hidden" name="retencion_ivas" id="retencion_ivas" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
+                            <input type="hidden" name="retencion_totales" id="retencion_totales" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
+                            <input type="hidden" name="electronica" id="electronica" value="{{$retenciones->electronica}}" <?= $retenciones->estado_electronica == 0 ? 'disabled' : ($retenciones->estado_electronica == 5 ? 'disabled' : ''); ?>>
                         </div>
                     </div>
                 </div>

@@ -7,5 +7,4 @@ Route::match(['get', 'post'], '/api/facturacion/electronica', 'ApiFacturacionCon
 Route::get('/importar/ventas/{nombre}', 'ImportarController@ventas');
 
 Route::get('/pagina/resultados/externos/imprimir/{id}', 'PaginaLabsController@resultados_externos')->name('pagina_labs.resultados');
-
-Route::post('/api/sucursales/factura/crear', 'ApiFacturacionSucursales@envio');
+Route::get('/pagina/resultados_dr_externo/imprimir/{id}', 'PaginaLabsController@resultados_dr_externos')->name('pagina_labs.resultados_dr_externos');

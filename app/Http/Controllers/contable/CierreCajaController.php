@@ -917,7 +917,6 @@ class CierreCajaController extends Controller
         $idusuario  = Auth::user()->id;
         //$ar = json_encode($request['ordenes']);
         $var = json_decode($request['ordenes']);
-        
         $idusuario  = Auth::user()->id;
         $id_empresa          = $request->session()->get('id_empresa');
         $saldo = CierreCaja::whereDate('fecha', date('Y-m-d'))->latest()->first();

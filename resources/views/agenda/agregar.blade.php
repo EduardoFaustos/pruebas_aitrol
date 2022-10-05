@@ -140,7 +140,7 @@
                             </thead>
                             <tbody style="background-color: #ffebe6;">
                                 @foreach($citas as $cita)
-                                    @if($cita->proc_consul<2)
+                                    @if($cita->proc_consul<2) 
                                     <tr >
                                         <!--td>@if($cita->proc_consul==0) CONSULTA @elseif($cita->proc_consul==1) PROCEDIMIENTO @endif Desde: {{substr($cita->fechaini,10)}} hasta: {{substr($cita->fechafin,10)}}  con el Dr(a).   agendado por {{Sis_medico\User::find($cita->id_usuariomod)->nombre1}} {{Sis_medico\User::find($cita->id_usuariomod)->apellido1}}</td-->
                                         @php
@@ -149,7 +149,7 @@
                                                 $ya_agendado = true;
                                             }
                                         @endphp
-                                        <td ><a href="{{ route('consultam.detalle_ag',['id' => $cita->id, 'unix' => $unix]) }}"><span @if($ya_agendado) style="color: red;font-size: 15px;font-weight: bold;" @endif>{{substr($cita->fechaini,0,10)}} </span>@if(Date('Y-m-d',strtotime($hora))==substr($cita->fechaini,0,10)) <span style="background-color: red ; color: white;font-size: 14px;padding-left: 2px;padding-right: 2px;"><b> YA AGENDADO PARA LA FECHA!! </b></span> @endif</a></td>
+                                        <td ><a href="{{ route('consultam.detalle_ag',['id' => $cita->id, 'unix' => $unix]) }}"><span @if($ya_agendado) style="color: red;font-size: 15px;font-weight: bold;" @endif>{{substr($cita->fechaini,0,10)}} </span>@if(Date('Y-m-d',strtotime($hora))==substr($cita->fechaini,0,10) and ($cita->estado_cita != '3')) <span style="background-color: red ; color: white;font-size: 14px;padding-left: 2px;padding-right: 2px;"><b> YA AGENDADO PARA LA FECHA!! </b></span> @endif</a></td>
                                         <td><a href="{{ route('consultam.detalle_ag',['id' => $cita->id, 'unix' => $unix]) }}"><span @if($ya_agendado) style="color: red;font-size: 15px;font-weight: bold;" @endif>{{substr($cita->fechaini,10)}}</span></a></td>
                                         <td><a href="{{ route('consultam.detalle_ag',['id' => $cita->id, 'unix' => $unix]) }}"><span @if($ya_agendado) style="color: red;font-size: 15px;font-weight: bold;" @endif>@if($cita->proc_consul==0) CONSULTA @elseif($cita->proc_consul==1) PROCEDIMIENTO @endif</span></a></td>
                                         <td><a href="{{ route('consultam.detalle_ag',['id' => $cita->id, 'unix' => $unix]) }}"><span @if($ya_agendado) style="color: red;font-size: 15px;font-weight: bold;" @endif>{{$cita->nombre1}}{{$cita->apellido1}}</span></a></td>

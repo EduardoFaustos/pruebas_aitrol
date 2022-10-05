@@ -1,5 +1,4 @@
 <?php
-Route::match(['get', 'post'], 'auditoria_historiaclinica/full_control', 'auditoria_hc_admision\AuditoriaFullcontrolController@index')->name('auditoria_historia_clinica.auditoria_fullcontrol');
 
 Route::get('auditoria/admision/duplicar_registros/{id_agenda}', 'auditoria_hc_admision\AuditoriaHcAdmisionController@duplicar_registros')->name('auditoria_admision.duplicar_registros');
 

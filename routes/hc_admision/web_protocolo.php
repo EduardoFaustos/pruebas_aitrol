@@ -45,6 +45,8 @@ Route::get('protocolo_cpre_eco/modal/{hcid}', 'hc_admision\ProtocoloController@m
 Route::post('protocolo_cpre_eco/modal/', 'hc_admision\ProtocoloController@modal_crear_editar')->name('protocolo_cpre_eco.modal_crear_editar');
 
 Route::get('protocolo_training/{training}/{protocolo}/{n}', 'hc_admision\ProtocoloController@crear_training')->name('protocolo_training.crear_training');
+Route::get('fell_puncion/protocolo_training/{training}/{protocolo}/{n}', 'hc_admision\ProtocoloController@crear_training_puncion')->name('protocolo_training.crear_training_puncion');
+
 
 //PARA HC4
 Route::get('procedimiento/selecciona/{tipo}/{paciente}', 'hc_admision\ProtocoloController@selecciona_procedimiento')->name('hc4_procedimiento.selecciona_procedimiento');

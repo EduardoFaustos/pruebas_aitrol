@@ -14,4 +14,3 @@ Route::match(['get', 'post'], 'contable/contabilidad/balance_general', 'contable
 
 //Route::match(['get', 'post'], 'contable/balance_general', 'contable\BalanceComprobacionController@index')->name('balance_general.index');
 Route::match(['get', 'post'], 'contable/contabilidad/balance_general/show', 'contable\BalanceGeneralController@show')->name('balance_general.show');
-Route::match(['get', 'post'],'contable/contabilidad/balance_general/redireccionar','contable\BalanceGeneralController@redireccionar')->name('redireccionarLibroMayor');

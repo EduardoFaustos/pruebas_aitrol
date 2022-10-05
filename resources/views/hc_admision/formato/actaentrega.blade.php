@@ -126,7 +126,9 @@ hspace=12></p>
 @php
     $empresa_1 = Sis_medico\Empresa::where('prioridad', '1')->first();
 @endphp
-
+@php 
+  $agenda = Sis_medico\Agenda::where('id',$data->id_agenda)->first();
+@endphp
 <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0>
  <tr style='height:14.95pt'>
   <td width=654 colspan=2 valign=top style='width:500pt;border:solid black 0.75pt;
@@ -168,14 +170,14 @@ hspace=12></p>
   none;border-bottom:solid black 0.75pt;border-right:solid black 0.75pt;
   padding:0cm 5.4pt 0cm 5.4pt;height:14.95pt'>
   <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span style='font-size:9.0pt'><b>CODIGO DE CIE 10:</b></span></p>
+  normal'><span style='font-size:9.0pt'><b>CODIGO DE CIE 10:</b></span><span style='font-size:9.0pt'> {{$agenda->cie10}} </span></p>
   </td>
  </tr>
  <tr style='height:14.0pt'>
   <td width=654 colspan=2 valign=top style='width:490.6pt;border:solid black 0.75pt;
   border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.0pt'>
   <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><b><span style='font-size:9.0pt'>NUMERO DE CODIGO DE VALIDACION:</span></b></p>
+  normal'><b><span style='font-size:9.0pt'>NUMERO DE CODIGO DE VALIDACION:</span></b> @if($data->id_seguro == 6) @if(!is_null($agenda))<span style='font-size:9.0pt'>{{$agenda->cod_val}} </span> @endif @endif</p>
   </td>
  </tr>
  <tr style='height:14.95pt'>
@@ -274,12 +276,9 @@ normal'>&nbsp;</p>
 text-align:center;line-height:normal'><b><u>ACUSE RECEPCION DEL SERVICIO</u></b></p>
 <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
 normal'>&nbsp;</p>
-@php
-  $id_empresa  = \Session::get('id_empresa');
-  $empresa  =  \Sis_medico\Empresa::find($id_empresa);
-@endphp
+
 <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-normal'><span style="font-size: 10;">Ciudad: {{ucfirst(strtolower($empresa->ciudad))}}, a los ______ Días del mes de <b><?php $mes = substr($date, 5, 2); if($mes == 01){ echo "Enero";} if($mes == 02){ echo "Febrero";} if($mes == 03){ echo "Marzo";} if($mes == 04){ echo "Abril";} if($mes == 05){ echo "Mayo";} if($mes == 06){ echo "Junio";} if($mes == 07){ echo "Julio";} if($mes == '08'){ echo "Agosto";}  if($mes == '09'){ echo "Septiembre";} if($mes == '10'){ echo "Octubre";} if($mes == '11'){ echo "Noviembre";} if($mes == '12'){ echo "Diciembre";} ?></b> del año <b>{{substr($date, 0, 4)}}</b></span></p>
+normal'><span style="font-size: 10;">Ciudad: Guayaquil, a los @if($data->id_seguro == 6) {{ substr($data->fechaini,0,2) }} @else ______ @endif Días del mes de <b><?php $mes = substr($date, 5, 2); if($mes == 01){ echo "Enero";} if($mes == 02){ echo "Febrero";} if($mes == 03){ echo "Marzo";} if($mes == 04){ echo "Abril";} if($mes == 05){ echo "Mayo";} if($mes == 06){ echo "Junio";} if($mes == 07){ echo "Julio";} if($mes == '08'){ echo "Agosto";}  if($mes == '09'){ echo "Septiembre";} if($mes == '10'){ echo "Octubre";} if($mes == '11'){ echo "Noviembre";} if($mes == '12'){ echo "Diciembre";} ?></b> del año <b>{{substr($date, 0, 4)}}</b></span></p>
 
 <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
 normal'><b>&nbsp;</b></p>

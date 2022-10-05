@@ -83,23 +83,23 @@ $logo = '<img src="' . base_path() . $logo . '" style="width:50%;" />';
                 <tr>
                     <td style="width:50%;">
                         <table style="font-size: 0.800em;width:100%;" cellpadding="0" cellspacing="0">
-                            <tr colspan="2">
+                            <tr colspan="4">
                                 <td align="center" valign="top"><?= $logo ?></td>
                             </tr>
                             <tr>
                                 <td>&nbsp;</td>
                             </tr>
-                            <tr colspan="2">
-                                <td align="center"><b><?= $xmlComprobamte->infoTributaria->razonSocial; ?></b></td>
+                            <tr colspan="4">
+                                <td align="center"><b><span style="font-size: 12;"><?= $xmlComprobamte->infoTributaria->razonSocial; ?></span></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             </tr>
-                            <tr colspan="2">
+                            <tr colspan="4">
                                 <td><b style="font-size: 10;">R.U.C.:</b> <span style="font-size: 12;"><?= $xmlComprobamte->infoTributaria->ruc; ?></span></td>
                             </tr>
-                            <tr colspan="2">
+                            <tr colspan="4">
                                 <td><b style="font-size: 10;">Dir Matriz:</b> <span style="font-size: 12;"><?= $xmlComprobamte->infoTributaria->dirMatriz; ?></span></td>
                             </tr>
-                            <tr colspan="2">
-                                <td><b style="font-size: 10;">Obligado a llevar contabilidad:</b><span style="font-size: 12;"><?= $xmlComprobamte->infoCompRetencion->obligadoContabilidad; ?></span></td>
+                            <tr colspan="4">
+                                <td><b style="font-size: 10;">Obligado a llevar contabilidad:</b><span style="font-size: 12;"><?= $xmlComprobamte->infoCompRetencion->obligadoContabilidad; ?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
                             </tr>
                             <tr>
                                 <?php
@@ -118,7 +118,7 @@ $logo = '<img src="' . base_path() . $logo . '" style="width:50%;" />';
                                 <td>
                                     <table style="font-size: 0.800em;" cellpadding="0" cellspacing="0">
                                         <tr>
-                                            <td align="center" style="font-size: 26px;" colspan="2"><b>COMPROBANTE DE RETENCION</b></td>
+                                            <td align="center" style="font-size: 26px;" colspan="2"><b>COMPROBANTE <br/>DE <br/>RETENCION </b></td>
                                         </tr>
                                         <tr>
                                             <td align="center" style="font-size: 18px;" colspan="2"><span style="font-size: 12;"><?= $xmlComprobamte->infoTributaria->estab; ?>-<?= $xmlComprobamte->infoTributaria->ptoEmi; ?>-<?= $xmlComprobamte->infoTributaria->secuencial; ?></span></td>

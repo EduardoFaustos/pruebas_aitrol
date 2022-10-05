@@ -322,41 +322,16 @@ Route::get('masivo_corregir_subtotal', 'archivo_plano\Ap_ArchivoController@masiv
 
 Route::get('plano_contable/ingresar/{aniomes}/{tipo}/{seg}/{cobertura}/{empresa}', 'archivo_plano\Ap_ArchivoController@plano_contable_ingresar')->name('aparchivo.plano_contable_ingresar');
 
-Route::match(['get','post'],'plano_contable/guardar', 'archivo_plano\Ap_ArchivoController@guardar_agrupado_vt')->name('archivo.guardar_agrupado_vt');
+Route::post('plano_contable/guardar', 'archivo_plano\Ap_ArchivoController@guardar_agrupado_vt')->name('archivo.guardar_agrupado_vt');
 Route::get('plano_contable/ingresar/{id}', 'archivo_plano\Ap_ArchivoController@plano_contable_editar')->name('aparchivo.plano_contable_editar');
 Route::get('plano_contable/eliminar/registro/{id}', 'archivo_plano\Ap_ArchivoController@plano_contable_eliminar')->name('aparchivo.plano_contable_eliminar');
 
 Route::match(['get', 'post'],'total_agrupado/', 'archivo_plano\Ap_ArchivoController@total_agrupado')->name('aparchivo.total_agrupado');
 Route::get('total_agrupado/crear', 'archivo_plano\Ap_ArchivoController@total_agrupado_crear')->name('aparchivo.total_agrupado_crear');
 Route::get('total_agrupado/editar/{id}', 'archivo_plano\Ap_ArchivoController@total_agrupado_editar')->name('aparchivo.total_agrupado_editar');
-Route::match(['get','post'],'total_agrupado/store', 'archivo_plano\Ap_ArchivoController@total_agrupado_store')->name('aparchivo.total_agrupado_store');
+Route::post('total_agrupado/store', 'archivo_plano\Ap_ArchivoController@total_agrupado_store')->name('aparchivo.total_agrupado_store');
 Route::post('total_agrupado/update', 'archivo_plano\Ap_ArchivoController@total_agrupado_update')->name('aparchivo.total_agrupado_update');
 
 
 //Leer excel 
 Route::get('actualizar_valores_publicos_2022','ImportarController@actualizar_valores_publicos_2022')->name('importar.actualizar_valores_publicos_2022');
-
-//Archivo Plano - CONTABILIDAD
-
-Route::post('plano_agrupado_contable/guardar', 'archivo_plano\Ap_ArchivoController@guardar_agrupado_contable')->name('archivo.guardar_agrupado_contable');
-Route::get('plano_agrupado_contable/ingresar/{id}', 'archivo_plano\Ap_ArchivoController@plano_contable_editar')->name('aparchivo.plano_agrupado_contable_editar');
-Route::get('plano_agrupado_contable/eliminar/registro/{id}', 'archivo_plano\Ap_ArchivoController@plano_contable_eliminar')->name('aparchivo.plano_agrupado_contable_eliminar');
-
-Route::match(['get', 'post'],'total_agrupado_contable/', 'archivo_plano\Ap_ArchivoController@total_agrupado_contable')->name('aparchivo.total_agrupado_contable');
-Route::get('total_agrupado_contable/crear', 'archivo_plano\Ap_ArchivoController@total_agrupado_contable_crear')->name('aparchivo.total_agrupado_contable_crear');
-Route::get('total_agrupado_contable/editar/{id}', 'archivo_plano\Ap_ArchivoController@total_agrupado_contable_editar')->name('aparchivo.total_agrupado_contable_editar');
-Route::post('total_agrupado_contable/store', 'archivo_plano\Ap_ArchivoController@total_agrupado_contable_store')->name('aparchivo.total_agrupado_contable_store');
-Route::post('total_agrupado_contable/update', 'archivo_plano\Ap_ArchivoController@total_agrupado_contable_update')->name('aparchivo.total_agrupado_contable_update');
-
-//MSP
-Route::get('plano_contable_msp/ingresar/{aniomes}/{tipo}/{seg}/{cobertura}/{empresa}', 'archivo_plano\Ap_ArchivoController@plano_contable_ingresar_msp')->name('aparchivo.plano_contable_ingresar_msp');
-
-Route::match(['get','post'],'plano_contable_msp/guardar', 'archivo_plano\Ap_ArchivoController@guardar_agrupado_msp')->name('archivo.guardar_agrupado_msp');
-Route::match(['get' ,'post'],'plano_contable_msp/ingresar/{id}', 'archivo_plano\Ap_ArchivoController@plano_contable_editar_msp')->name('aparchivo.plano_contable_editar_msp');
-Route::get('plano_contable_msp/eliminar/registro/{id}', 'archivo_plano\Ap_ArchivoController@plano_contable_eliminar_msp')->name('aparchivo.plano_contable_eliminar_msp');
-
-Route::get('prefacturar_factura_publica/{id}', 'archivo_plano\Ap_ArchivoController@ingresar_prefactura')->name('aparchivo.ingresar_prefactura');
-Route::match(['get', 'post'],'contable/prefactura_delete/{id}', 'archivo_plano\Ap_ArchivoController@prefactura_delete')->name('aparchivo.prefactura_delete');
-Route::get ('contable/visualizar_prefactura', 'archivo_plano\Ap_ArchivoController@visualizar_prefactura')->name('aparchivo.visualizar_prefactura');
-Route::match(['get','post'],'contable/prefactura_ap_orden_venta', 'archivo_plano\Ap_ArchivoController@detalle_prefactura')->name('aparchivo.detalle_prefactura');
-Route::match(['get','post'],'contable/enviar_prefactura', 'archivo_plano\Ap_ArchivoController@enviar_prefactura')-> name('aparchivo.enviar_prefactura');

@@ -9,7 +9,7 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
- */
+*/
 
 //ORDENES DE PROCEDIMIENTO ENDOSCOPICO
 
@@ -20,20 +20,21 @@ Route::get('historial_hc4/orden/endoscopicos/{id_paciente}', 'hc4\ordenes\Orden_
 Route::get('orden_hc4/procedimiento/endoscopico/{tipo}/{paciente}', 'hc4\ordenes\Orden_Proc_EndosController@crear_orden_endoscopico')->name('hc4_orden_proc_endoscopico');
 
 //Para guardar Orden de Procedimiento Endoscopico
-Route::post('orden_hc4/guardar/endoscopico', 'hc4\ordenes\Orden_Proc_EndosController@guardar_orden_endoscopico')->name('guarda.ordenhc4_proendoscopica');
+Route::post('orden_hc4/guardar/endoscopico','hc4\ordenes\Orden_Proc_EndosController@guardar_orden_endoscopico')->name('guarda.ordenhc4_proendoscopica');
 
 //Editar Orden de Procedimiento Endoscopico
 route::get('orden_hc4/ingresar/historial_hc4/', 'hc4\ordenes\Orden_Proc_EndosController@editar_orden')->name('editar.orden_procedimiento_endoscopico');
 route::get('orden_hc4/ingresar/historial_hc4/{id_orden}/{id_paciente}', 'hc4\ordenes\Orden_Proc_EndosController@editar_orden');
 
+
 //Para actualizar Orden de Procedimiento Endoscopico
-Route::post('orden_hc4/actualiza/endoscopico', 'hc4\ordenes\Orden_Proc_EndosController@actualiza_orden_endoscopico')->name('actualiza.ordenhc4_proendoscopica');
+Route::post('orden_hc4/actualiza/endoscopico','hc4\ordenes\Orden_Proc_EndosController@actualiza_orden_endoscopico')->name('actualiza.ordenhc4_proendoscopica');
 
 //Para Imprimir la Orden de Procedimiento Endoscopico
-Route::get('imprimir/orden_hc4/endoscopico/{id_orden}', 'hc4\ordenes\Orden_Proc_EndosController@imprimir_orden_endoscopica')->name('imprimir.ordenhc4_endoscopica');
+Route::get('imprimir/orden_hc4/endoscopico/{id_orden}','hc4\ordenes\Orden_Proc_EndosController@imprimir_orden_endoscopica')->name('imprimir.ordenhc4_endoscopica');
 
 //Para Imprimir la Orden de Procedimiento Endoscopico CIR
-Route::get('imprimir/orden_hc4/endoscopico/cir/{id_orden}', 'hc4\ordenes\Orden_Proc_EndosController@imprimir_orden_endoscopica_cir')->name('imprimir.ordenhc4_endoscopica_cir');
+Route::get('imprimir/orden_hc4/endoscopico/cir/{id_orden}','hc4\ordenes\Orden_Proc_EndosController@imprimir_orden_endoscopica_cir')->name('imprimir.ordenhc4_endoscopica_cir');
 
 //ORDENES DE PROCEDIMIENTO FUNCIONALES
 
@@ -51,13 +52,16 @@ route::get('edita_orden/funcional/historial_hc4/', 'hc4\ordenes\Orden_Proc_FunCo
 route::get('edita_orden/funcional/historial_hc4/{id_orden}/{id_paciente}', 'hc4\ordenes\Orden_Proc_FunController@editar_orden_funcional');
 
 //Para actualizar Orden de Procedimiento Funcional
-Route::post('orden_hc4/actualiza/funcional', 'hc4\ordenes\Orden_Proc_FunController@actualiza_orden_funcional')->name('actualiza.ordenhc4_profuncional');
+Route::post('orden_hc4/actualiza/funcional','hc4\ordenes\Orden_Proc_FunController@actualiza_orden_funcional')->name('actualiza.ordenhc4_profuncional');
+
 
 //Para Imprimir la Orden de Procedimiento Funcional
-Route::get('imprimir/orden_hc4/funcional/{id_orden}', 'hc4\ordenes\Orden_Proc_FunController@imprimir_orden_funcional')->name('imprimir.ordenhc4_funcional');
+Route::get('imprimir/orden_hc4/funcional/{id_orden}','hc4\ordenes\Orden_Proc_FunController@imprimir_orden_funcional')->name('imprimir.ordenhc4_funcional');
 
 //Para Imprimir la Orden de Procedimiento Funcional
-Route::get('imprimir/orden_hc4/funcional/cir/{id_orden}', 'hc4\ordenes\Orden_Proc_FunController@imprimir_orden_funcional_cir')->name('imprimir.ordenhc4_funcional_cir');
+Route::get('imprimir/orden_hc4/funcional/cir/{id_orden}','hc4\ordenes\Orden_Proc_FunController@imprimir_orden_funcional_cir')->name('imprimir.ordenhc4_funcional_cir');
+
+
 
 //ORDENES DE IMAGENES
 //Muestra el historial de las Imagenes
@@ -74,10 +78,11 @@ route::get('edita_orden/imagenes/historial_hc4/', 'hc4\ordenes\Orden_Proc_Imagen
 route::get('edita_orden/imagenes/historial_hc4/{id_orden}/{id_paciente}', 'hc4\ordenes\Orden_Proc_ImagenesController@editar_orden_imagenes');
 
 //Para actualizar Orden de Procedimiento Imagenes
-Route::post('orden_hc4/actualiza/imagenes', 'hc4\ordenes\Orden_Proc_ImagenesController@actualiza_orden_imagenes')->name('actualiza.ordenhc4_procedimagenes');
+Route::post('orden_hc4/actualiza/imagenes','hc4\ordenes\Orden_Proc_ImagenesController@actualiza_orden_imagenes')->name('actualiza.ordenhc4_procedimagenes');
 
 //Para Imprimir la Orden de Procedimiento Imagenes
-Route::get('imprimir/orden_hc4/imagenes/{id_orden}', 'hc4\ordenes\Orden_Proc_ImagenesController@imprimir_orden_imagenes')->name('imprimir.ordenhc4_imagenes');
+Route::get('imprimir/orden_hc4/imagenes/{id_orden}','hc4\ordenes\Orden_Proc_ImagenesController@imprimir_orden_imagenes')->name('imprimir.ordenhc4_imagenes');
+
 
 //Busca Evolucion Llena
 route::get('busca_evolucion_imagenes/imagenes', 'hc4\ordenes\Orden_Proc_ImagenesController@buscar_evolucion_imagenes')->name('busca.evolucion_imag');
@@ -88,9 +93,9 @@ route::get('hc4/orden/laboratorio/doctor/index/{paciente}', 'hc4\ordenes\Orden_L
 route::get('hc4/orden/laboratorio/doctor/index2/{paciente}', 'hc4\ordenes\Orden_LaboratorioController@index2')->name('hc4_orden_lab.index2');
 route::get('hc4/orden/laboratorio/doctor/crear/{paciente}', 'hc4\ordenes\Orden_LaboratorioController@crear')->name('hc4_orden_lab.crear');
 route::get('hc4/orden/laboratorio/doctor/editar/{paciente}', 'hc4\ordenes\Orden_LaboratorioController@editar')->name('hc4_orden_lab.editar');
-Route::post('hc4/orden/laboratorio/doctor/buscar/{orden}', 'hc4\ordenes\Orden_LaboratorioController@buscar')->name('hc4_orden_lab.buscar');
-Route::post('hc4/orden/laboratorio/doctor/perfil/seleccionar/{orden}', 'hc4\ordenes\Orden_LaboratorioController@cambia_perfil')->name('hc4_orden_lab.cambia_perfil');
-Route::get('deseleccionar/perfil/{id}', 'hc4\ordenes\Orden_LaboratorioController@deseleccionar_perfil')->name('hc4_orden_lab.deseleccionar_perfil');
+Route::post('hc4/orden/laboratorio/doctor/buscar/{orden}','hc4\ordenes\Orden_LaboratorioController@buscar')->name('hc4_orden_lab.buscar');
+Route::post('hc4/orden/laboratorio/doctor/perfil/seleccionar/{orden}','hc4\ordenes\Orden_LaboratorioController@cambia_perfil')->name('hc4_orden_lab.cambia_perfil');
+Route::get('deseleccionar/perfil/{id}','hc4\ordenes\Orden_LaboratorioController@deseleccionar_perfil')->name('hc4_orden_lab.deseleccionar_perfil');
 
 //examenes_favoritos
 route::get('hc4/laboratorio/examenes/favoritos', 'hc4\ordenes\Orden_LaboratorioController@examenes_favoritos')->name('hc4_examenes.favoritos');
@@ -105,35 +110,24 @@ route::post('hc4/laboratorio/examenes/favoritos/editar/actualizar/buscador/{id}'
 route::get('hc4/laboratorio/examenes/favoritos/editar/actualizar/seleccionar/{protocolo}/{id}', 'hc4\ordenes\Orden_LaboratorioController@examenes_favoritos_seleccionar')->name('hc4_examenes.seleccionar');
 route::get('hc4/laboratorio/examenes/favoritos/editar/actualizar/eliminar/{protocolo}/{id}', 'hc4\ordenes\Orden_LaboratorioController@examenes_favoritos_eliminar')->name('hc4_examenes.eliminar');
 
+
+
+
 //Formato_012 en lado de Doctor
 Route::get('hc4/formato012/{id}/{orden}', 'hc4\ordenes\Orden_formato012Controller@formato012')->name('formato_012');
-Route::match(['get', 'post'], 'orden_012/cargar/actualizar', 'hc4\ordenes\Orden_formato012Controller@actualizar_formato012')->name('orden_012.actualizar');
+Route::match(['get', 'post'],'orden_012/cargar/actualizar', 'hc4\ordenes\Orden_formato012Controller@actualizar_formato012')->name('orden_012.actualizar');
 Route::get('orden/ingresada/formato012', 'hc4\ordenes\Orden_formato012Controller@orden_ingresada_formato012')->name('orden_ingresada_formato012');
 //Formato_012 en lado de sistema medico prb
 Route::match(['get', 'post'], 'formato012/search', 'hc4\ordenes\Orden_formato012Controller@search')->name('formato012.search');
 Route::get('orden_012/cargar/Editar/{id}', 'hc4\ordenes\Orden_formato012Controller@Editar_formato012')->name('orden_012.editar');
-Route::match(['get', 'post'], 'orden_012/cargar/actualizar/orden_12', 'hc4\ordenes\Orden_formato012Controller@Actualizar_formato_012')->name('actualizar.orden_012');
+Route::match(['get', 'post'],'orden_012/cargar/actualizar/orden_12', 'hc4\ordenes\Orden_formato012Controller@Actualizar_formato_012')->name('actualizar.orden_012');
 
-//pdf cir
+
+//pdf cir 
 Route::get('hc4/imprimir/cir/{id}', 'hc4\ordenes\Orden_formato012Controller@cirPdf')->name('cir.pdfimprimir');
 
-Route::get('/hc4/orden/laboratorio/publica/{paciente}', 'hc4\ordenes\Orden_LaboratorioController@crear_publico')->name('laboratorio.orden.publica');
-
-//RUTAS INGRESO DE ORDENES
-//listar x procedimiento
-Route::get('ordenes_biopsia_ptv/index/{hc_id_procedimientos}', 'hc4\ordenes\OrdenBiopsiasPtvController@index')->name('ordenbiopsiasptv.index');
-//crear
-Route::get('ordenes_biopsia_ptv/crear/{tipo}/{hc_id_procedimientos}', 'hc4\ordenes\OrdenBiopsiasPtvController@crear')->name('ordenbiopsiasptv.crear');
-//editar
-Route::get('ordenes_biopsia_ptv/editar/{id}', 'hc4\ordenes\OrdenBiopsiasPtvController@editar')->name('ordenbiopsiasptv.editar');
-
-//Actualizar
-Route::post('ordenes_biopsia_ptv/update', 'hc4\ordenes\OrdenBiopsiasPtvController@update')->name('ordenbiopsiasptv.update');
-//ocultar
-Route::get('ordenes_biopsia_ptv/eliminar/{id}', 'hc4\ordenes\OrdenBiopsiasPtvController@eliminar')->name('ordenbiopsiasptv.eliminar');
-//imprimir
-Route::get('ordenes_biopsia_ptv/imprimir/{id}', 'hc4\ordenes\OrdenBiopsiasPtvController@imprimir')->name('ordenbiopsiasptv.imprimir');
 
 //imprimir orden 053
-Route::get('hc4_orden_053/imprimir', 'hc4\ordenes\Hc4Orden053Controller@imprimir')->name('hc4_orden053.imprimir');
+Route::get('hc4_orden053/imprimir', 'hc4\ordenes\Orden053Controller@imprimir')->name('orden053.imprimir');
+
 

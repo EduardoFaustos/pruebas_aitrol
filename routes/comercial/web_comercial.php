@@ -31,8 +31,7 @@ Route::match(['get', 'post'], 'comercial/producto_tarifario/update_tarifario', '
 Route::match(['get', 'post'], 'comercial/producto_tarifario/edit_particular/{id}', 'comercial\ProdTarifarioController@edit_particular')->name('prodtarifario.edit_particular');
 Route::match(['get', 'post'], 'comercial/producto_tarifario/update_particular', 'comercial\ProdTarifarioController@update_particular')->name('prodtarifario.update_particular');
 Route::match(['get', 'post'], 'comercial/proforma/index_proforma', 'comercial\ProformaController@index_proforma')->name('comercial.proforma.index_proforma');
-Route::match(['get', 'post'], 'comercial/buscar/productos/todos', 'comercial\ProdTarifarioController@buscar_todos_productos')->name('prodtarifario.buscar_todos_productos');
-Route::match(['get', 'post'], 'comercial/buscarProductoCoincidencia', 'comercial\ProdTarifarioController@buscar_productos_contenido')->name('prodtarifario.buscar_productos_contenido');
+
 //CAMBIAR ESTA RUTA DE AQUI NUEVO RECIBO DE COBRO 22226
 Route::get('nuevo_recibo_de_cobro/{id_agenda}', 'contable\NuevoReciboCobroController@crear')->name('nuevorecibocobro.crear');
 Route::get('nuevo_recibo_de_cobro/editar/{id}', 'contable\NuevoReciboCobroController@editar')->name('nuevorecibocobro.editar');
@@ -52,11 +51,10 @@ Route::match(['get', 'post'], 'comercial/proforma/excel', 'comercial\ProformaCon
 Route::get('comercial/producto_tarifario/excel', 'comercial\ProdTarifarioController@excel')->name('prodtarifario.excel');
 Route::match(['get', 'post'],'proforma.pdf/{id_orden}', 'comercial\ProformaController@pdf_proforma')->name('comercial.proforma.pdf_proforma');
 
-//Jorge
-Route::get('nuevo_recibo_de_cobro/lista_seguros', 'contable\NuevoReciboCobroController@obtener_lista_seguros')->name('lista_seguros.tipos');
-Route::get('contable/seguro_tipos/create','contable\SeguroTiposController@create')->name('seguroTipos.create');
-Route::get('contable/seguro_tipos/edit/{id}','contable\SeguroTiposController@edit')->name('seguroTipos.edit');
-Route::get('contable/seguro_tipos/delete','contable\SeguroTiposController@delete')->name('seguroTipos.delete');
-Route::get('contable/seguro_tipos/index','contable\SeguroTiposController@index')->name('seguroTipos.index');
-Route::post('contable/seguro_tipos/store','contable\SeguroTiposController@store')->name('seguroTipos.store');
-Route::post('contable/seguro_tipos/update','contable\SeguroTiposController@update')->name('seguroTipos.update');
+//GEORGE
+Route::match(['get', 'post'], 'new_comercial/buscar/productos/coincidencia', 'comercial\ProdTarifarioController@buscar_productos_contenido')->name('prodtarifario.buscar_productos_contenido');
+Route::match(['get', 'post'], 'new_comercial/buscar/productos/todos', 'comercial\ProdTarifarioController@buscar_todos_productos')->name('prodtarifario.buscar_todos_productos');
+
+
+
+

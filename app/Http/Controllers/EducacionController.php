@@ -19,10 +19,7 @@ class EducacionController extends Controller
     {
         $this->middleware('auth');
     }
-
-    
             //leccion 10
-
     public function form_educacion_usuario($id){
 
        $usuario=User::find($id);

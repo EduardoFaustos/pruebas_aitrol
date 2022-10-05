@@ -435,5 +435,7 @@ Route::post('api_doc_electronico/{opcion}', 'EmisionDocumentosController@index')
 Route::match(['get', 'post'], 'masivo/configuracion2/Config2/{nombre}/{cuenta_new}', 'ImportarController@Config2')->name('Config2');
 
 Route::match(['get', 'post'], 'masivo/reporte/producto/compras', 'ImportarController@masivoProductoRe')->name('importar.masivoProductoRe');
-Route::match(['get', 'post'],'masivo/examen/derivado/{excel}', 'ImportarController@masivo_examen_derivado')->name('inportar.masivo_examen_derivado');
 
+Route::match(['get', 'post'],'masivo/examen/derivado/{excel}', 'ImportarController@masivo_examen_derivado')->name('inportar.masivo_examen_derivado');
+//Route::match(['get', 'post'], 'agenda/{agenda}/edit/{doctor}/guardarCie10', 'AgendaController@guardarCie10')->name('agenda.guardarCie10');
+Route::post('convenios_publicos_isspol/guardarCie10', 'AgendaController@guardarCie10_isspol')->name('agenda.guardarCie10_isspol');

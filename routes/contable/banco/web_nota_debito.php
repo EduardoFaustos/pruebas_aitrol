@@ -22,6 +22,5 @@ Route::get('contable/Banco/notadebito/imprimir/{id}', 'contable\NotaDebitoContro
 Route::get('contable/banco/notadebito/imprimir_nuevo/{id}', 'contable\NotaDebitoController@imprimir_nuevo')->name('notadebito.imprimir_nuevo');
 
 
-
 Route::get('contable/Banco/notadebito/anular/{id}', 'contable\NotaDebitoController@anular')->name('notadebito.anular');
 Route::get('contable/Banco/notadebito/exportar_excel', 'contable\NotaDebitoController@exportar_excel')->name('notadebito.exportar_excel');

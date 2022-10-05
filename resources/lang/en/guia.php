@@ -17,5 +17,4 @@ return [
     'estadosri' => 'SRI Status',
     'accion' => 'Action',
     'tipo_guia' => 'Guide type'
-
 ];

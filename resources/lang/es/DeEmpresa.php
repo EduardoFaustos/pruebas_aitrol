@@ -20,5 +20,6 @@ return [
     'Prueba' => 'PRUEBA',
     'Produccion' => 'PRODUCCIÓN',
     'Rimpe_Emprendedor' => 'Rimpe Emprendedor',
-    'Rimpe_Popular' => 'Rimpe Popular'
+    'Rimpe_Popular' => 'Rimpe Popular',
+    'Regiman_General' => 'Regimen General'
 ];

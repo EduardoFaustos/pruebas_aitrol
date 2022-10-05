@@ -29,10 +29,13 @@ use Sis_medico\Ct_Asientos_Cabecera;
 use Sis_medico\Ct_Asientos_Detalle;
 use Sis_medico\Ct_Clientes;
 use Sis_medico\Ct_compras;
+use Sis_medico\Ct_Detalle_Credito_Clientes;
 use Sis_medico\Ct_detalle_retenciones;
+use Sis_medico\Ct_Detalle_Rubro_Credito;
 use Sis_medico\Ct_detalle_venta;
 use Sis_medico\Ct_Divisas;
 use Sis_medico\Ct_Forma_Pago;
+use Sis_medico\Ct_Nota_Credito;
 use Sis_medico\Ct_Nota_Credito_Clientes;
 use Sis_medico\Ct_Nota_Credito_Detalle;
 use Sis_medico\Ct_Porcentaje_Retenciones;
@@ -47,21 +50,22 @@ use stdClass;
 class EmisionDocumentosController extends Controller
 {
     public $errorGeneral = '';
+    private $tipoDocumento = null;
     public function index(Request $req)
     {
         if ($req->opcion == '') {
             if (isset($req->idUsuario)) {
-                // $this->getGuiaRemision(null, $req->idUsuario);
-                // $this->getNotaCredito(null, $req->idUsuario);
-                // $this->getFactura(null, $req->idUsuario);
-                $this->getRetencion(null, $req->idUsuario);
+                $this->getGuiaRemision(null, $req->idUsuario);
+                //$this->getNotaCredito(null, $req->idUsuario);
+                //$this->getFactura(null, $req->idUsuario);
+                //$this->getRetencion(null, $req->idUsuario);
                 // $this->getNotaDebito(null, $req->idUsuario);
                 // $this->getLiquidacion(null, $req->idUsuario);
             } else {
-                /*$this->getGuiaRemision(null);
-                $this->getNotaCredito();
-                $this->getFactura();*/
-                $this->getRetencion();
+                $this->getGuiaRemision(null);
+                //$this->getNotaCredito();
+                //$this->getFactura(null);
+                //$this->getRetencion(null);
                 // $this->getNotaDebito();
                 // $this->getLiquidacion();
             }
@@ -278,7 +282,6 @@ class EmisionDocumentosController extends Controller
                                 $sucursal = Ct_Sucursales::where('id_empresa', $empresa->id)
                                     ->where('codigo_sucursal', $infoTributaria['estab'])
                                     ->first();
-
                                 $caja = Ct_Caja::where('id_sucursal', $sucursal->id)
                                     ->where('codigo_caja', $infoTributaria['ptoEmi'])
                                     ->first();
@@ -312,8 +315,6 @@ class EmisionDocumentosController extends Controller
                                     $infoGuiaRemision['rucTransportista'] = null;
                                     $infoGuiaRemision['rise'] = null;
                                     $infoGuiaRemision['obligadoContabilidad'] = null; //Opcional
-                                    $infoGuiaRemision['obligadoContabilidad'] = null; //Opcional
-                                    $infoGuiaRemision['contribuyenteEspecial'] = null; //Opcional
                                     $infoGuiaRemision['contribuyenteEspecial'] = null; //Opcional
                                 }
                                 $data['infoGuiaRemision'] = $infoGuiaRemision;
@@ -322,7 +323,7 @@ class EmisionDocumentosController extends Controller
                                 $destinatario['dirDestinatario'] = $row->direccion_destinatario;
                                 $destinatario['motivoTraslado'] = $row->motivo_traslado_destinatario;
                                 $destinatario['docAduaneroUnico'] = null;
-                                $destinatario['codEstabDestino'] = null;
+                                $destinatario['codEstabDestino'] = $row->codigo_est_destino != '' ? $row->codigo_est_destino : null;
                                 $destinatario['ruta'] = $row->ruta;
                                 if (isset($row->tipo_documento_destinatario) && $row->tipo_documento_destinatario != '') {
                                     $destinatario['codDocSustento'] = str_pad($row->tipo_documento_destinatario, 2, 0, STR_PAD_LEFT);
@@ -374,10 +375,10 @@ class EmisionDocumentosController extends Controller
                                 $destinatario['detalles'] = $detalles;
                                 $campoAdicional['nombre'] = "email";
                                 $campoAdicional['valor']  = $emailTransportista;
-                                $informacion_adicional[0]['campoAdicional'] = $campoAdicional;
+                                $informacion_adicional[0] = $campoAdicional;
                                 $campoAdicional['nombre'] = "telefono";
                                 $campoAdicional['valor'] = $telefonoTransportista;
-                                $informacion_adicional[1]['campoAdicional'] = $campoAdicional;
+                                $informacion_adicional[1] = $campoAdicional;
                                 $infoAdicional['campoAdicional'] = $informacion_adicional;
                                 $destinatarios['destinatario'] = $destinatario;
                                 $data['destinatarios'] = $destinatarios;
@@ -387,9 +388,7 @@ class EmisionDocumentosController extends Controller
                                 echo json_encode($result);
                                 return;
                             }
-                            //dd($data);
                             $errores = $this->validarData($data);
-                            //dd($errores);
                             if (count($errores) > 0) {
                                 $arrayDocElec = [
                                     'id_de_pasos' => 7,
@@ -412,7 +411,6 @@ class EmisionDocumentosController extends Controller
                                 ];
                                 $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayDocElec, 7);
                                 Ct_Guia_Remision_Cabecera::updateSinGenerarXML($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id, $data['infoTributaria']['claveAcceso']);
-                                //dd($id_doc);
                                 $idInsertados .= $id_doc . ',';
                                 $arrayLog = [
                                     'id_de_documentos_electronicos' => $id_doc,
@@ -446,29 +444,16 @@ class EmisionDocumentosController extends Controller
                                     'id_documento' => $row->id
                                 ];
                                 $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayLogError, 1);
-                                $idInsertados .= $id_doc . ',';
-                                $comprobante = $this->generarDocElectronicoXml($data);
-                                /*echo '<pre>';
-                                print_r($comprobante);
-                                exit;*/
-                                Ct_Guia_Remision_Cabecera::updateGenerarXML($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id, $data['infoTributaria']['claveAcceso']);
-                                if (!empty($comprobante)) {
-                                    $docAnte = simplexml_load_string($comprobante);
-                                    if (!empty($docAnte)) {
-                                        //validar xsd
-                                        $validacion = $this->validarXmlToXsd($comprobante); //$this->ValidarFuera($comprobante, $this->tipoDocumento);
-                                        //dd($validacion);
-                                        if (!empty($validacion)) {
-                                            if ($validacion == 0) {
-                                                $arrayLog = [
-                                                    'id_de_documentos_electronicos' => $id_doc,
-                                                    'descripcion_error' => 'Error al conectarse al validadorXSD',
-                                                    'id_usuariomod' => $idUsuario,
-                                                    'id_usuariocrea' =>  $idUsuario,
-                                                    'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                                    'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                                ];
-                                            } else {
+                                if (is_numeric($id_doc)) {
+                                    $idInsertados .= $id_doc . ',';
+                                    $comprobante = $this->generarDocElectronicoXml($data);
+                                    Ct_Guia_Remision_Cabecera::updateGenerarXML($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id, $data['infoTributaria']['claveAcceso']);
+                                    if (!empty($comprobante)) {
+                                        $docAnte = simplexml_load_string($comprobante);
+                                        if (!empty($docAnte)) {
+                                            //validar xsd
+                                            $validacion = $this->validarXmlToXsd($comprobante);
+                                            if ($validacion['isValidoXsd'] != 1) {
                                                 $arrayLog = [
                                                     'id_de_documentos_electronicos' => $id_doc,
                                                     'descripcion_error' => json_encode($validacion),
@@ -477,97 +462,97 @@ class EmisionDocumentosController extends Controller
                                                     'ip_creacion' => $_SERVER['REMOTE_ADDR'],
                                                     'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
                                                 ];
+                                                De_Log_Error::setErrorLog($arrayLog);
+                                                $result = array('code' => 204, 'state' => true, 'data' => json_encode($validacion), 'message' => 'Error al validar XML con XSD');
+                                                echo json_encode($result);
+                                                return;
                                             }
-
-                                            De_Log_Error::setErrorLog($arrayLog);
-                                            $result = array('code' => 204, 'state' => true, 'data' => json_encode($validacion), 'message' => 'ok|No existen documentos para emitir');
-                                            echo json_encode($result);
-                                            return;
-                                        }
-                                        De_Documentos_Electronicos::updateValidacionXSD($comprobante);
-                                        Ct_Guia_Remision_Cabecera::updateValidacionXSD($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id);
-                                        //firmar xml
-                                        $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $datosFirma->ruta_firma; //firma.p12
-                                        //$ruta_p12 = $datosFirma->ruta_firma; //firma.p12
-                                        $password = $datosFirma->clave_firma; //'3duard0faustos';
-                                        $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
-                                        //dd($result);
-                                        if (!empty($result)) {
-                                            $docAnte = simplexml_load_string($comprobante);
-                                            $dom = new DOMDocument();
-                                            $dom->loadXML($result);
-                                            $this->crearcarpeta(base_path() . '/storage/app/facturaelectronica/firmados/' . $docAnte->infoTributaria->ruc . '/' . $this->tipoDocumento . '/');
-                                            $dom->save(base_path() . '/storage/app/facturaelectronica/firmados/' . $docAnte->infoTributaria->ruc . '/' . $this->tipoDocumento . '/' . $this->tipoDocumento . '-' . $docAnte->infoTributaria->estab . '-' . $docAnte->infoTributaria->ptoEmi . '-' . $docAnte->infoTributaria->secuencial . '.xml');
-                                            De_Documentos_Electronicos::updateXmlFirmado($comprobante);
-                                            Ct_Guia_Remision_Cabecera::updateXmlFirmado($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id);
-                                            //recepcion sri
-                                            $respuesta = $this->recibirWs($result, $data['infoTributaria']['ambiente']);
-                                            De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
-                                            Ct_Guia_Remision_Cabecera::updateRecibidoSri($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id);
-                                            //dd($respuesta['comprobantes']);
-                                            if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
-                                                //$this->procesarRespuestaXml($respuesta);
-                                                $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
-                                                $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
-                                                De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
-                                                //autorzacion sri
-                                                $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
-                                                $this->generarXmlAutorizacion($respuestaAutorizacion);
-                                                De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
-                                                Ct_Guia_Remision_Cabecera::updateXmlAutorizacion($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id, $docAnte->infoTributaria->claveAcceso, $secuancialDocumento);
-                                                $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
-                                                $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
-                                                $param = [
-                                                    'email' => $row->email_traslado_destinatario,
-                                                    'nombre' => $row->razon_social_destinatario,
-                                                    'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
-                                                    'estab' => $data['infoTributaria']['estab'],
-                                                    'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
-                                                    'secuencial' =>  $data['infoTributaria']['secuencial'],
-                                                    'tipoDoc' => $data['infoTributaria']['codDoc'],
-                                                    'fechaEmision' => $data['infoTributaria']['fecha_emision'],
-                                                ];
-                                                $this->enviar_correo($param);
+                                            De_Documentos_Electronicos::updateValidacionXSD($comprobante);
+                                            Ct_Guia_Remision_Cabecera::updateValidacionXSD($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id);
+                                            //firmar xml
+                                            $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $datosFirma->ruta_firma; //firma.p12
+                                            //$ruta_p12 = $datosFirma->ruta_firma; //firma.p12
+                                            $password = $datosFirma->clave_firma; //'3duard0faustos';
+                                            $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
+                                            if (!empty($result)) {
+                                                $docAnte = simplexml_load_string($comprobante);
+                                                $dom = new DOMDocument();
+                                                $dom->loadXML($result);
+                                                $this->crearcarpeta(base_path() . '/storage/app/facturaelectronica/firmados/' . $docAnte->infoTributaria->ruc . '/' . $this->tipoDocumento . '/');
+                                                $dom->save(base_path() . '/storage/app/facturaelectronica/firmados/' . $docAnte->infoTributaria->ruc . '/' . $this->tipoDocumento . '/' . $this->tipoDocumento . '-' . $docAnte->infoTributaria->estab . '-' . $docAnte->infoTributaria->ptoEmi . '-' . $docAnte->infoTributaria->secuencial . '.xml');
+                                                De_Documentos_Electronicos::updateXmlFirmado($comprobante);
+                                                Ct_Guia_Remision_Cabecera::updateXmlFirmado($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id);
+                                                //recepcion sri
+                                                $respuesta = $this->recibirWs($result, $data['infoTributaria']['ambiente']);
+                                                De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
+                                                Ct_Guia_Remision_Cabecera::updateRecibidoSri($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id);
+                                                if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
+                                                    //$this->procesarRespuestaXml($respuesta);
+                                                    $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
+                                                    $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
+                                                    De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
+                                                    //autorzacion sri
+                                                    $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
+                                                    $this->generarXmlAutorizacion($respuestaAutorizacion);
+                                                    De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
+                                                    Ct_Guia_Remision_Cabecera::updateXmlAutorizacion($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id, $docAnte->infoTributaria->claveAcceso, $secuancialDocumento);
+                                                    $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
+                                                    $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
+                                                    $param = [
+                                                        'email' => $row->email_traslado_destinatario,
+                                                        'nombre' => $row->razon_social_destinatario,
+                                                        'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
+                                                        'estab' => $data['infoTributaria']['estab'],
+                                                        'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
+                                                        'secuencial' =>  $data['infoTributaria']['secuencial'],
+                                                        'tipoDoc' => $data['infoTributaria']['codDoc'],
+                                                        'fechaEmision' => $data['infoTributaria']['fecha_emision'],
+                                                    ];
+                                                    $this->enviar_correo($param);
+                                                } else {
+                                                    $this->generarXmlRespuesta($respuesta, $data['infoTributaria']['claveAcceso']);
+                                                    De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
+                                                    Ct_Guia_Remision_Cabecera::updateXmlNoRecepcion($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id);
+                                                    $arrayLog = [
+                                                        'id_de_documentos_electronicos' => $id_doc,
+                                                        'descripcion_error' => json_encode($respuesta),
+                                                        'id_usuariomod' => $idUsuario,
+                                                        'id_usuariocrea' =>  $idUsuario,
+                                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                    ];
+                                                    De_Log_Error::setErrorLog($arrayLog);
+                                                    //return $respuesta['mensajesWs'];
+                                                }
                                             } else {
-                                                $this->generarXmlRespuesta($respuesta, $data['infoTributaria']['claveAcceso']);
-                                                De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
-                                                Ct_Guia_Remision_Cabecera::updateXmlNoRecepcion($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id);
+                                                //Log error al firmar XML
                                                 $arrayLog = [
                                                     'id_de_documentos_electronicos' => $id_doc,
-                                                    'descripcion_error' => json_encode($respuesta),
+                                                    'descripcion_error' => json_encode($result),
                                                     'id_usuariomod' => $idUsuario,
                                                     'id_usuariocrea' =>  $idUsuario,
                                                     'ip_creacion' => $_SERVER['REMOTE_ADDR'],
                                                     'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
                                                 ];
                                                 De_Log_Error::setErrorLog($arrayLog);
-                                                //dd($respuesta);
-                                                //return $respuesta['mensajesWs'];
                                             }
-                                        } else {
-                                            //Log error al firmar XML
-                                            $arrayLog = [
-                                                'id_de_documentos_electronicos' => $id_doc,
-                                                'descripcion_error' => json_encode($result),
-                                                'id_usuariomod' => $idUsuario,
-                                                'id_usuariocrea' =>  $idUsuario,
-                                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                            ];
-                                            De_Log_Error::setErrorLog($arrayLog);
                                         }
+                                    } else {
+                                        //log No genero XML
+                                        $arrayLog = [
+                                            'id_de_documentos_electronicos' => $id_doc,
+                                            'descripcion_error' => 'Error al crear el documento XML',
+                                            'id_usuariomod' => $idUsuario,
+                                            'id_usuariocrea' =>  $idUsuario,
+                                            'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                            'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                        ];
+                                        De_Log_Error::setErrorLog($arrayLog);
                                     }
                                 } else {
-                                    //log No genero XML
-                                    $arrayLog = [
-                                        'id_de_documentos_electronicos' => $id_doc,
-                                        'descripcion_error' => 'Error al crear el documento XML',
-                                        'id_usuariomod' => $idUsuario,
-                                        'id_usuariocrea' =>  $idUsuario,
-                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                    ];
-                                    De_Log_Error::setErrorLog($arrayLog);
+                                    $result = array('code' => 204, 'state' => true, 'data' => '', 'message' => 'error|' . $id_doc);
+                                    echo json_encode($result);
+                                    return;
                                 }
                             }
                         }
@@ -609,6 +594,7 @@ class EmisionDocumentosController extends Controller
         $data = [];
         $id_doc = 0;
         $numDocumento = '';
+        $respuestaNo = new stdClass();
         try {
             if ($dinfo == null) {
                 $result = [];
@@ -686,7 +672,6 @@ class EmisionDocumentosController extends Controller
                                     $infoFactura['dirEstablecimiento'] = $empresa->direccion;
                                 }
                                 $telefonoCliente = '';
-                                //dd($datosFirma);
                                 if ($datosFirma->contribuyente_especial != '' && $datosFirma->contribuyente_especial != 0) {
                                     $infoFactura['contribuyenteEspecial'] = $datosFirma->contribuyente_especial; //Opcional
                                 }
@@ -715,7 +700,6 @@ class EmisionDocumentosController extends Controller
                                 $totalConImpuesto = [];
                                 $conImpuesto = 0;
                                 $impuestos = Ct_detalle_venta::getDetalles($row->id);
-                                //dd($impuestos);
                                 if (count($impuestos) > 0) {
                                     foreach ($impuestos as $impuesto) {
                                         if ($impuesto->check_iva == 1)
@@ -829,9 +813,7 @@ class EmisionDocumentosController extends Controller
                                 echo json_encode($result);
                                 return;
                             }
-                            //dd($data);
                             $errores = $this->validarData($data);
-                            //dd($errores);
                             if (count($errores) > 0) {
                                 $arrayDocElec = [
                                     'id_de_pasos' => 7,
@@ -853,7 +835,6 @@ class EmisionDocumentosController extends Controller
                                 ];
                                 $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayDocElec, 7);
                                 Ct_Guia_Remision_Cabecera::updateSinGenerarXML($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id, $data['infoTributaria']['claveAcceso']);
-                                //dd($id_doc);
                                 $idInsertados .= $id_doc . ',';
                                 $arrayLog = [
                                     'id_de_documentos_electronicos' => $id_doc,
@@ -886,107 +867,110 @@ class EmisionDocumentosController extends Controller
                                     'id_maestro_documento' => De_Maestro_Documentos::getIdMaestroDocuemnto($infoTributaria['codDoc']),
                                     'id_documento' => $row->id
                                 ];
-                                //dd($arrayLogError);
                                 $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayLogError, 1);
-                                $idInsertados .= $id_doc . ',';
-                                $comprobante = $this->generarDocElectronicoXml($data);
-                                Ct_ventas::updateGenerarXML($row->id, $data['infoTributaria']['claveAcceso']);
-                                if (!empty($comprobante)) {
-                                    $docAnte = simplexml_load_string($comprobante);
-                                    if (!empty($docAnte)) {
-                                        //validar xsd
-                                        $validacion = $this->validarXmlToXsd($comprobante);
-                                        if ($validacion['isValidoXsd'] != 1) {
-                                            $arrayLog = [
-                                                'id_de_documentos_electronicos' => $id_doc,
-                                                'descripcion_error' => json_encode($validacion),
-                                                'id_usuariomod' => $idUsuario,
-                                                'id_usuariocrea' =>  $idUsuario,
-                                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                            ];
-                                            De_Log_Error::setErrorLog($arrayLog);
-                                            $result = array('code' => 204, 'state' => true, 'data' => json_encode($validacion), 'message' => 'ok|No existen documentos para emitir');
-                                            echo json_encode($result);
-                                            return;
-                                        }
-
-                                        De_Documentos_Electronicos::updateValidacionXSD($comprobante);
-                                        Ct_ventas::updateValidacionXSD($row->id);
-                                        //firmar xml
-                                        $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $datosFirma->ruta_firma; //firma.p12
-                                        $password = $datosFirma->clave_firma; //'3duard0faustos';
-                                        $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
-                                        if (!empty($result)) {
-                                            De_Documentos_Electronicos::updateXmlFirmado($comprobante);
-                                            Ct_ventas::updateXmlFirmado($row->id);
-                                            //recepcion sri
-                                            $respuesta = $this->recibirWs($result, $data['infoTributaria']['ambiente']);
-                                            De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
-                                            Ct_ventas::updateRecibidoSri($row->id);
-                                            //dd($respuesta['comprobantes']);
-                                            if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
-                                                //$this->procesarRespuestaXml($respuesta);
-                                                $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
-                                                $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
-                                                De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
-                                                //autorzacion sri
-                                                $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
-                                                $this->generarXmlAutorizacion($respuestaAutorizacion);
-                                                De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
-                                                Ct_ventas::updateXmlAutorizacion($row->id);
-                                                $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
-                                                $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
-                                                $param = [
-                                                    'email' => $row->email_traslado_destinatario,
-                                                    'nombre' => $row->razon_social_destinatario,
-                                                    'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
-                                                    'estab' => $data['infoTributaria']['estab'],
-                                                    'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
-                                                    'secuencial' =>  $data['infoTributaria']['secuencial'],
-                                                    'tipoDoc' => $this->tipoDocumento
-                                                ];
-                                                $this->enviar_correo($param);
-                                            } else {
-                                                $this->generarXmlRespuesta($respuesta);
-                                                De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
-                                                Ct_ventas::updateXmlNoRecepcion($row->id);
+                                if (is_numeric($id_doc)) {
+                                    $idInsertados .= $id_doc . ',';
+                                    $comprobante = $this->generarDocElectronicoXml($data);
+                                    Ct_ventas::updateGenerarXML($row->id, $data['infoTributaria']['claveAcceso']);
+                                    if (!empty($comprobante)) {
+                                        $docAnte = simplexml_load_string($comprobante);
+                                        if (!empty($docAnte)) {
+                                            //validar xsd
+                                            $validacion = $this->validarXmlToXsd($comprobante);
+                                            if ($validacion['isValidoXsd'] != 1) {
                                                 $arrayLog = [
                                                     'id_de_documentos_electronicos' => $id_doc,
-                                                    'descripcion_error' => json_encode($respuesta),
+                                                    'descripcion_error' => json_encode($validacion),
                                                     'id_usuariomod' => $idUsuario,
                                                     'id_usuariocrea' =>  $idUsuario,
                                                     'ip_creacion' => $_SERVER['REMOTE_ADDR'],
                                                     'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
                                                 ];
                                                 De_Log_Error::setErrorLog($arrayLog);
-                                                //dd($respuesta);
-                                                //return $respuesta['mensajesWs'];
+                                                $result = array('code' => 204, 'state' => true, 'data' => json_encode($validacion), 'message' => 'ok|No existen documentos para emitir');
+                                                echo json_encode($result);
+                                                return;
                                             }
-                                        } else {
-                                            //Log error al firmar XML
-                                            $arrayLog = [
-                                                'id_de_documentos_electronicos' => $id_doc,
-                                                'descripcion_error' => json_encode($result),
-                                                'id_usuariomod' => $idUsuario,
-                                                'id_usuariocrea' =>  $idUsuario,
-                                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                            ];
-                                            De_Log_Error::setErrorLog($arrayLog);
+
+                                            De_Documentos_Electronicos::updateValidacionXSD($comprobante);
+                                            Ct_ventas::updateValidacionXSD($row->id);
+                                            //firmar xml
+                                            $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $datosFirma->ruta_firma; //firma.p12
+                                            $password = $datosFirma->clave_firma; //'3duard0faustos';
+                                            $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
+                                            if (!empty($result)) {
+                                                De_Documentos_Electronicos::updateXmlFirmado($comprobante);
+                                                Ct_ventas::updateXmlFirmado($row->id);
+                                                //recepcion sri
+                                                $respuesta = $this->recibirWs($result, $data['infoTributaria']['ambiente']);
+                                                De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
+                                                Ct_ventas::updateRecibidoSri($row->id);
+                                                if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
+                                                    //$this->procesarRespuestaXml($respuesta);
+                                                    $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
+                                                    $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
+                                                    De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
+                                                    //autorzacion sri
+                                                    $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
+                                                    $this->generarXmlAutorizacion($respuestaAutorizacion);
+                                                    De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
+                                                    Ct_ventas::updateXmlAutorizacion($row->id);
+                                                    $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
+                                                    $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
+                                                    $param = [
+                                                        'email' => $row->email_traslado_destinatario,
+                                                        'nombre' => $row->razon_social_destinatario,
+                                                        'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
+                                                        'estab' => $data['infoTributaria']['estab'],
+                                                        'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
+                                                        'secuencial' =>  $data['infoTributaria']['secuencial'],
+                                                        'tipoDoc' => $this->tipoDocumento
+                                                    ];
+                                                    $this->enviar_correo($param);
+                                                } else {
+                                                    $this->generarXmlRespuesta($respuesta);
+                                                    De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
+                                                    Ct_ventas::updateXmlNoRecepcion($row->id);
+                                                    $arrayLog = [
+                                                        'id_de_documentos_electronicos' => $id_doc,
+                                                        'descripcion_error' => json_encode($respuesta),
+                                                        'id_usuariomod' => $idUsuario,
+                                                        'id_usuariocrea' =>  $idUsuario,
+                                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                    ];
+                                                    De_Log_Error::setErrorLog($arrayLog);
+                                                    //return $respuesta['mensajesWs'];
+                                                }
+                                            } else {
+                                                //Log error al firmar XML
+                                                $arrayLog = [
+                                                    'id_de_documentos_electronicos' => $id_doc,
+                                                    'descripcion_error' => json_encode($result),
+                                                    'id_usuariomod' => $idUsuario,
+                                                    'id_usuariocrea' =>  $idUsuario,
+                                                    'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                    'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                ];
+                                                De_Log_Error::setErrorLog($arrayLog);
+                                            }
                                         }
+                                    } else {
+                                        //log No genero XML
+                                        $arrayLog = [
+                                            'id_de_documentos_electronicos' => $id_doc,
+                                            'descripcion_error' => 'Error al crear el documento XML',
+                                            'id_usuariomod' => $idUsuario,
+                                            'id_usuariocrea' =>  $idUsuario,
+                                            'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                            'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                        ];
+                                        De_Log_Error::setErrorLog($arrayLog);
                                     }
                                 } else {
-                                    //log No genero XML
-                                    $arrayLog = [
-                                        'id_de_documentos_electronicos' => $id_doc,
-                                        'descripcion_error' => 'Error al crear el documento XML',
-                                        'id_usuariomod' => $idUsuario,
-                                        'id_usuariocrea' =>  $idUsuario,
-                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                    ];
-                                    De_Log_Error::setErrorLog($arrayLog);
+                                    $result = array('code' => 204, 'state' => true, 'data' => '', 'message' => 'error|' . $id_doc);
+                                    echo json_encode($result);
+                                    return;
                                 }
                             }
                         }
@@ -1024,9 +1008,7 @@ class EmisionDocumentosController extends Controller
                     $empresa = Empresa::getEmpresa($dinfo['empresa']);
                     if ($empresa != '') {
                         $datosFirma = De_Empresa::getDatos($dinfo['empresa']);
-
                         $venta = Ct_ventas::where('id', $dinfo['idVenta'])->first();
-
                         $firma['ruta_firma'] = $datosFirma->ruta_firma;
                         $firma['clave_firma'] = $datosFirma->clave_firma;
                         $data['datosfirma'] = $firma;
@@ -1070,7 +1052,6 @@ class EmisionDocumentosController extends Controller
                         $sucursal = Ct_Sucursales::where('id_empresa', $empresa->id)
                             ->where('codigo_sucursal', $infoTributaria['estab'])
                             ->first();
-
                         if (isset($sucursal->direccion_sucursal)) {
                             $infoFactura['dirEstablecimiento'] = $sucursal->direccion_sucursal;
                         } else {
@@ -1083,7 +1064,6 @@ class EmisionDocumentosController extends Controller
                         if ($datosFirma->contabilidad == 1)
                             $infoFactura['obligadoContabilidad'] = 'SI'; //Opcional
                         $cliente = Ct_Clientes::getCliente($venta->id_cliente);
-
                         if ($cliente != '') {
                             $email = $cliente->email_representante;
                             $telefonoCliente = $cliente->telefono1;
@@ -1103,7 +1083,6 @@ class EmisionDocumentosController extends Controller
                         $totalConImpuesto = [];
                         $conImpuesto = 0;
                         $impuestos = Ct_detalle_venta::getDetalles($venta->id);
-                        //dd($impuestos);
                         if (count($impuestos) > 0) {
                             foreach ($impuestos as $impuesto) {
                                 if ($impuesto->check_iva == 1)
@@ -1169,155 +1148,200 @@ class EmisionDocumentosController extends Controller
                                     ];
                                     $contAdicional++;
                                 }
-                                if ($detaFactura->adicional != '') {
+                                /*if ($detaFactura->adicional != '') {
                                     $detAdicional_ = [
                                         'nombre' => 'adicional',
                                         'valor' => $detaFactura->adicional
                                     ];
                                     $contAdicional++;
-                                }
+                                }*/
                                 if ($contAdicional > 0) {
-                                    $detallesAdicionales = [isset($detAdicional) ? $detAdicional : [], isset($detAdicional_) ? $detAdicional_ : []];
+                                    $detallesAdicionales = [isset($detAdicional) ? $detAdicional : []];
                                     $detalle['detallesAdicionales'] = $detallesAdicionales;
                                 }
                                 $detalles[$conDetalle] = $detalle;
                                 $conDetalle++;
                             }
                         }
-
                         $data['detalles'] = $detalles;
                         $campoAdicional['nombre'] = "detalle";
                         $campoAdicional['valor']  = $venta->nota_electronica;
                         $informacion_adicional[0] = $campoAdicional;
                         $infoAdicional['campoAdicional'] = $informacion_adicional;
                         $data['infoAdicional'] = $informacion_adicional;
-
+                        //Factura interna
                         $errores = $this->validarData($data);
-
-                        //Creacion XML
-                        $arrayLogError = [
-                            'id_de_pasos' => 1,
-                            'infoTributaria' => json_encode($data['infoTributaria']),
-                            'infoFactura' => json_encode($data['infoFactura']),
-                            'detalles' => json_encode($data['detalles']),
-                            'infoAdicional' => json_encode($data['infoAdicional']),
-                            'establecimiento' => $infoTributaria['estab'],
-                            'emision' => $infoTributaria['ptoEmi'],
-                            'secuencial' => $infoTributaria['secuencial'],
-                            'ruc_receptor' =>  $infoTributaria['identificacionComprador'],
-                            'ruc_emisor' => $infoTributaria['ruc'],
-                            'id_usuariomod' => $idUsuario,
-                            'id_usuariocrea' =>  $idUsuario,
-                            'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                            'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                            'clave_acceso' => $data['infoTributaria']['claveAcceso'],
-                            'id_maestro_documento' => De_Maestro_Documentos::getIdMaestroDocuemnto($infoTributaria['codDoc']),
-                            'id_documento' => $venta->id
-                        ];
-                        $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayLogError, 1);
-                        $idInsertados .= $id_doc . ',';
-                        $comprobante = $this->generarDocElectronicoXml($data);
-                        Ct_ventas::updateGenerarXML($venta->id, $data['infoTributaria']['claveAcceso']);
-                        if (!empty($comprobante)) {
-                            $docAnte = simplexml_load_string($comprobante);
-                            if (!empty($docAnte)) {
-                                //validar xsd
-                                $validacion = $this->validarXmlToXsd($comprobante);
-                                if ($validacion['isValidoXsd'] != 1) {
-                                    $arrayLog = [
-                                        'id_de_documentos_electronicos' => $id_doc,
-                                        'descripcion_error' => json_encode($validacion),
-                                        'id_usuariomod' => $idUsuario,
-                                        'id_usuariocrea' =>  $idUsuario,
-                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                    ];
-                                    De_Log_Error::setErrorLog($arrayLog);
-                                    $result = array('code' => 500, 'state' => true, 'data' => json_encode($validacion), 'message' => 'Error: al validar documento xml.');
-                                    return json_encode($result);
-                                }
-                                De_Documentos_Electronicos::updateValidacionXSD($comprobante);
-                                Ct_ventas::updateValidacionXSD($venta->id);
-                                //firmar xml
-                                $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $datosFirma->ruta_firma; //firma.p12
-                                $password = $datosFirma->clave_firma; //'3duard0faustos';
-                                $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
-                                if (!empty($result)) {
-                                    De_Documentos_Electronicos::updateXmlFirmado($comprobante);
-                                    Ct_ventas::updateXmlFirmado($venta->id);
-                                    //recepcion sri
-                                    $respuesta = $this->recibirWs($result, $data['infoTributaria']['ambiente']);
-                                    De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
-                                    Ct_ventas::updateRecibidoSri($venta->id);
-                                    //dd($respuesta['comprobantes']);
-                                    if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
-                                        //$this->procesarRespuestaXml($respuesta);
-                                        $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
-                                        $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
-                                        De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
-                                        //autorzacion sri
-                                        $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
-                                        $this->generarXmlAutorizacion($respuestaAutorizacion);
-                                        De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
-                                        Ct_ventas::updateXmlAutorizacion($venta->id);
-                                        $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
-                                        $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
-                                        $param = [
-                                            'email' => $venta->email_traslado_destinatario,
-                                            'nombre' => $venta->razon_social_destinatario,
-                                            'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
-                                            'estab' => $data['infoTributaria']['estab'],
-                                            'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
-                                            'secuencial' =>  $data['infoTributaria']['secuencial'],
-                                            'tipoDoc' => $this->tipoDocumento
-                                        ];
-                                        $this->enviar_correo($param);
-                                    } else {
-                                        $this->generarXmlRespuesta($respuesta);
-                                        De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
-                                        Ct_ventas::updateXmlNoRecepcion($venta->id);
-                                        $arrayLog = [
-                                            'id_de_documentos_electronicos' => $id_doc,
-                                            'descripcion_error' => json_encode($respuesta),
-                                            'id_usuariomod' => $idUsuario,
-                                            'id_usuariocrea' =>  $idUsuario,
-                                            'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                            'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                        ];
-                                        De_Log_Error::setErrorLog($arrayLog);
-                                        //dd($respuesta);
-                                        //return $respuesta['mensajesWs'];
-                                    }
-                                } else {
-                                    //Log error al firmar XML
-                                    $arrayLog = [
-                                        'id_de_documentos_electronicos' => $id_doc,
-                                        'descripcion_error' => json_encode($result),
-                                        'id_usuariomod' => $idUsuario,
-                                        'id_usuariocrea' =>  $idUsuario,
-                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                    ];
-                                    De_Log_Error::setErrorLog($arrayLog);
-                                }
-                            }
-                        } else {
-                            //log No genero XML
-                            $arrayLog = [
-                                'id_de_documentos_electronicos' => $id_doc,
-                                'descripcion_error' => 'Error al crear el documento XML',
+                        if (count($errores) > 0) {
+                            $arrayDocElec = [
+                                'id_de_pasos' => 7,
+                                'infoTributaria' => json_encode($data['infoTributaria']),
+                                'infoFactura' => json_encode($data['infoFactura']),
+                                'infoAdicional' => json_encode($data['infoAdicional']),
+                                'establecimiento' => $infoTributaria['estab'],
+                                'emision' => $infoTributaria['ptoEmi'],
+                                'secuencial' => $infoTributaria['secuencial'],
+                                'ruc_receptor' => $infoTributaria['identificacionComprador'],
+                                'ruc_emisor' => $infoTributaria['ruc'],
                                 'id_usuariomod' => $idUsuario,
                                 'id_usuariocrea' =>  $idUsuario,
                                 'ip_creacion' => $_SERVER['REMOTE_ADDR'],
                                 'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                'clave_acceso' => $data['infoTributaria']['claveAcceso'],
+                                'id_maestro_documento' => De_Maestro_Documentos::getIdMaestroDocuemnto($infoTributaria['codDoc']),
+                                'id_documento' => $venta->id,
+                            ];
+                            $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayDocElec, 7);
+                            Ct_Guia_Remision_Cabecera::updateSinGenerarXML($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $venta->id, $data['infoTributaria']['claveAcceso']);
+                            $idInsertados .= $id_doc . ',';
+                            $arrayLog = [
+                                'id_de_documentos_electronicos' => $id_doc,
+                                'descripcion_error' => json_encode($errores),
+                                'id_usuariomod' => $idUsuario,
+                                'id_usuariocrea' =>  $idUsuario,
+                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                'id_documento' => $venta->id
                             ];
                             De_Log_Error::setErrorLog($arrayLog);
+                            $infoErrores = De_Documentos_Electronicos::revisionEstadosDocumentosErrores($idInsertados);
+                            $infoAutorizados = '';
+                            if ($claveInsertados != '')
+                                $infoAutorizados = De_Documentos_Electronicos::revisionEstadosDocumentosAutorizados($claveInsertados);
+                            $result = array('code' => 200, 'state' => true, 'data' => ['errores:' => $infoErrores, 'autorizado:' => $infoAutorizados], 'message' => 'proceso ejecutado correctamente');
+                            return json_encode($result);
+                        } else {
+                            //Creacion XML
+                            $arrayLogError = [
+                                'id_de_pasos' => 1,
+                                'infoTributaria' => json_encode($data['infoTributaria']),
+                                'infoFactura' => json_encode($data['infoFactura']),
+                                'detalles' => json_encode($data['detalles']),
+                                'infoAdicional' => json_encode($data['infoAdicional']),
+                                'establecimiento' => $infoTributaria['estab'],
+                                'emision' => $infoTributaria['ptoEmi'],
+                                'secuencial' => $infoTributaria['secuencial'],
+                                'ruc_receptor' =>  $infoFactura['identificacionComprador'],
+                                'ruc_emisor' => $infoTributaria['ruc'],
+                                'id_usuariomod' => $idUsuario,
+                                'id_usuariocrea' =>  $idUsuario,
+                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                'clave_acceso' => $data['infoTributaria']['claveAcceso'],
+                                'id_maestro_documento' => De_Maestro_Documentos::getIdMaestroDocuemnto($infoTributaria['codDoc']),
+                                'id_documento' => $venta->id
+                            ];
+                            $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayLogError, 1);
+                            if (is_numeric($id_doc)) {
+                                $idInsertados .= $id_doc . ',';
+                                $comprobante = $this->generarDocElectronicoXml($data);
+                                Ct_ventas::updateGenerarXML($venta->id, $data['infoTributaria']['claveAcceso']);
+                                if (!empty($comprobante)) {
+                                    $docAnte = simplexml_load_string($comprobante);
+                                    if (!empty($docAnte)) {
+                                        //validar xsd
+                                        $validacion = $this->validarXmlToXsd($comprobante);
+                                        if ($validacion['isValidoXsd'] != 1) {
+                                            $arrayLog = [
+                                                'id_de_documentos_electronicos' => $id_doc,
+                                                'descripcion_error' => json_encode($validacion),
+                                                'id_usuariomod' => $idUsuario,
+                                                'id_usuariocrea' =>  $idUsuario,
+                                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                            ];
+                                            De_Log_Error::setErrorLog($arrayLog);
+                                            $result = array('code' => 500, 'state' => true, 'data' => json_encode($validacion), 'message' => 'Error: al validar documento xml.');
+                                            return json_encode($result);
+                                        }
+                                        De_Documentos_Electronicos::updateValidacionXSD($comprobante);
+                                        Ct_ventas::updateValidacionXSD($venta->id);
+                                        //firmar xml
+                                        $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $datosFirma->ruta_firma; //firma.p12
+                                        $password = $datosFirma->clave_firma; //'3duard0faustos';
+                                        $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
+                                        if (!empty($result)) {
+                                            De_Documentos_Electronicos::updateXmlFirmado($comprobante);
+                                            Ct_ventas::updateXmlFirmado($venta->id);
+                                            //recepcion sri
+                                            $respuesta = $this->recibirWs($result, $data['infoTributaria']['ambiente']);
+                                            De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
+                                            Ct_ventas::updateRecibidoSri($venta->id);
+                                            if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
+                                                //$this->procesarRespuestaXml($respuesta);
+                                                $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
+                                                $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
+                                                De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
+                                                //autorzacion sri
+                                                $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
+                                                $this->generarXmlAutorizacion($respuestaAutorizacion);
+                                                De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
+                                                Ct_ventas::updateXmlAutorizacion($venta->id);
+                                                $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
+                                                $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
+                                                $param = [
+                                                    'email' => $venta->email_traslado_destinatario,
+                                                    'nombre' => $venta->razon_social_destinatario,
+                                                    'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
+                                                    'estab' => $data['infoTributaria']['estab'],
+                                                    'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
+                                                    'secuencial' =>  $data['infoTributaria']['secuencial'],
+                                                    'tipoDoc' => $this->tipoDocumento
+                                                ];
+                                                $this->enviar_correo($param);
+                                                $arrayVentaAct = [
+                                                    'numero'=>$data['infoTributaria']['secuencial']
+                                                ];
+                                                Ct_ventas::where('id', $venta->id)->update($arrayVentaAct);
+                                            } else {
+                                                $this->generarXmlRespuesta($respuesta);
+                                                De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
+                                                Ct_ventas::updateXmlNoRecepcion($venta->id);
+                                                $arrayLog = [
+                                                    'id_de_documentos_electronicos' => $id_doc,
+                                                    'descripcion_error' => json_encode($respuesta),
+                                                    'id_usuariomod' => $idUsuario,
+                                                    'id_usuariocrea' =>  $idUsuario,
+                                                    'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                    'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                ];
+                                                De_Log_Error::setErrorLog($arrayLog);
+                                                //return $respuesta['mensajesWs'];
+                                            }
+                                        } else {
+                                            //Log error al firmar XML
+                                            $arrayLog = [
+                                                'id_de_documentos_electronicos' => $id_doc,
+                                                'descripcion_error' => json_encode($result),
+                                                'id_usuariomod' => $idUsuario,
+                                                'id_usuariocrea' =>  $idUsuario,
+                                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                            ];
+                                            De_Log_Error::setErrorLog($arrayLog);
+                                        }
+                                    }
+                                } else {
+                                    //log No genero XML
+                                    $arrayLog = [
+                                        'id_de_documentos_electronicos' => $id_doc,
+                                        'descripcion_error' => 'Error al crear el documento XML',
+                                        'id_usuariomod' => $idUsuario,
+                                        'id_usuariocrea' =>  $idUsuario,
+                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                    ];
+                                    De_Log_Error::setErrorLog($arrayLog);
+                                }
+                            } else {
+                                $result = array('code' => 204, 'state' => true, 'data' => '', 'message' => 'error|' . $id_doc);
+                                echo json_encode($result);
+                                return;
+                            }
                         }
+                        $respuestaNo->nro_comprobante = $numDocumento;
+                        return $respuestaNo;
                     }
                 }
-                $respuesta = new stdClass();
-                $respuesta->nro_comprobante = $numDocumento;
-                return $respuesta;
             }
         } catch (Exception $ex) {
             if ($id_doc != 0) {
@@ -1332,8 +1356,7 @@ class EmisionDocumentosController extends Controller
                 De_Log_Error::setErrorLog($arrayLog);
             }
             $result = array('code' => 500, 'state' => true, 'data' => ['error:' => $ex->getMessage(), 'linea' => $ex->getLine()], 'message' => 'Error');
-            echo json_encode($result);
-            return;
+            return json_encode($result);
         }
     }
     private static function getNonce($n)
@@ -1348,7 +1371,6 @@ class EmisionDocumentosController extends Controller
     }
     public static function envio_factura($data)
     {
-        //dd($data);
         if (Auth::check()) {
             $id_usuario = Auth::user()->id;
         } else {
@@ -1450,7 +1472,6 @@ class EmisionDocumentosController extends Controller
             $url     = $empresa->url . 'billing/create/';
         }
         EmisionDocumentosController::crearcarpeta($url);
-        //dd($url);
         Log_Api::create([
             'id_usuario'  => $id_usuario,
             'ip_usuario'  => $ip_cliente,
@@ -1476,9 +1497,7 @@ class EmisionDocumentosController extends Controller
                 ),
             );
         }
-        //dd($url);
         $context = stream_context_create($options);
-        //dd($context, $url);
         $response = file_get_contents($url, false, $context);
         Log_Api::create([
             'id_usuario'  => $id_usuario,
@@ -1508,11 +1527,8 @@ class EmisionDocumentosController extends Controller
         $numero          = $info_comprobante->comprobante;
         $numero1         = $numero;
         $num_comprobante = 0;
-        //dd($data);
-        //dd($request->all());
         $cliente = Ct_Clientes::where('identificacion', '=', $data['cliente']['cedula'])->first();
         //return $cliente. " - ". $request['identificacion_cliente'];
-
         $cliente_datos = $data['cliente'];
 
         if (is_null($cliente)) {
@@ -1633,17 +1649,13 @@ class EmisionDocumentosController extends Controller
             'id_usuariomod'     => $idusuario,
             'electronica'       => 1,
         ];
-
         // return $factura_venta;
-
         $id_venta = Ct_ventas::insertGetId($factura_venta);
-        //dd($id_venta);
         //$id_venta = 0;
         $arr_total      = [];
         $total_iva      = 0;
         $total_impuesto = 0;
         $total_0        = 0;
-
         //kardex
         foreach ($data['productos'] as $valor) {
             $datos_iva = 0;
@@ -1853,7 +1865,6 @@ class EmisionDocumentosController extends Controller
                         foreach ($cabecera as $row) {
                             $cont++;
                             $empresa = Empresa::getEmpresa($row->id_empresa);
-                            //dd($empresa);
                             $email = '';
                             $telefono = '';
                             if ($empresa != '') {
@@ -1998,7 +2009,6 @@ class EmisionDocumentosController extends Controller
                                 $informacion_adicional[1] = $campoAdicional;
 
                                 $data['infoAdicional'] = $informacion_adicional;
-                                //dd($data);
                             } else {
                                 $result = array('code' => 204, 'state' => true, 'data' => '', 'message' => 'ok|No existe la empresa');
                                 echo json_encode($result);
@@ -2006,7 +2016,7 @@ class EmisionDocumentosController extends Controller
                             }
 
                             $errores = $this->validarData($data);
-                            //dd($errores);
+
                             if (count($errores) > 0) {
                                 $arrayDocElec = [
                                     'id_de_pasos' => 7,
@@ -2029,7 +2039,6 @@ class EmisionDocumentosController extends Controller
                                 ];
                                 $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayDocElec, 7);
                                 Ct_Retenciones::updateSinGenerarXML($row->id, $data['infoTributaria']['claveAcceso']);
-                                //dd($id_doc);
                                 $idInsertados .= $id_doc . ',';
                                 $arrayLog = [
                                     'id_de_documentos_electronicos' => $id_doc,
@@ -2063,120 +2072,117 @@ class EmisionDocumentosController extends Controller
                                     'id_documento' => $row->id
                                 ];
                                 $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayLogError, 1);
-                                //dd($id_doc);
-                                $idInsertados .= $id_doc . ',';
-                                $comprobante = $this->generarDocElectronicoXml($data);
-                                Ct_Retenciones::updateGenerarXML($row->id, $data['infoTributaria']['claveAcceso']);
-                                if (!empty($comprobante)) {
-                                    //dd($comprobante);
-                                    $docAnte = simplexml_load_string($comprobante);
-                                    if (!empty($docAnte)) {
-                                        //validar xsd
-                                        $validacion = $this->validarXmlToXsd($comprobante); //$this->ValidarFuera($comprobante, $this->tipoDocumento);
-                                        //1: ok; 0: error
-                                        if ($validacion['isValidoXsd'] == 0) {
-                                            $arrayLog = [
-                                                'id_de_documentos_electronicos' => $id_doc,
-                                                'descripcion_error' => json_encode($validacion),
-                                                'id_usuariomod' => $idUsuario,
-                                                'id_usuariocrea' =>  $idUsuario,
-                                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                            ];
-                                            De_Log_Error::setErrorLog($arrayLog);
-                                            $result = array('code' => 204, 'state' => true, 'data' => json_encode($validacion), 'message' => 'ok|Error al validar XML con XSD');
-                                            echo json_encode($result);
-                                            return;
-                                        }
-                                        De_Documentos_Electronicos::updateValidacionXSD($comprobante);
-                                        Ct_Retenciones::updateValidacionXSD($row->id);
-                                        //firmar xml
-                                        $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $deEmpresa->ruta_firma; //firma.p12
-                                        //$ruta_p12 = $deEmpresa->ruta_firma; //firma.p12
-                                        $password = $deEmpresa->clave_firma; //'3duard0faustos';
-
-                                        // dd($resultado);
-                                        $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
-                                        //dd($result);
-                                        if (!empty($result)) {
-
-                                            $docAnte = simplexml_load_string($comprobante);
-                                            $dom = new DOMDocument();
-                                            $dom->loadXML($result);
-                                            $this->crearcarpeta(base_path() . '/storage/app/facturaelectronica/firmados/' . $docAnte->infoTributaria->ruc . '/' . $this->tipoDocumento . '/');
-                                            $dom->save(base_path() . '/storage/app/facturaelectronica/firmados/' . $docAnte->infoTributaria->ruc . '/' . $this->tipoDocumento . '/' . $this->tipoDocumento . '-' . $docAnte->infoTributaria->estab . '-' . $docAnte->infoTributaria->ptoEmi . '-' . $docAnte->infoTributaria->secuencial . '.xml');
-                                            echo '<pre>';
-                                            De_Documentos_Electronicos::updateXmlFirmado($comprobante);
-                                            Ct_Retenciones::updateXmlFirmado($row->id);
-                                            //recepcion sri
-                                            $respuesta = $this->recibirWs($result, 1);
-
-                                            De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
-                                            Ct_Retenciones::updateRecibidoSri($row->id);
-                                            //dd($respuesta['comprobantes']);
-                                            if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
-                                                //$this->procesarRespuestaXml($respuesta);
-                                                $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
-                                                $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
-                                                De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
-                                                //autorzacion sri
-                                                $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso);
-                                                //dd($respuestaAutorizacion);
-                                                $this->generarXmlAutorizacion($respuestaAutorizacion);
-                                                De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
-                                                Ct_Retenciones::updateXmlAutorizacion($row->id, $docAnte->infoTributaria->claveAcceso, str_pad($secuancialDocumento, 9, '0', STR_PAD_LEFT));
-                                                $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
-                                                $this->generarPdf($docAnte->infoTributaria->claveAcceso);
-                                                $param = [
-                                                    'email' => $row->email_traslado_destinatario,
-                                                    'nombre' => $row->razon_social_destinatario,
-                                                    'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
-                                                    'estab' => $data['infoTributaria']['estab'],
-                                                    'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
-                                                    'secuencial' =>  $data['infoTributaria']['secuencial'],
-                                                    'tipoDoc' => $this->tipoDocumento
-                                                ];
-                                                $this->enviar_correo($param);
-                                            } else {
-                                                $this->generarXmlRespuesta($respuesta);
-                                                De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
-                                                Ct_Retenciones::updateXmlNoRecepcion($row->id);
+                                if (is_numeric($id_doc)) {
+                                    $idInsertados .= $id_doc . ',';
+                                    $comprobante = $this->generarDocElectronicoXml($data);
+                                    Ct_Retenciones::updateGenerarXML($row->id, $data['infoTributaria']['claveAcceso']);
+                                    if (!empty($comprobante)) {
+                                        $docAnte = simplexml_load_string($comprobante);
+                                        if (!empty($docAnte)) {
+                                            //validar xsd
+                                            $validacion = $this->validarXmlToXsd($comprobante); //$this->ValidarFuera($comprobante, $this->tipoDocumento);
+                                            //1: ok; 0: error
+                                            if ($validacion['isValidoXsd'] == 0) {
                                                 $arrayLog = [
                                                     'id_de_documentos_electronicos' => $id_doc,
-                                                    'descripcion_error' => json_encode($respuesta),
+                                                    'descripcion_error' => json_encode($validacion),
                                                     'id_usuariomod' => $idUsuario,
                                                     'id_usuariocrea' =>  $idUsuario,
                                                     'ip_creacion' => $_SERVER['REMOTE_ADDR'],
                                                     'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
                                                 ];
                                                 De_Log_Error::setErrorLog($arrayLog);
-                                                //dd($respuesta);
-                                                //return $respuesta['mensajesWs'];
+                                                $result = array('code' => 204, 'state' => true, 'data' => json_encode($validacion), 'message' => 'ok|Error al validar XML con XSD');
+                                                echo json_encode($result);
+                                                return;
                                             }
-                                        } else {
-                                            //Log error al firmar XML
-                                            $arrayLog = [
-                                                'id_de_documentos_electronicos' => $id_doc,
-                                                'descripcion_error' => json_encode($result),
-                                                'id_usuariomod' => $idUsuario,
-                                                'id_usuariocrea' =>  $idUsuario,
-                                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                            ];
-                                            De_Log_Error::setErrorLog($arrayLog);
+                                            De_Documentos_Electronicos::updateValidacionXSD($comprobante);
+                                            Ct_Retenciones::updateValidacionXSD($row->id);
+                                            //firmar xml
+                                            $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $deEmpresa->ruta_firma; //firma.p12
+                                            //$ruta_p12 = $deEmpresa->ruta_firma; //firma.p12
+                                            $password = $deEmpresa->clave_firma; //'3duard0faustos';
+                                            $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
+                                            if (!empty($result)) {
+
+                                                $docAnte = simplexml_load_string($comprobante);
+                                                $dom = new DOMDocument();
+                                                $dom->loadXML($result);
+                                                $this->crearcarpeta(base_path() . '/storage/app/facturaelectronica/firmados/' . $docAnte->infoTributaria->ruc . '/' . $this->tipoDocumento . '/');
+                                                $dom->save(base_path() . '/storage/app/facturaelectronica/firmados/' . $docAnte->infoTributaria->ruc . '/' . $this->tipoDocumento . '/' . $this->tipoDocumento . '-' . $docAnte->infoTributaria->estab . '-' . $docAnte->infoTributaria->ptoEmi . '-' . $docAnte->infoTributaria->secuencial . '.xml');
+                                                echo '<pre>';
+                                                De_Documentos_Electronicos::updateXmlFirmado($comprobante);
+                                                Ct_Retenciones::updateXmlFirmado($row->id);
+                                                //recepcion sri
+                                                $respuesta = $this->recibirWs($result, 1);
+                                                De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
+                                                Ct_Retenciones::updateRecibidoSri($row->id);
+                                                if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
+                                                    //$this->procesarRespuestaXml($respuesta);
+                                                    $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
+                                                    $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
+                                                    De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
+                                                    //autorzacion sri
+                                                    $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso);
+                                                    $this->generarXmlAutorizacion($respuestaAutorizacion);
+                                                    De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
+                                                    Ct_Retenciones::updateXmlAutorizacion($row->id, $docAnte->infoTributaria->claveAcceso, str_pad($secuancialDocumento, 9, '0', STR_PAD_LEFT));
+                                                    $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
+                                                    $this->generarPdf($docAnte->infoTributaria->claveAcceso);
+                                                    $param = [
+                                                        'email' => $row->email_traslado_destinatario,
+                                                        'nombre' => $row->razon_social_destinatario,
+                                                        'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
+                                                        'estab' => $data['infoTributaria']['estab'],
+                                                        'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
+                                                        'secuencial' =>  $data['infoTributaria']['secuencial'],
+                                                        'tipoDoc' => $this->tipoDocumento
+                                                    ];
+                                                    $this->enviar_correo($param);
+                                                } else {
+                                                    $this->generarXmlRespuesta($respuesta);
+                                                    De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
+                                                    Ct_Retenciones::updateXmlNoRecepcion($row->id);
+                                                    $arrayLog = [
+                                                        'id_de_documentos_electronicos' => $id_doc,
+                                                        'descripcion_error' => json_encode($respuesta),
+                                                        'id_usuariomod' => $idUsuario,
+                                                        'id_usuariocrea' =>  $idUsuario,
+                                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                    ];
+                                                    De_Log_Error::setErrorLog($arrayLog);
+                                                    //return $respuesta['mensajesWs'];
+                                                }
+                                            } else {
+                                                //Log error al firmar XML
+                                                $arrayLog = [
+                                                    'id_de_documentos_electronicos' => $id_doc,
+                                                    'descripcion_error' => json_encode($result),
+                                                    'id_usuariomod' => $idUsuario,
+                                                    'id_usuariocrea' =>  $idUsuario,
+                                                    'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                    'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                ];
+                                                De_Log_Error::setErrorLog($arrayLog);
+                                            }
                                         }
+                                    } else {
+                                        //log No genero XML
+                                        $arrayLog = [
+                                            'id_de_documentos_electronicos' => $id_doc,
+                                            'descripcion_error' => 'Error al crear el documento XML',
+                                            'id_usuariomod' => $idUsuario,
+                                            'id_usuariocrea' =>  $idUsuario,
+                                            'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                            'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                        ];
+                                        De_Log_Error::setErrorLog($arrayLog);
                                     }
                                 } else {
-                                    //log No genero XML
-                                    $arrayLog = [
-                                        'id_de_documentos_electronicos' => $id_doc,
-                                        'descripcion_error' => 'Error al crear el documento XML',
-                                        'id_usuariomod' => $idUsuario,
-                                        'id_usuariocrea' =>  $idUsuario,
-                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                    ];
-                                    De_Log_Error::setErrorLog($arrayLog);
+                                    $result = array('code' => 204, 'state' => true, 'data' => '', 'message' => 'error|' . $id_doc);
+                                    echo json_encode($result);
+                                    return;
                                 }
                             }
                         }
@@ -2190,8 +2196,6 @@ class EmisionDocumentosController extends Controller
                 $infoAutorizados = '';
                 if ($claveInsertados != '')
                     $infoAutorizados = De_Documentos_Electronicos::revisionEstadosDocumentosAutorizados($claveInsertados);
-
-                //dd($infoAutorizados);
                 $result = array('code' => 200, 'state' => true, 'data' => ['errores:' => $infoErrores, 'autorizado:' => $infoAutorizados], 'message' => 'proceso ejecutado correctamente');
                 echo json_encode($result);
             } else {
@@ -2224,9 +2228,9 @@ class EmisionDocumentosController extends Controller
                 $result = [];
                 $idInsertados = '';
                 $claveInsertados = '';
-                $facturaCabecera = Ct_Nota_Credito_Clientes::getVentasCabecera();
-                if (count($facturaCabecera) > 0) {
-                    if (!$this->consultarEstadoSRI($facturaCabecera[0]->id_empresa)) {
+                $notaCreditoCabecera = Ct_Nota_Credito_Clientes::getNotaCredito();
+                if (count($notaCreditoCabecera) > 0) {
+                    if (!$this->consultarEstadoSRI($notaCreditoCabecera[0]->id_empresa)) {
                         $arrayLog = [
                             'id_de_documentos_electronicos' => $id_doc,
                             'descripcion_error' => json_encode(['Error:' => 'SRI sin servicio']),
@@ -2242,7 +2246,7 @@ class EmisionDocumentosController extends Controller
                         return;
                     } else {
                         $cont = 0;
-                        foreach ($facturaCabecera as $row) {
+                        foreach ($notaCreditoCabecera as $row) {
                             $cont++;
                             $empresa = Empresa::getEmpresa($row->id_empresa);
                             if ($empresa != '') {
@@ -2285,116 +2289,105 @@ class EmisionDocumentosController extends Controller
                                 $claveObj->llenarDatos($campos);
                                 $infoTributaria['claveAcceso'] = $claveObj->clave_acceso;
                                 $data['infoTributaria'] = $infoTributaria;
-                                //Info Factura
-                                $infoFactura['fechaEmision'] = $row->fecha;
+                                //Info Nota Credito
+                                $infoNotaCredito['fechaEmision'] = $row->fecha;
                                 $sucursal = Ct_Sucursales::where('id_empresa', $empresa->id)
                                     ->where('codigo_sucursal', $infoTributaria['estab'])
                                     ->first();
                                 if (isset($sucursal->direccion_sucursal)) {
-                                    $infoFactura['dirEstablecimiento'] = $sucursal->direccion_sucursal;
+                                    $infoNotaCredito['dirEstablecimiento'] = $sucursal->direccion_sucursal;
                                 } else {
-                                    $infoFactura['dirEstablecimiento'] = $empresa->direccion;
+                                    $infoNotaCredito['dirEstablecimiento'] = $empresa->direccion;
                                 }
                                 $telefonoCliente = '';
-                                //dd($datosFirma);
-                                if ($datosFirma->contribuyente_especial != '' && $datosFirma->contribuyente_especial != 0) {
-                                    $infoFactura['contribuyenteEspecial'] = $datosFirma->contribuyente_especial; //Opcional
-                                }
-                                $infoFactura['obligadoContabilidad'] = 'NO'; //Opcional
-                                if ($datosFirma->contabilidad == 1)
-                                    $infoFactura['obligadoContabilidad'] = 'SI'; //Opcional
-                                $cliente = Ct_Clientes::getCliente($row->ruc_id_cliente);
+                                $cliente = Ct_Clientes::getCliente($row->id_cliente);
                                 if ($cliente != '') {
                                     $email = $cliente->email_representante;
                                     $telefonoCliente = $cliente->telefono1;
-                                    $infoFactura['tipoIdentificacionComprador'] = str_pad($cliente->tipo, 2, 0, STR_PAD_LEFT);
-                                    $infoFactura['identificacionComprador'] = $cliente->identificacion;
-                                    $infoFactura['razonSocialComprador'] = $cliente->nombre;
-                                    $infoFactura['direccionComprador'] = $cliente->direccion_representante;
+                                    $infoNotaCredito['tipoIdentificacionComprador'] = str_pad($cliente->tipo, 2, 0, STR_PAD_LEFT);
+                                    $infoNotaCredito['razonSocialComprador'] = $cliente->nombre;
+                                    $infoNotaCredito['identificacionComprador'] = $cliente->identificacion;
                                 } else {
-                                    $infoFactura['tipoIdentificacionComprador'] = null;
-                                    $infoFactura['identificacionComprador'] = null;
-                                    $infoFactura['razonSocialComprador'] = null;
-                                    $infoFactura['direccionComprador'] = null; //Opcional
+                                    $infoNotaCredito['tipoIdentificacionComprador'] = null;
+                                    $infoNotaCredito['razonSocialComprador'] = null;
+                                    $infoNotaCredito['identificacionComprador'] = null;
                                 }
-                                if ($row->guiaRemision != '')
-                                    $infoFactura['guiaRemision'] = $row->guiaRemision;
-                                $infoFactura['totalSinImpuestos'] = $row->subtotal_0 + $row->subtotal_12;
-                                $infoFactura['totalConImpuestos'] = $row->total_final;
+                                if ($datosFirma->contribuyente_especial != '' && $datosFirma->contribuyente_especial != 0) {
+                                    $infoNotaCredito['contribuyenteEspecial'] = $datosFirma->contribuyente_especial; //Opcional
+                                }
+                                $infoNotaCredito['obligadoContabilidad'] = 'NO';
+                                if ($datosFirma->contabilidad == 1)
+                                    $infoNotaCredito['obligadoContabilidad'] = 'SI'; //Opcional
+
+                                if ($datosFirma->rise != '')
+                                    $infoNotaCredito['rise'] = $datosFirma->rise; //Opcional
+
+                                $infoNotaCredito['codDocModificado'] = '01';
+                                $infoNotaCredito['numDocModificado'] = $row->numero_factura;
+                                $idFactura = $row->id_factura;
+                                $factura = Ct_ventas::find($idFactura)->first();
+                                if (!is_null($factura)) {
+                                    $infoNotaCredito['fechaEmisionDocSustento'] = $factura->fecha;
+                                }
+
+                                $infoNotaCredito['totalSinImpuestos'] = $row->subtotal0;
+                                $infoNotaCredito['valorModificacion'] = $row->total_final;
                                 $totalConImpuestos = [];
                                 $totalConImpuesto = [];
                                 $conImpuesto = 0;
-                                $impuestos = Ct_Nota_Credito_Detalle::getDetalles($row->id);
-                                //dd($impuestos);
-                                if (count($impuestos) > 0) {
-                                    foreach ($impuestos as $impuesto) {
-                                        if ($impuesto->check_iva == 1)
+                                //$impuestos = Ct_Detalle_Rubro_Credito::getDetalles($row->id);
+                                $details       = Ct_Detalle_Credito_Clientes::where('id_not_cred', $row->id)->first();
+                                $venta_detalle = Ct_detalle_venta::where('id_ct_ventas', $row->id_factura)->get();
+                                if (count($venta_detalle) > 0) {
+                                    foreach ($venta_detalle as $detail) {
+                                        if ($detail->check_iva == 1)
                                             $codigoImpuesto = De_Codigo_Impuestos::where('id', 1)->first();
                                         else
                                             $codigoImpuesto = De_Codigo_Impuestos::where('id', 2)->first();
                                         $totalConImpuesto['codigo'] = $codigoImpuesto->codigo_impuesto;
                                         $totalConImpuesto['codigoPorcentaje'] = $codigoImpuesto->codigo;
-                                        $totalConImpuesto['descuentoAdicional'] = $impuesto->descuento;
-                                        $totalConImpuesto['baseImponible'] = ($impuesto->cantidad * $impuesto->precio) - $impuesto->descuento;
-                                        if ($impuesto->check_iva == 1)
-                                            $totalConImpuesto['valor'] = $this->getDecimal(($impuesto->precio * $impuesto->cantidad) * $impuesto->porcentaje);
+                                        $totalConImpuesto['descuentoAdicional'] = $detail->descuento;
+                                        $totalConImpuesto['baseImponible'] = ($detail->cantidad * $detail->precio) - $detail->descuento;
+                                        if ($detail->check_iva == 1)
+                                            $totalConImpuesto['valor'] = $this->getDecimal(($detail->precio * $detail->cantidad) * $detail->porcentaje);
                                         else
                                             $totalConImpuesto['valor'] = $this->getDecimal(0);
                                         array_push($totalConImpuestos, $totalConImpuesto);
                                         $conImpuesto++;
                                     }
                                 }
-                                $infoFactura['totalConImpuestos'] = $totalConImpuestos;
-                                $infoFactura['propina'] = $this->getDecimal(0);
-                                $infoFactura['importeTotal'] = $row->total_final;
-                                $infoFactura['moneda'] = Ct_Divisas::getMoneda();
-                                $detallePagos = Ct_Nota_Credito_Detalle::getDetalles($row->id);
-                                //Formas de pago
-                                $pagos = [];
-                                $pago = [];
-                                $conPagos = 0;
-                                $formasPagos = Ct_Forma_Pago::join('ct_tipo_pago as t', 'ct_forma_pago.tipo', '=', 't.id')
-                                    ->where('id_ct_ventas', $row->id)->get([
-                                        't.codigo'
-                                    ]);
-                                if (count($formasPagos) > 0) {
-                                    foreach ($formasPagos as $formaPago) {
-                                        $pago['formaPago'] = str_pad($formaPago->codigo, 2, 0, STR_PAD_LEFT);
-                                        $pago['total'] = $row->total_final;
-                                        $pago['plazo'] = $row->dias_plazo;
-                                        $pago['unidadTiempo'] = 'dias';
-                                        array_push($pagos, $pago);
-                                    }
-                                }
-                                $infoFactura['pagos'] = $pagos;
-                                $data['infoFactura'] = $infoFactura;
+                                $infoNotaCredito['totalConImpuestos'] = $totalConImpuestos;
+                                $infoNotaCredito['importeTotal'] = $row->total_final;
+                                $infoNotaCredito['moneda'] = 'Dolar'; //Ct_Divisas::getMoneda();
+
+                                $data['infoNotaCredito'] = $infoNotaCredito;
                                 //detalles
                                 $detalle = [];
                                 $detalles = [];
                                 $conDetalle = 0;
-                                $detalleFactura = Ct_Nota_Credito_Detalle::getDetalles($row->id);
-                                if (count($detalleFactura) > 0) {
-                                    foreach ($detalleFactura as $detaFactura) {
-                                        $detalle['p_impuesto'] = $detaFactura->check_iva !== null ? 12 : 0;
-                                        $detalle['codigoPrincipal'] = $detaFactura->id_ct_productos;
-                                        $detalle['codigoAuxiliar'] = $detaFactura->id_ct_productos;
-                                        $detalle['descripcion'] = $detaFactura->nombre;
-                                        $detalle['cantidad'] = $detaFactura->cantidad;
-                                        $detalle['precioUnitario'] = $detaFactura->precio;
-                                        $detalle['descuento'] = $detaFactura->descuento;
+                                $detalleNotaCredito = Ct_Detalle_Rubro_Credito::getDetalles($row->id);
+                                if (count($detalleNotaCredito) > 0) {
+                                    foreach ($detalleNotaCredito as $deta) {
+                                        $detalle['p_impuesto'] = $deta->check_iva !== null ? 12 : 0;
+                                        $detalle['codigoInterno'] = $deta->id_ct_productos;
+                                        $detalle['codigoAdicional'] = $deta->id_ct_productos;
+                                        $detalle['descripcion'] = $deta->nombre;
+                                        $detalle['cantidad'] = $deta->cantidad;
+                                        $detalle['precioUnitario'] = $deta->precio;
+                                        $detalle['descuento'] = $deta->descuento;
                                         $detalle['precioTotalSinImpuesto'] = $row->subtotal_0 + $row->subtotal_12;
                                         $contAdicional = 0;
-                                        if ($detaFactura->detalle != '') {
+                                        if ($deta->detalle != '') {
                                             $detAdicional = [
                                                 'nombre' => 'detalle',
-                                                'valor' => $detaFactura->detalle
+                                                'valor' => $deta->detalle
                                             ];
                                             $contAdicional++;
                                         }
-                                        if ($detaFactura->adicional != '') {
+                                        if ($deta->adicional != '') {
                                             $detAdicional_ = [
                                                 'nombre' => 'adicional',
-                                                'valor' => $detaFactura->adicional
+                                                'valor' => $deta->adicional
                                             ];
                                             $contAdicional++;
                                         }
@@ -2439,9 +2432,7 @@ class EmisionDocumentosController extends Controller
                                 echo json_encode($result);
                                 return;
                             }
-                            //dd($data);
                             $errores = $this->validarData($data);
-                            //dd($errores);
                             if (count($errores) > 0) {
                                 $arrayDocElec = [
                                     'id_de_pasos' => 7,
@@ -2463,7 +2454,6 @@ class EmisionDocumentosController extends Controller
                                 ];
                                 $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayDocElec, 7);
                                 Ct_Nota_Credito_Clientes::updateSinGenerarXML($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id, $data['infoTributaria']['claveAcceso']);
-                                //dd($id_doc);
                                 $idInsertados .= $id_doc . ',';
                                 $arrayLog = [
                                     'id_de_documentos_electronicos' => $id_doc,
@@ -2496,107 +2486,110 @@ class EmisionDocumentosController extends Controller
                                     'id_maestro_documento' => De_Maestro_Documentos::getIdMaestroDocuemnto($infoTributaria['codDoc']),
                                     'id_documento' => $row->id
                                 ];
-                                //dd($arrayLogError);
                                 $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayLogError, 1);
-                                $idInsertados .= $id_doc . ',';
-                                $comprobante = $this->generarDocElectronicoXml($data);
-                                Ct_Nota_Credito_Clientes::updateGenerarXML($row->id, $data['infoTributaria']['claveAcceso']);
-                                if (!empty($comprobante)) {
-                                    $docAnte = simplexml_load_string($comprobante);
-                                    if (!empty($docAnte)) {
-                                        //validar xsd
-                                        $validacion = $this->validarXmlToXsd($comprobante);
-                                        if ($validacion['isValidoXsd'] != 1) {
-                                            $arrayLog = [
-                                                'id_de_documentos_electronicos' => $id_doc,
-                                                'descripcion_error' => json_encode($validacion),
-                                                'id_usuariomod' => $idUsuario,
-                                                'id_usuariocrea' =>  $idUsuario,
-                                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                            ];
-                                            De_Log_Error::setErrorLog($arrayLog);
-                                            $result = array('code' => 204, 'state' => true, 'data' => json_encode($validacion), 'message' => 'ok|No existen documentos para emitir');
-                                            echo json_encode($result);
-                                            return;
-                                        }
-
-                                        De_Documentos_Electronicos::updateValidacionXSD($comprobante);
-                                        Ct_Nota_Credito_Clientes::updateValidacionXSD($row->id);
-                                        //firmar xml
-                                        $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $datosFirma->ruta_firma; //firma.p12
-                                        $password = $datosFirma->clave_firma; //'3duard0faustos';
-                                        $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
-                                        if (!empty($result)) {
-                                            De_Documentos_Electronicos::updateXmlFirmado($comprobante);
-                                            Ct_Nota_Credito_Clientes::updateXmlFirmado($row->id);
-                                            //recepcion sri
-                                            $respuesta = $this->recibirWs($result, $data['infoTributaria']['ambiente']);
-                                            De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
-                                            Ct_Nota_Credito_Clientes::updateRecibidoSri($row->id);
-                                            //dd($respuesta['comprobantes']);
-                                            if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
-                                                //$this->procesarRespuestaXml($respuesta);
-                                                $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
-                                                $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
-                                                De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
-                                                //autorzacion sri
-                                                $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
-                                                $this->generarXmlAutorizacion($respuestaAutorizacion);
-                                                De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
-                                                Ct_Nota_Credito_Clientes::updateXmlAutorizacion($row->id);
-                                                $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
-                                                $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
-                                                $param = [
-                                                    'email' => $row->email_traslado_destinatario,
-                                                    'nombre' => $row->razon_social_destinatario,
-                                                    'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
-                                                    'estab' => $data['infoTributaria']['estab'],
-                                                    'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
-                                                    'secuencial' =>  $data['infoTributaria']['secuencial'],
-                                                    'tipoDoc' => $this->tipoDocumento
-                                                ];
-                                                $this->enviar_correo($param);
-                                            } else {
-                                                $this->generarXmlRespuesta($respuesta);
-                                                De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
-                                                Ct_Nota_Credito_Clientes::updateXmlNoRecepcion($row->id);
+                                if (is_numeric($id_doc)) {
+                                    $idInsertados .= $id_doc . ',';
+                                    $comprobante = $this->generarDocElectronicoXml($data);
+                                    Ct_Nota_Credito_Clientes::updateGenerarXML($row->id, $data['infoTributaria']['claveAcceso']);
+                                    if (!empty($comprobante)) {
+                                        $docAnte = simplexml_load_string($comprobante);
+                                        if (!empty($docAnte)) {
+                                            //validar xsd
+                                            $validacion = $this->validarXmlToXsd($comprobante);
+                                            if ($validacion['isValidoXsd'] != 1) {
                                                 $arrayLog = [
                                                     'id_de_documentos_electronicos' => $id_doc,
-                                                    'descripcion_error' => json_encode($respuesta),
+                                                    'descripcion_error' => json_encode($validacion),
                                                     'id_usuariomod' => $idUsuario,
                                                     'id_usuariocrea' =>  $idUsuario,
                                                     'ip_creacion' => $_SERVER['REMOTE_ADDR'],
                                                     'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
                                                 ];
                                                 De_Log_Error::setErrorLog($arrayLog);
-                                                //dd($respuesta);
-                                                //return $respuesta['mensajesWs'];
+                                                $result = array('code' => 204, 'state' => true, 'data' => json_encode($validacion), 'message' => 'ok|No existen documentos para emitir');
+                                                echo json_encode($result);
+                                                return;
                                             }
-                                        } else {
-                                            //Log error al firmar XML
-                                            $arrayLog = [
-                                                'id_de_documentos_electronicos' => $id_doc,
-                                                'descripcion_error' => json_encode($result),
-                                                'id_usuariomod' => $idUsuario,
-                                                'id_usuariocrea' =>  $idUsuario,
-                                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                            ];
-                                            De_Log_Error::setErrorLog($arrayLog);
+
+                                            De_Documentos_Electronicos::updateValidacionXSD($comprobante);
+                                            Ct_Nota_Credito_Clientes::updateValidacionXSD($row->id);
+                                            //firmar xml
+                                            $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $datosFirma->ruta_firma; //firma.p12
+                                            $password = $datosFirma->clave_firma; //'3duard0faustos';
+                                            $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
+                                            if (!empty($result)) {
+                                                De_Documentos_Electronicos::updateXmlFirmado($comprobante);
+                                                Ct_Nota_Credito_Clientes::updateXmlFirmado($row->id);
+                                                //recepcion sri
+                                                $respuesta = $this->recibirWs($result, $data['infoTributaria']['ambiente']);
+                                                De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
+                                                Ct_Nota_Credito_Clientes::updateRecibidoSri($row->id);
+                                                if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
+                                                    //$this->procesarRespuestaXml($respuesta);
+                                                    $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
+                                                    $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
+                                                    De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
+                                                    //autorzacion sri
+                                                    $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
+                                                    $this->generarXmlAutorizacion($respuestaAutorizacion);
+                                                    De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
+                                                    Ct_Nota_Credito_Clientes::updateXmlAutorizacion($row->id, $docAnte->infoTributaria->claveAcceso, str_pad($secuancialDocumento, 9, '0', STR_PAD_LEFT));
+                                                    $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
+                                                    $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
+                                                    $param = [
+                                                        'email' => $row->email_traslado_destinatario,
+                                                        'nombre' => $row->razon_social_destinatario,
+                                                        'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
+                                                        'estab' => $data['infoTributaria']['estab'],
+                                                        'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
+                                                        'secuencial' =>  $data['infoTributaria']['secuencial'],
+                                                        'tipoDoc' => $this->tipoDocumento
+                                                    ];
+                                                    $this->enviar_correo($param);
+                                                } else {
+                                                    $this->generarXmlRespuesta($respuesta);
+                                                    De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
+                                                    Ct_Nota_Credito_Clientes::updateXmlNoRecepcion($row->id);
+                                                    $arrayLog = [
+                                                        'id_de_documentos_electronicos' => $id_doc,
+                                                        'descripcion_error' => json_encode($respuesta),
+                                                        'id_usuariomod' => $idUsuario,
+                                                        'id_usuariocrea' =>  $idUsuario,
+                                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                    ];
+                                                    De_Log_Error::setErrorLog($arrayLog);
+                                                    //return $respuesta['mensajesWs'];
+                                                }
+                                            } else {
+                                                //Log error al firmar XML
+                                                $arrayLog = [
+                                                    'id_de_documentos_electronicos' => $id_doc,
+                                                    'descripcion_error' => json_encode($result),
+                                                    'id_usuariomod' => $idUsuario,
+                                                    'id_usuariocrea' =>  $idUsuario,
+                                                    'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                    'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                ];
+                                                De_Log_Error::setErrorLog($arrayLog);
+                                            }
                                         }
+                                    } else {
+                                        //log No genero XML
+                                        $arrayLog = [
+                                            'id_de_documentos_electronicos' => $id_doc,
+                                            'descripcion_error' => 'Error al crear el documento XML',
+                                            'id_usuariomod' => $idUsuario,
+                                            'id_usuariocrea' =>  $idUsuario,
+                                            'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                            'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                        ];
+                                        De_Log_Error::setErrorLog($arrayLog);
                                     }
                                 } else {
-                                    //log No genero XML
-                                    $arrayLog = [
-                                        'id_de_documentos_electronicos' => $id_doc,
-                                        'descripcion_error' => 'Error al crear el documento XML',
-                                        'id_usuariomod' => $idUsuario,
-                                        'id_usuariocrea' =>  $idUsuario,
-                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                    ];
-                                    De_Log_Error::setErrorLog($arrayLog);
+                                    $result = array('code' => 204, 'state' => true, 'data' => '', 'message' => 'error|' . $id_doc);
+                                    echo json_encode($result);
+                                    return;
                                 }
                             }
                         }
@@ -2635,7 +2628,7 @@ class EmisionDocumentosController extends Controller
                     if ($empresa != '') {
                         $datosFirma = De_Empresa::getDatos($dinfo['empresa']);
 
-                        $venta = Ct_ventas::where('id', $dinfo['idVenta'])->first();
+                        $notaCredito = Ct_Nota_Credito_Clientes::where('id', $dinfo['idVenta'])->first();
 
                         $firma['ruta_firma'] = $datosFirma->ruta_firma;
                         $firma['clave_firma'] = $datosFirma->clave_firma;
@@ -2647,8 +2640,8 @@ class EmisionDocumentosController extends Controller
                         $infoTributaria['nombreComercial'] = $empresa->nombrecomercial;
                         $infoTributaria['ruc'] = $empresa->id;
                         $infoTributaria['codDoc'] = '01';
-                        $infoTributaria['estab'] = str_pad($venta->sucursal, 3, 0, STR_PAD_LEFT);
-                        $infoTributaria['ptoEmi'] = str_pad($venta->punto_emision, 3, 0, STR_PAD_LEFT);
+                        $infoTributaria['estab'] = str_pad($notaCredito->sucursal, 3, 0, STR_PAD_LEFT);
+                        $infoTributaria['ptoEmi'] = str_pad($notaCredito->punto_emision, 3, 0, STR_PAD_LEFT);
                         $infoTributaria['dirMatriz'] = $empresa->direccion;
                         $idDoc = De_Maestro_Documentos::getIdMaestroDocuemnto($infoTributaria['codDoc']);
                         $datosTributarios = De_Info_Tributaria::getDatos(session('id_empresa'), $infoTributaria['estab'], $infoTributaria['ptoEmi'], $idDoc);
@@ -2662,7 +2655,7 @@ class EmisionDocumentosController extends Controller
                         $infoTributaria['secuencial'] = str_pad($secuencial, 9, 0, STR_PAD_LEFT);
                         $claveObj = new ClaveAcceso();
                         $campos = [
-                            'fecha_emision' => str_replace('/', '-', date('d/m/Y', strtotime($venta->fecha))),
+                            'fecha_emision' => str_replace('/', '-', date('d/m/Y', strtotime($notaCredito->fecha))),
                             'tipo_comprobante' => $infoTributaria['codDoc'],
                             'ruc' => $infoTributaria['ruc'],
                             'tipo_ambiente' => $infoTributaria['ambiente'],
@@ -2676,44 +2669,43 @@ class EmisionDocumentosController extends Controller
                         $infoTributaria['claveAcceso'] = $claveObj->clave_acceso;
                         $data['infoTributaria'] = $infoTributaria;
                         //InfoTributaria
-                        $infoFactura['fechaEmision'] = $venta->fecha;
+                        $infoNotaCredito['fechaEmision'] = $notaCredito->fecha;
                         $sucursal = Ct_Sucursales::where('id_empresa', $empresa->id)
                             ->where('codigo_sucursal', $infoTributaria['estab'])
                             ->first();
 
                         if (isset($sucursal->direccion_sucursal)) {
-                            $infoFactura['dirEstablecimiento'] = $sucursal->direccion_sucursal;
+                            $infoNotaCredito['dirEstablecimiento'] = $sucursal->direccion_sucursal;
                         } else {
-                            $infoFactura['dirEstablecimiento'] = $empresa->direccion;
+                            $infoNotaCredito['dirEstablecimiento'] = $empresa->direccion;
                         }
                         if ($datosFirma->contribuyente_especial != '' && $datosFirma->contribuyente_especial != 0) {
-                            $infoFactura['contribuyenteEspecial'] = $datosFirma->contribuyente_especial; //Opcional
+                            $infoNotaCredito['contribuyenteEspecial'] = $datosFirma->contribuyente_especial; //Opcional
                         }
-                        $infoFactura['obligadoContabilidad'] = 'NO'; //Opcional
+                        $infoNotaCredito['obligadoContabilidad'] = 'NO'; //Opcional
                         if ($datosFirma->contabilidad == 1)
-                            $infoFactura['obligadoContabilidad'] = 'SI'; //Opcional
-                        $cliente = Ct_Clientes::getCliente($venta->id_cliente);
+                            $infoNotaCredito['obligadoContabilidad'] = 'SI'; //Opcional
+                        $cliente = Ct_Clientes::getCliente($notaCredito->id_cliente);
 
                         if ($cliente != '') {
                             $email = $cliente->email_representante;
                             $telefonoCliente = $cliente->telefono1;
-                            $infoFactura['tipoIdentificacionComprador'] = str_pad($cliente->tipo, 2, 0, STR_PAD_LEFT);
-                            $infoFactura['identificacionComprador'] = $cliente->identificacion;
-                            $infoFactura['razonSocialComprador'] = $cliente->nombre;
-                            $infoFactura['direccionComprador'] = $cliente->direccion_representante;
+                            $infoNotaCredito['tipoIdentificacionComprador'] = str_pad($cliente->tipo, 2, 0, STR_PAD_LEFT);
+                            $infoNotaCredito['identificacionComprador'] = $cliente->identificacion;
+                            $infoNotaCredito['razonSocialComprador'] = $cliente->nombre;
+                            $infoNotaCredito['direccionComprador'] = $cliente->direccion_representante;
                         } else {
-                            $infoFactura['tipoIdentificacionComprador'] = null;
-                            $infoFactura['identificacionComprador'] = null;
-                            $infoFactura['razonSocialComprador'] = null;
-                            $infoFactura['direccionComprador'] = null; //Opcional
+                            $infoNotaCredito['tipoIdentificacionComprador'] = null;
+                            $infoNotaCredito['identificacionComprador'] = null;
+                            $infoNotaCredito['razonSocialComprador'] = null;
+                            $infoNotaCredito['direccionComprador'] = null; //Opcional
                         }
-                        $infoFactura['totalSinImpuestos'] = $venta->subtotal_0 + $venta->subtotal_12;
-                        $infoFactura['totalConImpuestos'] = $venta->total_final;
+                        $infoNotaCredito['totalSinImpuestos'] = $notaCredito->subtotal_0 + $notaCredito->subtotal_12;
+                        $infoNotaCredito['totalConImpuestos'] = $notaCredito->total_final;
                         $totalConImpuestos = [];
                         $totalConImpuesto = [];
                         $conImpuesto = 0;
-                        $impuestos = Ct_detalle_venta::getDetalles($venta->id);
-                        //dd($impuestos);
+                        $impuestos = Ct_detalle_venta::getDetalles($notaCredito->id);
                         if (count($impuestos) > 0) {
                             foreach ($impuestos as $impuesto) {
                                 if ($impuesto->check_iva == 1)
@@ -2734,22 +2726,22 @@ class EmisionDocumentosController extends Controller
                         }
                         $infoFactura['totalConImpuestos'] = $totalConImpuestos;
                         $infoFactura['propina'] = $this->getDecimal(0);
-                        $infoFactura['importeTotal'] = $venta->total_final;
+                        $infoFactura['importeTotal'] = $notaCredito->total_final;
                         $infoFactura['moneda'] = Ct_Divisas::getMoneda();
-                        $detallePagos = Ct_detalle_venta::getDetalles($venta->id);
+                        $detallePagos = Ct_detalle_venta::getDetalles($notaCredito->id);
                         //Formas de pago
                         $pagos = [];
                         $pago = [];
                         $conPagos = 0;
                         $formasPagos = Ct_Forma_Pago::join('ct_tipo_pago as t', 'ct_forma_pago.tipo', '=', 't.id')
-                            ->where('id_ct_ventas', $venta->id)->get([
+                            ->where('id_ct_ventas', $notaCredito->id)->get([
                                 't.codigo'
                             ]);
                         if (count($formasPagos) > 0) {
                             foreach ($formasPagos as $formaPago) {
                                 $pago['formaPago'] = str_pad($formaPago->codigo, 2, 0, STR_PAD_LEFT);
-                                $pago['total'] = $venta->total_final;
-                                $pago['plazo'] = $venta->dias_plazo;
+                                $pago['total'] = $notaCredito->total_final;
+                                $pago['plazo'] = $notaCredito->dias_plazo;
                                 $pago['unidadTiempo'] = 'dias';
                                 array_push($pagos, $pago);
                             }
@@ -2760,7 +2752,7 @@ class EmisionDocumentosController extends Controller
                         $detalle = [];
                         $detalles = [];
                         $conDetalle = 0;
-                        $detalleFactura = Ct_detalle_venta::getDetalles($venta->id);
+                        $detalleFactura = Ct_detalle_venta::getDetalles($notaCredito->id);
                         if (count($detalleFactura) > 0) {
                             foreach ($detalleFactura as $detaFactura) {
                                 $detalle['p_impuesto'] = $detaFactura->check_iva !== null ? 12 : 0;
@@ -2770,7 +2762,7 @@ class EmisionDocumentosController extends Controller
                                 $detalle['cantidad'] = $detaFactura->cantidad;
                                 $detalle['precioUnitario'] = $detaFactura->precio;
                                 $detalle['descuento'] = $detaFactura->descuento;
-                                $detalle['precioTotalSinImpuesto'] = $venta->subtotal_0 + $venta->subtotal_12;
+                                $detalle['precioTotalSinImpuesto'] = $notaCredito->subtotal_0 + $notaCredito->subtotal_12;
                                 $contAdicional = 0;
                                 if ($detaFactura->detalle != '') {
                                     $detAdicional = [
@@ -2797,11 +2789,13 @@ class EmisionDocumentosController extends Controller
 
                         $data['detalles'] = $detalles;
                         $campoAdicional['nombre'] = "detalle";
-                        $campoAdicional['valor']  = $venta->nota_electronica;
+                        $campoAdicional['valor']  = $notaCredito->nota_electronica;
                         $informacion_adicional[0] = $campoAdicional;
                         $infoAdicional['campoAdicional'] = $informacion_adicional;
                         $data['infoAdicional'] = $informacion_adicional;
-
+                        echo '<pre>';
+                        print_r($data);
+                        exit;
                         $errores = $this->validarData($data);
 
                         //Creacion XML
@@ -2822,111 +2816,118 @@ class EmisionDocumentosController extends Controller
                             'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
                             'clave_acceso' => $data['infoTributaria']['claveAcceso'],
                             'id_maestro_documento' => De_Maestro_Documentos::getIdMaestroDocuemnto($infoTributaria['codDoc']),
-                            'id_documento' => $venta->id
+                            'id_documento' => $notaCredito->id
                         ];
                         $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayLogError, 1);
-                        $idInsertados .= $id_doc . ',';
-                        $comprobante = $this->generarDocElectronicoXml($data);
-                        Ct_ventas::updateGenerarXML($venta->id, $data['infoTributaria']['claveAcceso']);
-                        if (!empty($comprobante)) {
-                            $docAnte = simplexml_load_string($comprobante);
-                            if (!empty($docAnte)) {
-                                //validar xsd
-                                $validacion = $this->validarXmlToXsd($comprobante);
-                                if ($validacion['isValidoXsd'] != 1) {
-                                    $arrayLog = [
-                                        'id_de_documentos_electronicos' => $id_doc,
-                                        'descripcion_error' => json_encode($validacion),
-                                        'id_usuariomod' => $idUsuario,
-                                        'id_usuariocrea' =>  $idUsuario,
-                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                    ];
-                                    De_Log_Error::setErrorLog($arrayLog);
-                                    $result = array('code' => 500, 'state' => true, 'data' => json_encode($validacion), 'message' => 'Error: al validar documento xml.');
-                                    return json_encode($result);
-                                }
-                                De_Documentos_Electronicos::updateValidacionXSD($comprobante);
-                                Ct_ventas::updateValidacionXSD($venta->id);
-                                //firmar xml
-                                $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $datosFirma->ruta_firma; //firma.p12
-                                $password = $datosFirma->clave_firma; //'3duard0faustos';
-                                $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
-                                if (!empty($result)) {
-                                    De_Documentos_Electronicos::updateXmlFirmado($comprobante);
-                                    Ct_ventas::updateXmlFirmado($venta->id);
-                                    //recepcion sri
-                                    $respuesta = $this->recibirWs($result, $data['infoTributaria']['ambiente']);
-                                    De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
-                                    Ct_ventas::updateRecibidoSri($venta->id);
-                                    //dd($respuesta['comprobantes']);
-                                    if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
-                                        //$this->procesarRespuestaXml($respuesta);
-                                        $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
-                                        $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
-                                        De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
-                                        //autorzacion sri
-                                        $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
-                                        $this->generarXmlAutorizacion($respuestaAutorizacion);
-                                        De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
-                                        Ct_ventas::updateXmlAutorizacion($venta->id);
-                                        $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
-                                        $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
-                                        $param = [
-                                            'email' => $venta->email_traslado_destinatario,
-                                            'nombre' => $venta->razon_social_destinatario,
-                                            'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
-                                            'estab' => $data['infoTributaria']['estab'],
-                                            'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
-                                            'secuencial' =>  $data['infoTributaria']['secuencial'],
-                                            'tipoDoc' => $this->tipoDocumento
-                                        ];
-                                        $this->enviar_correo($param);
-                                    } else {
-                                        $this->generarXmlRespuesta($respuesta);
-                                        De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
-                                        Ct_ventas::updateXmlNoRecepcion($venta->id);
+                        if (is_numeric($id_doc)) {
+                            $idInsertados .= $id_doc . ',';
+                            $comprobante = $this->generarDocElectronicoXml($data);
+                            Ct_ventas::updateGenerarXML($notaCredito->id, $data['infoTributaria']['claveAcceso']);
+                            if (!empty($comprobante)) {
+                                $docAnte = simplexml_load_string($comprobante);
+                                if (!empty($docAnte)) {
+                                    //validar xsd
+                                    $validacion = $this->validarXmlToXsd($comprobante);
+                                    if ($validacion['isValidoXsd'] != 1) {
                                         $arrayLog = [
                                             'id_de_documentos_electronicos' => $id_doc,
-                                            'descripcion_error' => json_encode($respuesta),
+                                            'descripcion_error' => json_encode($validacion),
                                             'id_usuariomod' => $idUsuario,
                                             'id_usuariocrea' =>  $idUsuario,
                                             'ip_creacion' => $_SERVER['REMOTE_ADDR'],
                                             'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
                                         ];
                                         De_Log_Error::setErrorLog($arrayLog);
-                                        //dd($respuesta);
-                                        //return $respuesta['mensajesWs'];
+                                        $result = array('code' => 500, 'state' => true, 'data' => json_encode($validacion), 'message' => 'Error: al validar documento xml.');
+                                        return json_encode($result);
                                     }
-                                } else {
-                                    //Log error al firmar XML
-                                    $arrayLog = [
-                                        'id_de_documentos_electronicos' => $id_doc,
-                                        'descripcion_error' => json_encode($result),
-                                        'id_usuariomod' => $idUsuario,
-                                        'id_usuariocrea' =>  $idUsuario,
-                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                                    ];
-                                    De_Log_Error::setErrorLog($arrayLog);
+                                    De_Documentos_Electronicos::updateValidacionXSD($comprobante);
+                                    Ct_ventas::updateValidacionXSD($notaCredito->id);
+                                    //firmar xml
+                                    $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/' . $datosFirma->ruta_firma; //firma.p12
+                                    $password = $datosFirma->clave_firma; //'3duard0faustos';
+                                    $result = $this->generarXmlSignJar($comprobante, $this->tipoDocumento, $ruta_p12, $password, $docAnte->infoTributaria->claveAcceso, $docAnte->infoTributaria->secuencial, $docAnte->infoTributaria->ruc);
+                                    if (!empty($result)) {
+                                        De_Documentos_Electronicos::updateXmlFirmado($comprobante);
+                                        Ct_ventas::updateXmlFirmado($notaCredito->id);
+                                        //recepcion sri
+                                        $respuesta = $this->recibirWs($result, $data['infoTributaria']['ambiente']);
+                                        De_Documentos_Electronicos::updateRecibidoSri($comprobante, $respuesta);
+                                        Ct_ventas::updateRecibidoSri($notaCredito->id);
+                                        if ($respuesta['estado'] == 'RECIBIDA') { //Devuelta
+                                            //$this->procesarRespuestaXml($respuesta);
+                                            $numDocumento = $data['infoTributaria']['estab'] . '-' . $data['infoTributaria']['ptoEmi'] . '-' . $data['infoTributaria']['secuencial'];
+                                            $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
+                                            De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
+                                            //autorzacion sri
+                                            $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
+                                            $this->generarXmlAutorizacion($respuestaAutorizacion);
+                                            De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
+                                            Ct_ventas::updateXmlAutorizacion($notaCredito->id);
+                                            $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
+                                            $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
+                                            $param = [
+                                                'email' => $notaCredito->email_traslado_destinatario,
+                                                'nombre' => $notaCredito->razon_social_destinatario,
+                                                'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
+                                                'estab' => $data['infoTributaria']['estab'],
+                                                'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
+                                                'secuencial' =>  $data['infoTributaria']['secuencial'],
+                                                'tipoDoc' => $this->tipoDocumento
+                                            ];
+                                            $this->enviar_correo($param);
+                                        } else {
+                                            $this->generarXmlRespuesta($respuesta);
+                                            De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
+                                            Ct_ventas::updateXmlNoRecepcion($notaCredito->id);
+                                            $arrayLog = [
+                                                'id_de_documentos_electronicos' => $id_doc,
+                                                'descripcion_error' => json_encode($respuesta),
+                                                'id_usuariomod' => $idUsuario,
+                                                'id_usuariocrea' =>  $idUsuario,
+                                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                            ];
+                                            De_Log_Error::setErrorLog($arrayLog);
+                                            //return $respuesta['mensajesWs'];
+                                        }
+                                    } else {
+                                        //Log error al firmar XML
+                                        $arrayLog = [
+                                            'id_de_documentos_electronicos' => $id_doc,
+                                            'descripcion_error' => json_encode($result),
+                                            'id_usuariomod' => $idUsuario,
+                                            'id_usuariocrea' =>  $idUsuario,
+                                            'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                            'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                        ];
+                                        De_Log_Error::setErrorLog($arrayLog);
+                                    }
                                 }
+                            } else {
+                                //log No genero XML
+                                $arrayLog = [
+                                    'id_de_documentos_electronicos' => $id_doc,
+                                    'descripcion_error' => 'Error al crear el documento XML',
+                                    'id_usuariomod' => $idUsuario,
+                                    'id_usuariocrea' =>  $idUsuario,
+                                    'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                    'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                ];
+                                De_Log_Error::setErrorLog($arrayLog);
                             }
                         } else {
-                            //log No genero XML
-                            $arrayLog = [
-                                'id_de_documentos_electronicos' => $id_doc,
-                                'descripcion_error' => 'Error al crear el documento XML',
-                                'id_usuariomod' => $idUsuario,
-                                'id_usuariocrea' =>  $idUsuario,
-                                'ip_creacion' => $_SERVER['REMOTE_ADDR'],
-                                'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
-                            ];
-                            De_Log_Error::setErrorLog($arrayLog);
+                            $result = array('code' => 204, 'state' => true, 'data' => '', 'message' => 'error|' . $id_doc);
+                            echo json_encode($result);
+                            return;
                         }
                     }
                 }
                 $respuesta = new stdClass();
                 $respuesta->nro_comprobante = $numDocumento;
+                echo '<pre>';
+                print_r($respuesta);
+                exit;
                 return $respuesta;
             }
         } catch (Exception $ex) {
@@ -2961,7 +2962,6 @@ class EmisionDocumentosController extends Controller
         $parametros['claveAccesoComprobante'] = $clave;
         $client = new SoapClient($servicio, $parametros);
         $result = $client->autorizacionComprobante($parametros);
-        dd($result);
         return $result;
     }
     public static function setBarcode($clave, $ruta)
@@ -2990,7 +2990,6 @@ class EmisionDocumentosController extends Controller
             } else {
                 $estado = 1;
             }
-            //dd($estado);
             return $estado;
         } catch (Exception $ex) {
             $estado = false;
@@ -3302,7 +3301,6 @@ class EmisionDocumentosController extends Controller
                     if (isset($data['destinatarios'])) {
                         if ($data['destinatarios'] != '') {
                             $error = $this->validarDestinatarios($data['destinatarios'], $codDoc, $cont, $error);
-                            //dd($error);
                         } else {
                             $error[$cont] = "Error " . ($cont + 1) . ': el campo destinatarios no puede ser vacio';
                             $cont++;
@@ -3327,7 +3325,7 @@ class EmisionDocumentosController extends Controller
                     //ValidarDetalle
                     if (isset($data['detalles'])) {
                         if ($data['detalles'] != '') {
-                            $error = $this->validarDetalles($data['detalles'],$codDoc, $cont, $error);
+                            $error = $this->validarDetalles($data['detalles'], $codDoc, $cont, $error);
                         } else {
                             $error[$cont] = "Error " . ($cont + 1) . ': el campo detalles no puede ser vacio';
                             $cont++;
@@ -3365,7 +3363,7 @@ class EmisionDocumentosController extends Controller
                     //ValidarDetalle
                     if (isset($data['detalles'])) {
                         if ($data['detalles'] != '') {
-                            $error = $this->validarDetalles($data['detalles'],$codDoc, $cont, $error);
+                            $error = $this->validarDetalles($data['detalles'], $codDoc, $cont, $error);
                         } else {
                             $error[$cont] = "Error " . ($cont + 1) . ': el campo detalles no puede ser vacio';
                             $cont++;
@@ -3432,10 +3430,8 @@ class EmisionDocumentosController extends Controller
             $error[$cont] = "Error " . ($cont + 1) . ': el campo identificacionSujetoRetenido es obligatorio';
             $cont++;
         }
-        // dd($error);
         return $error;
     }
-
     private function validarInfoFactura($data, &$cont, $error)
     {
         try {
@@ -4368,6 +4364,9 @@ class EmisionDocumentosController extends Controller
                     $error[$cont] = "Error " . ($cont + 1) . ': el campo motivo no puede ser vacio';
                     $cont++;
                 }
+            } else {
+                $error[$cont] = "Error " . ($cont + 1) . ': el campo motivo es obligatorio';
+                $cont++;
             }
         } catch (Exception $ex) {
             $error[$cont] = "Error " . ($cont + 1) . $ex->getMessage();
@@ -4936,19 +4935,19 @@ class EmisionDocumentosController extends Controller
         try {
             $contDeta = 0;
             foreach ($data as $detalle) {
-                //validarCodigoPrincipal
-                if (isset($detalle['codigoPrincipal'])) {
-                    if ($detalle['codigoPrincipal'] != '') {
-                        if (strlen($detalle['codigoPrincipal']) > 25) {
-                            $error[$cont] = "Error " . ($cont + 1) . ': el campo codigoPrincipal del detalle ' . ($contDeta + 1) . ' puede tener maximo 25 caracteres';
+                if ($codDoc != '06') {
+                    //validarCodigoPrincipal
+                    if (isset($detalle['codigoPrincipal'])) {
+                        if ($detalle['codigoPrincipal'] != '') {
+                            if (strlen($detalle['codigoPrincipal']) > 25) {
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigoPrincipal del detalle ' . ($contDeta + 1) . ' puede tener maximo 25 caracteres';
+                                $cont++;
+                            }
+                        } else {
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo codigoPrincipal del detalle ' . ($contDeta + 1) . ' no puede estar vacio';
                             $cont++;
                         }
-                    } else {
-                        $error[$cont] = "Error " . ($cont + 1) . ': el campo codigoPrincipal del detalle ' . ($contDeta + 1) . ' no puede estar vacio';
-                        $cont++;
                     }
-                }
-                if ($codDoc == 01) {
                     //validarCodigoAuxiliar
                     if (isset($detalle['codigoAuxiliar'])) {
                         if ($detalle['codigoAuxiliar'] != '') {
@@ -4965,6 +4964,18 @@ class EmisionDocumentosController extends Controller
                         $cont++;
                     }
                 } else {
+                    //validarCodigoInterno
+                    if (isset($detalle['codigoInterno'])) {
+                        if ($detalle['codigoInterno'] != '') {
+                            if (strlen($detalle['codigoInterno']) > 25) {
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigoInterno del detalle ' . ($contDeta + 1) . ' puede tener maximo 25 caracteres';
+                                $cont++;
+                            }
+                        } else {
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo codigoInterno del detalle ' . ($contDeta + 1) . ' no puede estar vacio';
+                            $cont++;
+                        }
+                    }
                     //validarCodigoAdicional
                     if (isset($detalle['codigoAdicional'])) {
                         if ($detalle['codigoAdicional'] != '') {
@@ -4981,6 +4992,7 @@ class EmisionDocumentosController extends Controller
                         $cont++;
                     }
                 }
+
                 //validarDescripcion
                 if (isset($detalle['descripcion'])) {
                     if ($detalle['descripcion'] != '') {
@@ -5015,6 +5027,7 @@ class EmisionDocumentosController extends Controller
                     $error[$cont] = "Error " . ($cont + 1) . ': el campo cantidad del detalle ' . ($contDeta + 1) . ' es obligatorio';
                     $cont++;
                 }
+
                 if ($codDoc != 06) {
                     //validarPrecioUnitario
                     if (isset($detalle['precioUnitario'])) {
@@ -5071,18 +5084,6 @@ class EmisionDocumentosController extends Controller
                         }
                     } else {
                         $error[$cont] = "Error " . ($cont + 1) . ': el campo precioTotalSinImpuesto del detalle ' . ($contDeta + 1) . ' es obligatorio';
-                        $cont++;
-                    }
-                    //validarImpuestos
-                    if (isset($detalle['impuestos'])) {
-                        if (count($detalle['impuestos']) > 0) {
-                            $error = $this->validarImpuestos($detalle['impuestos'], $cont, $error);
-                        } else {
-                            $error[$cont] = "Error " . ($cont + 1) . ': el campo impuestos del detalle ' . ($contDeta + 1) . ' no puede estar vacio';
-                            $cont++;
-                        }
-                    } else {
-                        $error[$cont] = "Error " . ($cont + 1) . ': el campo impuestos del detalle ' . ($contDeta + 1) . ' es obligatorio';
                         $cont++;
                     }
                 }
@@ -5366,7 +5367,6 @@ class EmisionDocumentosController extends Controller
     }
     private  function getDetallesAdicionales($xmlDocument, $detalles)
     {
-        //echo '<pre>';print_r($detalles);exit;
         $nodoDetalle = $xmlDocument->createElement('detallesAdicionales');
         $count = 0;
         foreach ($detalles as $detalle) {
@@ -5515,10 +5515,6 @@ class EmisionDocumentosController extends Controller
             $xml->appendChild($root);
             $xml->formatOutput = true;
             $comprobante = $xml->saveXML();
-
-            $xml->appendChild($root);
-            $xml->formatOutput = true;
-            $comprobante = $xml->saveXML();
             $r_ = base_path() . '/storage/app/facturaelectronica/sinfirmar/' . $campos['infoTributaria']['ruc'] . '/' . $this->tipoDocumento . '/';
             $this->crearcarpeta($r_);
             $ruta = $r_ . $this->tipoDocumento . '-' . $campos['infoTributaria']['estab'] . '-' .  $campos['infoTributaria']['ptoEmi'] . '-' . str_pad($campos['infoTributaria']['secuencial'], 9, 0, STR_PAD_LEFT) . '.xml';
@@ -5529,7 +5525,7 @@ class EmisionDocumentosController extends Controller
     public static function crearcarpeta($ruta)
     {
         if (!file_exists($ruta)) {
-            mkdir($ruta, 0777, true);
+            mkdir($ruta, 777, true);
         }
     }
     public function validarXmlToXsd($dataDoc)
@@ -5727,7 +5723,6 @@ class EmisionDocumentosController extends Controller
     public function procesarRespuestaXml($xmlGenerado)
     {
         $compelXml = simplexml_load_string($xmlGenerado);
-        //dd($compelXml);
         $isValido = false;
         $comprobante = "";
         $mensajes = array();
@@ -5753,7 +5748,6 @@ class EmisionDocumentosController extends Controller
         $result["isValido"] = $isValido;
         $result["mensajes"] = $mensajes;
         $result["comprobante"] = $comprobante;
-        //dd($result);
         return $result;
     }
     public function htmlspecial($valor)
@@ -5843,7 +5837,6 @@ class EmisionDocumentosController extends Controller
                 $root->appendChild($estado);
                 $nodoComprobantes = $xml->createElement('comprobantes');
                 $comprobantes = $xmlRespuesta['comprobantes'];
-                //dd($comprobantes);
                 foreach ($comprobantes as $comprobante) {
                     $nodoComprobante = $xml->createElement('comprobante');
                     $nodoComprobante->appendChild($xml->createElement('claveAcceso', $comprobante['claveAcceso']));
@@ -5889,7 +5882,6 @@ class EmisionDocumentosController extends Controller
                 $root->appendChild($estado);
                 $nodoComprobantes = $xml->createElement('comprobantes');
                 $comprobantes = $xmlRespuesta['comprobantes'];
-                //dd($comprobantes);
                 foreach ($comprobantes as $comprobante) {
                     $nodoComprobante = $xml->createElement('comprobante');
                     $nodoComprobante->appendChild($xml->createElement('claveAcceso', $clave));
@@ -5901,7 +5893,6 @@ class EmisionDocumentosController extends Controller
                     $nodoComprobantes->appendChild($nodoComprobante);
                     $root->appendChild($nodoComprobantes);
                 }
-                //dd($root);
                 $mensajesWs = $xmlRespuesta['mensajesWs'];
                 $nodoMensajesWs = $xml->createElement('MensajesWs');
                 foreach ($mensajesWs as $mensajeWs) {
@@ -6009,7 +6000,6 @@ class EmisionDocumentosController extends Controller
             $this->crearcarpeta($r_);
             $ruta = $r_ . $nombreArchivo . '_' . $estado . '.xml';
             $xml->save($ruta);
-            //dd($comprobante);
             return $comprobante;
         } catch (Exception $ex) {
             echo $ex->getMessage();
@@ -6058,7 +6048,6 @@ class EmisionDocumentosController extends Controller
             $this->crearcarpeta($r_);
             $ruta = $r_ . $nombreArchivo . '_' . $estado . '.xml';
             $xml->save($ruta);
-            //dd($comprobante);
             return $comprobante;
         } catch (Exception $ex) {
             echo $ex->getMessage();
@@ -6083,20 +6072,20 @@ class EmisionDocumentosController extends Controller
     }
     public function generarPdf($xml, $accion = '', $tipo = '')
     {
-        $this->tipoDocumento = $tipo;
+        $docCod = substr($xml, 8, 2);
         $clave = $xml;
         $xml = base_path() . '/storage/app/facturaelectronica/respuestaSri/autorizacion/' . $clave . '_AUTORIZADO.xml';
-        if ($this->tipoDocumento == 'guiaRemision')
+        if ($docCod == '01')
+            $pdf = 'sri_electronico.documentosgenerados.view_facturapdf';
+        elseif ($docCod == '03')
+            $pdf = 'sri_electronico.documentosgenerados.';
+        elseif ($docCod == '04')
+            $pdf = 'sri_electronico.documentosgenerados.';
+        elseif ($docCod == '05')
+            $pdf = 'sri_electronico.documentosgenerados.';
+        elseif ($docCod == '06')
             $pdf = 'sri_electronico.documentosgenerados.view_guiaremisionpdf';
-        elseif ($this->tipoDocumento == 'factura')
-            $pdf = 'sri_electronico.documentosgenerados.';
-        elseif ($this->tipoDocumento == 'liquidacionCompra')
-            $pdf = 'sri_electronico.documentosgenerados.';
-        elseif ($this->tipoDocumento == 'notaCredito')
-            $pdf = 'sri_electronico.documentosgenerados.';
-        elseif ($this->tipoDocumento == 'notaDebito')
-            $pdf = 'sri_electronico.documentosgenerados.';
-        elseif ($this->tipoDocumento = 'comprobanteRetencion')
+        elseif ($docCod = '07')
             $pdf = 'sri_electronico.documentosgenerados.view_compRetencionPDF';
 
         if (file_exists($xml)) {
@@ -6177,7 +6166,7 @@ class EmisionDocumentosController extends Controller
             });
             return true;
         } catch (Exception $e) {
-            return false;
+            echo json_encode(['Error: ' => $e->getMessage(), 'Linea: ' => $e->getLine()]);
         }
     }
     public function getInfoFactura($xmlDocument, $campos)
@@ -6310,7 +6299,6 @@ class EmisionDocumentosController extends Controller
         $nodoDetalle = $xmlDocument->createElement('impuestos');
         $impuestos = $campos["impuestos"];
         foreach ($impuestos as $impuesto) {
-            //dd($impuesto);
             $item = $xmlDocument->createElement('impuesto');
             $item->appendChild($xmlDocument->createElement('codigo', $impuesto['codigo']));
             $item->appendChild($xmlDocument->createElement('codigoRetencion', $impuesto['codigoRetencion']));

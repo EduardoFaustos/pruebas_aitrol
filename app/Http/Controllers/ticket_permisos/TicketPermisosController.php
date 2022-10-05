@@ -637,6 +637,8 @@ class TicketPermisosController extends Controller
             $msj->from('alexo8ec@hotmail.com');
             $msj->bcc('torbi10@hotmail.com');
         });
+
+        return redirect()->back();
     }
 
 }

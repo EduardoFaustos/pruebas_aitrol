@@ -346,7 +346,22 @@ class ControlDocController extends Controller
     private function carga_hc($hcid)
     {
 
-        $historiaclinica = DB::table('historiaclinica')->where('historiaclinica.hcid', $hcid)->join('paciente', 'paciente.id', 'historiaclinica.id_paciente')->join('seguros', 'seguros.id', 'historiaclinica.id_seguro')->join('users', 'users.id', 'paciente.id_usuario')->join('agenda', 'agenda.id', 'historiaclinica.id_agenda')->leftjoin('subseguro', 'subseguro.id', 'historiaclinica.id_subseguro')->select('historiaclinica.*', 'paciente.nombre1', 'paciente.nombre2', 'paciente.apellido1', 'paciente.apellido2', 'seguros.nombre', 'agenda.fechaini', 'paciente.fecha_nacimiento', 'agenda.proc_consul', 'agenda.id_procedimiento', 'seguros.tipo', 'subseguro.nombre as sbnombre', 'paciente.telefono1', 'paciente.telefono2', 'paciente.telefono3', 'users.nombre1 as unombre1', 'users.nombre2 as unombre2', 'users.apellido1 as uapellido1', 'users.apellido2 as uapellido2', 'paciente.parentesco', 'users.telefono1 as utelefono1', 'users.telefono2 as utelefono2', 'users.id as uid', 'paciente.parentescofamiliar as fparentesco', 'paciente.nombre1familiar as fnombre1', 'paciente.nombre2familiar as fnombre2', 'paciente.apellido1familiar as fapellido1', 'paciente.apellido2familiar as fapellido2', 'paciente.id_usuario', 'paciente.cedulafamiliar', 'agenda.id_sala as idsala')->first();
+        $historiaclinica = DB::table('historiaclinica')->where('historiaclinica.hcid', $hcid)
+        ->join('paciente', 'paciente.id', 'historiaclinica.id_paciente')
+        ->join('seguros', 'seguros.id', 'historiaclinica.id_seguro')
+        ->join('users', 'users.id', 'paciente.id_usuario')
+        ->join('agenda', 'agenda.id', 'historiaclinica.id_agenda')
+        ->leftjoin('subseguro', 'subseguro.id', 'historiaclinica.id_subseguro')
+        ->select('historiaclinica.*', 'paciente.nombre1', 'paciente.nombre2', 'paciente.apellido1', 
+        'paciente.apellido2', 'seguros.nombre', 'agenda.fechaini', 'paciente.fecha_nacimiento', 
+        'agenda.proc_consul', 'agenda.id_procedimiento', 'seguros.tipo', 'subseguro.nombre as sbnombre', 
+        'paciente.telefono1', 'paciente.telefono2', 'paciente.telefono3', 'users.nombre1 as unombre1', 
+        'users.nombre2 as unombre2', 'users.apellido1 as uapellido1', 'users.apellido2 as uapellido2', 
+        'paciente.parentesco', 'users.telefono1 as utelefono1', 'users.telefono2 as utelefono2', 
+        'users.id as uid', 'paciente.parentescofamiliar as fparentesco', 'paciente.nombre1familiar as fnombre1', 
+        'paciente.nombre2familiar as fnombre2', 'paciente.apellido1familiar as fapellido1', 
+        'paciente.apellido2familiar as fapellido2', 'paciente.id_usuario', 'paciente.cedulafamiliar', 
+        'agenda.id_sala as idsala')->first();
 
         return $historiaclinica;
     }
@@ -596,7 +611,6 @@ class ControlDocController extends Controller
 
             if (!is_null($protocolo->fecha)) {
                 $date = $protocolo->fecha;
-
             } else {
                 $date = $agenda->fechaini;
             }
@@ -891,9 +905,11 @@ class ControlDocController extends Controller
         $view = \View::make('hc_admision.formato.certificado', compact('agenda', 'tipo', 'date', 'paciente', 'descanso', 'letras', 'fecha_hasta', 'cfecha', 'doctor', 'id_doctor1', 'diagnostico', 'firma', 'especialidad', 'desde', 'hasta', 'familiar', 'institucion'))->render();
         $pdf  = \App::make('dompdf.wrapper');
 
-        $pdf->setOptions(['dpi' => 96, 
+        $pdf->setOptions([
+            'dpi' => 96,
             'isRemoteEnabled' => true,
-            'chroot'  => base_path('storage/app'),]);
+            'chroot'  => base_path('storage/app'),
+        ]);
         $paper_size = array(0, 0, 595.28, 850);
         $pdf->setpaper($paper_size);
         //$pdf->loadHTML($view);
@@ -1950,22 +1966,54 @@ class ControlDocController extends Controller
 
                 $sheet->mergeCells('A3:' . $letras[$cant_doc - 1] . '3');
 
-                $mes = substr($fecha_d, 5, 2);if ($mes == 01) {
+                $mes = substr($fecha_d, 5, 2);
+                if ($mes == 01) {
                     $mes_letra
-                    = "ENERO";}if ($mes == 02) {$mes_letra = "FEBRERO";}if
-                ($mes == 03) {$mes_letra = "MARZO";}if ($mes == 04) {$mes_letra = "ABRIL";}if ($mes == 05) {
+                        = "ENERO";
+                }
+                if ($mes == 02) {
+                    $mes_letra = "FEBRERO";
+                }
+                if ($mes == 03) {
+                    $mes_letra = "MARZO";
+                }
+                if ($mes == 04) {
+                    $mes_letra = "ABRIL";
+                }
+                if ($mes == 05) {
                     $mes_letra
-                    = "MAYO";}if ($mes == 06) {$mes_letra = "JUNIO";}if
-                ($mes == 07) {$mes_letra = "JULIO";}if ($mes == '08') {$mes_letra = "AGOSTO";}if ($mes == '09') {
+                        = "MAYO";
+                }
+                if ($mes == 06) {
+                    $mes_letra = "JUNIO";
+                }
+                if ($mes == 07) {
+                    $mes_letra = "JULIO";
+                }
+                if ($mes == '08') {
+                    $mes_letra = "AGOSTO";
+                }
+                if ($mes == '09') {
                     $mes_letra
-                    = "SEPTIEMBRE";}if ($mes == '10') {
+                        = "SEPTIEMBRE";
+                }
+                if ($mes == '10') {
                     $mes_letra
-                    = "OCTUBRE";}if ($mes == '11') {
+                        = "OCTUBRE";
+                }
+                if ($mes == '11') {
                     $mes_letra
-                    = "NOVIEMBRE";}if ($mes == '12') {
+                        = "NOVIEMBRE";
+                }
+                if ($mes == '12') {
                     $mes_letra
-                    = "DICIEMBRE";}$fecha2 = 'FECHA: ' . substr($fecha_d, 8,
-                    2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
+                        = "DICIEMBRE";
+                }
+                $fecha2 = 'FECHA: ' . substr(
+                    $fecha_d,
+                    8,
+                    2
+                ) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
                 $sheet->cell('A2', function ($cell) use ($fecha2) {
                     // manipulate the cel
                     $cell->setValue('PROCEDIMIENTOS DOCUMENTOS ISSPOL' . ' - ' . $fecha2);
@@ -2465,7 +2513,6 @@ class ControlDocController extends Controller
                     $i = $i + 1;
                 }
             });
-
         })->export('xlsx');
     }
 
@@ -2973,7 +3020,6 @@ class ControlDocController extends Controller
                                 $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             });
                             $nl++;
-
                         }
                     }
 
@@ -3016,7 +3062,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('I' . $i, function ($cell) {
                             // manipulate the cel
@@ -3041,7 +3086,11 @@ class ControlDocController extends Controller
 
                         foreach ($orden_funcional as $of) {
                             if ($cont < 2) {
-                                if ($cont == 0) {$txt_of = $of->nombre_proc;} else { $txt_of = $txt_of . ' + ' . $of->nombre_proc;}
+                                if ($cont == 0) {
+                                    $txt_of = $of->nombre_proc;
+                                } else {
+                                    $txt_of = $txt_of . ' + ' . $of->nombre_proc;
+                                }
                                 $cont++;
                             }
                             $fecha_ordenof = substr($of->fecha_orden, 0, 10);
@@ -3059,7 +3108,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('K' . $i, function ($cell) {
                             // manipulate the cel
@@ -3084,12 +3132,15 @@ class ControlDocController extends Controller
 
                         foreach ($orden_imagen as $oi) {
                             if ($cont < 2) {
-                                if ($cont == 0) {$txt_oi = $oi->nombre_proc;} else { $txt_oi = $txt_oi . ' + ' . $oi->nombre_proc;}
+                                if ($cont == 0) {
+                                    $txt_oi = $oi->nombre_proc;
+                                } else {
+                                    $txt_oi = $txt_oi . ' + ' . $oi->nombre_proc;
+                                }
                                 $cont++;
                             }
 
                             $fecha_ordenoi = substr($oi->fecha_orden, 0, 10);
-
                         }
 
                         if (!is_null($orden_labs)) {
@@ -3115,7 +3166,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('M' . $i, function ($cell) {
                             // manipulate the cel
@@ -3199,7 +3249,6 @@ class ControlDocController extends Controller
                                 $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             });
                             $nletra++;
-
                         }
                     }
 
@@ -3600,7 +3649,6 @@ class ControlDocController extends Controller
                                 $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             });
                             $nl++;
-
                         }
                     }
 
@@ -3643,7 +3691,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('I' . $i, function ($cell) {
                             // manipulate the cel
@@ -3668,7 +3715,11 @@ class ControlDocController extends Controller
 
                         foreach ($orden_funcional as $of) {
                             if ($cont < 2) {
-                                if ($cont == 0) {$txt_of = $of->nombre_proc;} else { $txt_of = $txt_of . ' + ' . $of->nombre_proc;}
+                                if ($cont == 0) {
+                                    $txt_of = $of->nombre_proc;
+                                } else {
+                                    $txt_of = $txt_of . ' + ' . $of->nombre_proc;
+                                }
                                 $cont++;
                             }
                             $fecha_ordenof = substr($of->fecha_orden, 0, 10);
@@ -3686,7 +3737,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('K' . $i, function ($cell) {
                             // manipulate the cel
@@ -3711,12 +3761,15 @@ class ControlDocController extends Controller
 
                         foreach ($orden_imagen as $oi) {
                             if ($cont < 2) {
-                                if ($cont == 0) {$txt_oi = $oi->nombre_proc;} else { $txt_oi = $txt_oi . ' + ' . $oi->nombre_proc;}
+                                if ($cont == 0) {
+                                    $txt_oi = $oi->nombre_proc;
+                                } else {
+                                    $txt_oi = $txt_oi . ' + ' . $oi->nombre_proc;
+                                }
                                 $cont++;
                             }
 
                             $fecha_ordenoi = substr($oi->fecha_orden, 0, 10);
-
                         }
 
                         if (!is_null($orden_labs)) {
@@ -3742,7 +3795,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('M' . $i, function ($cell) {
                             // manipulate the cel
@@ -4228,7 +4280,6 @@ class ControlDocController extends Controller
                                 $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             });
                             $nl++;
-
                         }
                     }
 
@@ -4278,7 +4329,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('I' . $i, function ($cell) {
                             // manipulate the cel
@@ -4303,7 +4353,11 @@ class ControlDocController extends Controller
 
                         foreach ($orden_funcional as $of) {
                             if ($cont < 2) {
-                                if ($cont == 0) {$txt_of = $of->nombre_proc;} else { $txt_of = $txt_of . ' + ' . $of->nombre_proc;}
+                                if ($cont == 0) {
+                                    $txt_of = $of->nombre_proc;
+                                } else {
+                                    $txt_of = $txt_of . ' + ' . $of->nombre_proc;
+                                }
                                 $cont++;
                             }
                             $fecha_ordenof = substr($of->fecha_orden, 0, 10);
@@ -4321,7 +4375,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('K' . $i, function ($cell) {
                             // manipulate the cel
@@ -4346,12 +4399,15 @@ class ControlDocController extends Controller
 
                         foreach ($orden_imagen as $oi) {
                             if ($cont < 2) {
-                                if ($cont == 0) {$txt_oi = $oi->nombre_proc;} else { $txt_oi = $txt_oi . ' + ' . $oi->nombre_proc;}
+                                if ($cont == 0) {
+                                    $txt_oi = $oi->nombre_proc;
+                                } else {
+                                    $txt_oi = $txt_oi . ' + ' . $oi->nombre_proc;
+                                }
                                 $cont++;
                             }
 
                             $fecha_ordenoi = substr($oi->fecha_orden, 0, 10);
-
                         }
 
                         if (!is_null($orden_labs)) {
@@ -4377,7 +4433,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('M' . $i, function ($cell) {
                             // manipulate the cel
@@ -4861,7 +4916,6 @@ class ControlDocController extends Controller
                                 $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             });
                             $nl++;
-
                         }
                     }
 
@@ -4911,7 +4965,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('I' . $i, function ($cell) {
                             // manipulate the cel
@@ -4936,7 +4989,11 @@ class ControlDocController extends Controller
 
                         foreach ($orden_funcional as $of) {
                             if ($cont < 2) {
-                                if ($cont == 0) {$txt_of = $of->nombre_proc;} else { $txt_of = $txt_of . ' + ' . $of->nombre_proc;}
+                                if ($cont == 0) {
+                                    $txt_of = $of->nombre_proc;
+                                } else {
+                                    $txt_of = $txt_of . ' + ' . $of->nombre_proc;
+                                }
                                 $cont++;
                             }
                             $fecha_ordenof = substr($of->fecha_orden, 0, 10);
@@ -4954,7 +5011,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('K' . $i, function ($cell) {
                             // manipulate the cel
@@ -4979,12 +5035,15 @@ class ControlDocController extends Controller
 
                         foreach ($orden_imagen as $oi) {
                             if ($cont < 2) {
-                                if ($cont == 0) {$txt_oi = $oi->nombre_proc;} else { $txt_oi = $txt_oi . ' + ' . $oi->nombre_proc;}
+                                if ($cont == 0) {
+                                    $txt_oi = $oi->nombre_proc;
+                                } else {
+                                    $txt_oi = $txt_oi . ' + ' . $oi->nombre_proc;
+                                }
                                 $cont++;
                             }
 
                             $fecha_ordenoi = substr($oi->fecha_orden, 0, 10);
-
                         }
 
                         if (!is_null($orden_labs)) {
@@ -5010,7 +5069,6 @@ class ControlDocController extends Controller
                             $cell->setBorder('thin', 'thin', 'thin', 'thin');
                             //$cell->setFontColor($txtcolor);
                         });
-
                     } else {
                         $sheet->cell('M' . $i, function ($cell) {
                             // manipulate the cel
@@ -5100,9 +5158,7 @@ class ControlDocController extends Controller
                     $i = $i + 1;
                 }
             });
-
         })->export('xlsx');
-
     }
 
     public function valida_existe($hcid, $id_doc)
@@ -5311,7 +5367,6 @@ class ControlDocController extends Controller
 
             if (!is_null($protocolo->fecha)) {
                 $date = $protocolo->fecha;
-
             } else {
                 $date = $agenda->fechaini;
             }

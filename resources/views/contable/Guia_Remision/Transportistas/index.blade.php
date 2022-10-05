@@ -90,8 +90,8 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{Route('transportistas.editar', ['id'=>$mt->id])}}" class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <a href="{{Route('transportistas.delete', ['id'=>$mt->id])}}" class="btn btn-danger"><i class="glyphicon glyphicon-trash "></i></a>
+                                            <a href="{{Route('transportistas.editar', ['id'=>$mt->ci_ruc])}}" class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                                            <a href="{{Route('transportistas.delete', ['id'=>$mt->ci_ruc])}}" class="btn btn-danger"><i class="glyphicon glyphicon-trash "></i></a>
                                         </td>
                                     </tr>
                                     @endforeach

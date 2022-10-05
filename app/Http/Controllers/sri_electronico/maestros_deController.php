@@ -52,6 +52,7 @@ class maestros_deController extends Controller
 
     public function update(Request $request)
     {
+        //dd($request);
         $ip_cliente = $_SERVER["REMOTE_ADDR"];
         $idusuario = Auth::user()->id;
         date_default_timezone_set('America/Guayaquil');
@@ -60,15 +61,15 @@ class maestros_deController extends Controller
 
         //$firmar = new FirmaElectronica($config);
 
-
         $deempresas = De_empresa::find($request['id']);
         $deempresas->id_empresa = $request->id_empresa;
         $deempresas->agente_retencion = $request->agente_retencion;
         $deempresas->ambiente = $request->ambiente;
+        $deempresas->tipo_contribuyente = $request->tipo_contribuyente;
         $deempresas->contabilidad = $request->contabilidad;
         $deempresas->contribuyente_especial  = $request->contribuyente_especial;
         $deempresas->tipo_rimpe = $request->tipo_rimpe;
-        $deempresas->ruta_firma  = $_FILES['entidadFirma']['name'];
+        $deempresas->ruta_firma  = $request->texfirma;
         $deempresas->clave_firma  = $request->clave_firma;
         $deempresas->estado     = 1;
         $deempresas->ip_creacion = $ip_cliente;
@@ -78,7 +79,6 @@ class maestros_deController extends Controller
         $deempresas->save();
         return redirect('empresa');
     }
-
     function guardarArchivo(Request $req)
     {
         $archivo = '';

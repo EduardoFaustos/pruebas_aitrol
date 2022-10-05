@@ -14,8 +14,6 @@ Route::get('sala/espera/cambio_estado', 'turnero\TurneroController@cambio_estado
 Route::get('sala/espera/finalizar', 'turnero\TurneroController@finalizar')->name('turnero_finalizar');
 Route::match(['get', 'post'], 'sala/espera/turnos', 'turnero\TurneroController@turnos')->name('turnero_turnos');
 
-
-
 //sin cedula
 Route::post('turnero/sala/identificacion', 'turnero\TurneroController@index_2')->name('turnero_index_sincedula');
 Route::get('turnero/cache', 'turnero\TurneroController@guardar_cache')->name('guardar_cache');
@@ -28,12 +26,12 @@ Route::match(['get', 'post'], 'sala/espera/turno_lista', 'turnero\TurneroControl
 Route::match(['get', 'post'], 'sala/espera/verficacion_turno', 'turnero\TurneroController@verficacion_turno')->name('verficacion_turno');
 Route::match(['get', 'post'], 'sala/espera/verficacion_boleto', 'turnero\TurneroController@verficacion_boleto')->name('verficacion_boleto');
 //Excel
-Route::match(['get', 'post'], 'turnero/sala/excel_buscar', 'turnero\TurneroController@excel_buscar')->name('turnero.excel_buscarturnero');
+Route::post('turnero/sala/excel_buscar', 'turnero\TurneroController@excel_buscar')->name('excel_buscarturnero');
 //disposito externo
 Route::get('sala/espera/turno_pantalla', 'turnero\TurneroController@turno_pantalla')->name('turno_pantalla_sala_espera');
 Route::match(['get', 'post'], 'sala/espera/nuevo_turnos_pantalla', 'turnero\TurneroController@nuevo_turnos_pantalla')->name('nuevo_turnos_pantalla');
 Route::match(['get', 'post'], 'sala/espera/turno_lista_pantalla', 'turnero\TurneroController@turno_lista_pantalla')->name('turno_lista_pantalla');
-
+Route::match(['get', 'post'], 'turnero/sala/excel_buscar', 'turnero\TurneroController@excel_buscar')->name('turnero.excel_buscarturnero');
 
 
 //trabajo de campo
@@ -50,24 +48,21 @@ Route::get('control/sintomas', 'control_sintoma\ControlSintomasController@index'
 Route::get('control/sintomas/create', function () {
     return view('control_sintoma/create');
 })->name('create_control');
-Route::match(['get', 'post'], 'control/sintomas/save', 'control_sintoma\ControlSintomasController@save')->name('save_control');
-Route::match(['get', 'post'], 'control/sintomas/edit/{id}', function (ControlSintoma $id) {
-    return view('control_sintoma/edit', ['user' => $id]);
+Route::match(['get', 'post'],'control/sintomas/save', 'control_sintoma\ControlSintomasController@save')->name('save_control');
+Route::match(['get', 'post'],'control/sintomas/edit/{id}',function(ControlSintoma $id){
+    return view('control_sintoma/edit',['user'=>$id]);
 })->name('edit_control');
 
-Route::match(['get', 'post'], 'control/sintomas/editar', 'control_sintoma\ControlSintomasController@editar')->name('editar_control');
+Route::match(['get', 'post'],'control/sintomas/editar', 'control_sintoma\ControlSintomasController@editar')->name('editar_control');
 
 
-Route::match(['get', 'post'], 'control/sintomas/buscar', 'control_sintoma\ControlSintomasController@buscar')->name('buscar_control');
+Route::match(['get', 'post'],'control/sintomas/buscar', 'control_sintoma\ControlSintomasController@buscar')->name('buscar_control');
 Route::get('control/sintomas', 'control_sintoma\ControlSintomasController@index')->name('index_control');
-Route::match(['get', 'post'], 'control/sintomas/buscarusuario', 'control_sintoma\ControlSintomasController@usuarios')->name('buscarusuario_control');
+Route::match(['get', 'post'],'control/sintomas/buscarusuario', 'control_sintoma\ControlSintomasController@usuarios')->name('buscarusuario_control');
+
+
 Route::post('sala/espera/imprimir/boleto', 'turnero\TurneroController@imprimir_boleto')->name('imprimir_boleto_turnero');
-//consentimiento
-Route::get('consentimiento/radiologia_intervencionista', 'control_sintoma\ControlSintomasController@radiologia_intervencionista')->name('consentimiento_radiologia');
-//excel Eduardo
-Route::get('excel/modelo/registro/utilizados', 'control_sintoma\ControlSintomasController@registros_utilizados')->name('registros_utilizados_excel');
-
-
-//10/5/2022
-Route::get('modelo/registro/materiales_utilizados', 'Insumos\InsumosController@materiales_utilizados')->name('materiales_utilizados_excel');
-
+//17/08/2022
+Route::post('sala/espera/guardar/hora', 'turnero\TurneroController@guardar_hora')->name('guardar_hora_turnero');
+//26/08/2022
+Route::post('buscar/excel/turno', 'turnero\TurneroController@buscar_turno')->name('turnero_buscar_turno');

@@ -1,7 +1,7 @@
 <?php
 //Registro de Limpieza de Baños
 Route::get('limpieza_banos/index', 'servicios_generales\LimpiezaBanosController@salas')->name('limpieza_banos.index');
-Route::get('limpieza_banos/sala/{id}', 'servicios_generales\LimpiezaBanosController@index')->name('limpieza_banos.index_2');
+Route::get('limpieza_banos/sala', 'servicios_generales\LimpiezaBanosController@index')->name('limpieza_banos.index_2');
 Route::match(['get', 'post'], 'limpieza_banos/create/{id_sala}', 'servicios_generales\LimpiezaBanosController@create')->name('limpieza_banos.create');
 Route::match(['get', 'post'], 'limpieza_banos/store', 'servicios_generales\LimpiezaBanosController@guardar')->name('limpieza_banos.store');
 Route::match(['get', 'post'], 'limpieza_banos/buscar_fecha', 'servicios_generales\LimpiezaBanosController@buscar_fecha')->name('limpieza_banos.buscar_fecha');
@@ -45,18 +45,11 @@ Route::get('limpieza_equipo/registro/{id}/{id_sala}/{id_pentax}', 'servicios_gen
 Route::get('limpieza_equipo/autocomplete', 'servicios_generales\LimpiezaEquipoController@autocomplete')->name('limpieza_equipo.autocomplete');
 Route::get('limpieza_equipo/guardar', 'servicios_generales\LimpiezaEquipoController@guardar')->name('limpieza_equipo.guardar');
 Route::get('limpieza_equipo/editar/{id}', 'servicios_generales\LimpiezaEquipoController@editar')->name('limpieza_control.editar');
-
-
 Route::get('limpieza_equipo/marca', 'servicios_generales\LimpiezaEquipoController@marca')->name('limpieza_control.marca');
-
-Route::match(['get', 'post'], 'limpieza_equipo/marca', 'servicios_generales\LimpiezaEquipoController@marca')->name('limpieza_control.marca');
-
-
-Route::match(['get', 'post'], 'limpieza_equipo/marca', 'servicios_generales\LimpiezaEquipoController@marca')->name('limpieza_control.marca');
-
 Route::get('limpieza_equipo/actualizar', 'servicios_generales\LimpiezaEquipoController@actualizar')->name('limpieza_control.actualizar');
 Route::post('limpieza_equipo/buscar_fecha', 'servicios_generales\LimpiezaEquipoController@buscar_fecha')->name('limpieza_control.buscar_fecha');
 Route::post('limpieza_equipo/excel', 'servicios_generales\LimpiezaEquipoController@excel')->name('limpieza_control.excel');
+
 //Route::get('limpieza_equipo/vista_nueva/{id}', 'servicios_generales\LimpiezaEquipoController@vista_nueva')->name('limpieza_equipo.vista_nueva');
 
 //Mantenimiento IECED Horarios
@@ -166,27 +159,28 @@ Route::match(['get', 'post'], 'examenes/documento/buscar', 'servicios_generales\
 
 //
 Route::post('recibo/cobro/app/reporte', 'servicios_generales\LimpiezaEquipoController@reporte_apps')->name('excel.reporte_apps');
+
+Route::get('recibo/cobro/app/num_factura', 'servicios_generales\LimpiezaEquipoController@num_factura')->name('excel.num_factura');
 //examen tubo
 Route::get('mantenimiento/examenes/tubos', 'servicios_generales\MantenimientoController@index')->name('mantenimientoexcel.index');
 Route::get('mantenimiento/examenes/actualizar', 'servicios_generales\MantenimientoController@actualizar')->name('mantenimientoexcel.actualizar');
 Route::post('mantenimiento/examenes/update', 'servicios_generales\MantenimientoController@update')->name('mantenimientoexcel.update');
-
 Route::match(['get', 'post'],'mantenimiento/examenes/buscador', 'servicios_generales\MantenimientoController@buscador')->name('mantenimientoexcel.buscador');
-Route::post('mantenimiento/examenes/buscador', 'servicios_generales\MantenimientoController@buscador')->name('mantenimientoexcel.buscador');
-//5/7/2022
-Route::get('subir/examenes/excel', 'servicios_generales\MantenimientoController@excel_tubos');
 
-Route::get('login/css', 'servicios_generales\MantenimientoController@login_css');
-
-Route::get('login/css', 'servicios_generales\MantenimientoController@login_css');
-
-//16-08-2022 FO
 
 //excel tubo
 Route::get('subir/examenes/excel', 'servicios_generales\MantenimientoController@excel_tubos');
 
 //imprimir codigo barras
 Route::get('imprimir/codigo/barras/{id}', 'servicios_generales\MantenimientoController@imprimir_barra')->name('imprimir_codigo_barra');
+
+//10-08-2022 modal de limpieza_banos
+Route::get('limpieza/salas/limpieza', 'limpieza_desinfeccion\LimpiezaDesinfeccionController@modalServiciosGenerales')->name('mantenimientohorario.limpieza_registro');
+Route::post('limpieza/salas/limpieza/guardar', 'limpieza_desinfeccion\LimpiezaDesinfeccionController@serviciosGenerales_guardar')->name('mantenimientohorario.limpieza_guardar');
+
+
+
+//11-08-2022 limpieza salas crud
 Route::get('limpieza/pentax/index', 'limpieza_pentax\LimpiezaPentaxController@index_pentax')->name('index_pentax_limpieza');
 Route::get('limpieza/pentax/created', 'limpieza_pentax\LimpiezaPentaxController@created_pentax')->name('created_pentax_limpieza');
 Route::post('limpieza/pentax/save', 'limpieza_pentax\LimpiezaPentaxController@save_pentax')->name('save_pentax_limpieza');
@@ -196,69 +190,52 @@ Route::post('limpieza/pentax/buscar/sala', 'limpieza_pentax\LimpiezaPentaxContro
 Route::post('limpieza/pentax/buscar/todo', 'limpieza_pentax\LimpiezaPentaxController@buscador')->name('buscador_pentax_limpieza');
 Route::get('limpieza/pentax/modal/foto', 'limpieza_pentax\LimpiezaPentaxController@modal_foto')->name('modal_foto_pentax_limpieza');
 
+Route::get('limpieza/pentax/excel', 'limpieza_pentax\LimpiezaPentaxController@excel_foto')->name('excel_limpiezaPentax');
+
 //17-08-2022
 Route::get('limpieza/horario/index', 'servicios_generales\MantenimientoHorarioController@registro_new')->name('registro_new_limpieza');
 Route::post('limpieza/eleccion/tipo', 'limpieza_pentax\LimpiezaPentaxController@eleccion_tipo')->name('eleccion-tipo');
+// Route::post('limpieza/eleccion2/tipo2', 'limpieza_pentax\LimpiezaPentaxController@eleccion_tipo2')->name('eleccion-tipo2');
+Route::match(['get', 'post'],'limpieza/eleccion2/tipo2', 'limpieza_pentax\LimpiezaPentaxController@eleccion_tipo2')->name('eleccion-tipo2');
 
 //24/8/2022
 Route::get('limpieza/area/created', 'servicios_generales\LimpiezaAreaController@created')->name('created_limpieza_area');
 Route::post('limpieza/area/created/save', 'servicios_generales\LimpiezaAreaController@save')->name('save_limpieza_area');
+Route::get('limpieza/area/created/index', 'servicios_generales\LimpiezaAreaController@index')->name('index_limpieza_area');
+Route::get('limpieza/area/created/edit', 'servicios_generales\LimpiezaAreaController@edit')->name('edit_limpieza_area');
+Route::post('limpieza/area/created/edit_save', 'servicios_generales\LimpiezaAreaController@edit_save')->name('edit_save_limpieza_area');
+Route::match(['get', 'post'], 'limpieza/area/created/buscador', 'servicios_generales\LimpiezaAreaController@buscador')->name('buscador_limpieza_area');
+Route::post('limpieza/areas/excel', 'servicios_generales\LimpiezaAreaController@excel')->name('limpieza_areas.excel');
+Route::get('limpieza_area/reporte_areas', 'servicios_generales\LimpiezaAreaController@vistareportesareas')->name('limpieza_area.reporte_area');
+//30/8/2022
+Route::get('limpieza/area/modal', 'servicios_generales\LimpiezaAreaController@modal_foto')->name('modal_foto_limpieza_area');
 
-//31/8/2022
+// /
+//Route::get('limpieza/area/reporte_areas', 'servicios_generales\LimpiezaAreaController@vistareportesareas')->name('limpieza_areas.reporte_areas');
 
 
-
-
-//login css
-Route::get('nuevo/login', 'servicios_generales\MantenimientoController@login_css')->name('mantenimientoexcel.login_css');
-
-//login css
-Route::get('nuevo/login', 'servicios_generales\MantenimientoController@login_css')->name('mantenimientoexcel.login_css');
 
 //Mantenimientos Dotacion
-Route::get( 'mantenimientos_d/index', 'servicios_generales\Mantenimientos_DotacionController@index')->name('mantenimientos_d.index');
-Route::match(['get', 'post'], 'mantenimientos_d/create', 'servicios_generales\Mantenimientos_DotacionController@crear')->name('mantenimientos_d.crear');
-Route::match(['get', 'post'], 'mantenimientos_d/edit/{id}', 'servicios_generales\Mantenimientos_DotacionController@editar')->name('mantenimientos_d.editar');
-Route::match(['get', 'post'], 'mantenimientos_d/store', 'servicios_generales\Mantenimientos_DotacionController@store')->name('mantenimientos_d.store');
+
+Route::match(['get', 'post'], 'mantenimientos_d/index', 'servicios_generales\Mantenimientos_DotacionController@index')->name('mantenimientos_d.index');
+Route::match(['get', 'post'], 'mantenimientos_d/create', 'servicios_generales\Mantenimientos_DotacionController@crear')->name('mantenimientos_d.create');
+Route::match(['get', 'post'], 'mantenimientos_d/edit/{id}', 'servicios_generales\Mantenimientos_DotacionController@editar')->name('mantenimientos_d.edit');
+Route::match(['get', 'post'], 'mantenimientos_d/store', 'servicios_generales\Mantenimientos_DotacionController@guardar')->name('mantenimientos_d.store');
 Route::match(['get', 'post'], 'mantenimientos_d/update', 'servicios_generales\Mantenimientos_DotacionController@actualizar')->name('mantenimientos_d.update');
-
-
+Route::match(['get', 'post'], 'mantenimientos_d/buscar_piso', 'servicios_generales\Mantenimientos_DotacionController@buscar_dotacion')->name('mantenimientos_d.buscar_piso');
 //Mantenimientos Insumos limpieza
 
 Route::match(['get', 'post'], 'mantenimientos_inlimpieza/index', 'servicios_generales\Mantenimientos_Insumos_LimpiezaController@index')->name('mantenimientos_inlimpieza.index');
 Route::match(['get', 'post'], 'mantenimientos_inlimpieza/create', 'servicios_generales\Mantenimientos_Insumos_LimpiezaController@crear')->name('mantenimientos_inlimpieza.create');
 Route::match(['get', 'post'], 'mantenimientos_inlimpieza/edit/{id}', 'servicios_generales\Mantenimientos_Insumos_LimpiezaController@editar')->name('mantenimientos_inlimpieza.edit');
-Route::match(['get', 'post'], 'mantenimientos_inlimpieza/store', 'servicios_generales\Mantenimientos_Insumos_LimpiezaController@store')->name('mantenimientos_inlimpieza.store');
+Route::match(['get', 'post'], 'mantenimientos_inlimpieza/store', 'servicios_generales\Mantenimientos_Insumos_LimpiezaController@guardar')->name('mantenimientos_inlimpieza.store');
 Route::match(['get', 'post'], 'mantenimientos_inlimpieza/update', 'servicios_generales\Mantenimientos_Insumos_LimpiezaController@actualizar')->name('mantenimientos_inlimpieza.update');
 Route::match(['get', 'post'], 'mantenimientos_inlimpieza/buscar_piso', 'servicios_generales\Mantenimientos_Insumos_LimpiezaController@inusmoslimpieza')->name('mantenimientos_inlimpieza.buscar_piso');
-//31/8/2022
+//Victor Labs
 
-
-//Mantenimientos baños
-Route::match(['get', 'post'], 'mantenimientos_banos/index', 'servicios_generales\Mantenimientos_BanosController@index')->name('mantenimientos_banos.index');
-Route::match(['get', 'post'], 'mantenimientos_banos/create', 'servicios_generales\Mantenimientos_BanosController@create')->name('mantenimientos_banos.create');
-Route::match(['get', 'post'], 'mantenimientos_banos/edit/{id}', 'servicios_generales\Mantenimientos_BanosController@edit')->name('mantenimientos_banos.edit');
-Route::match(['get', 'post'], 'mantenimientos_banos/store', 'servicios_generales\Mantenimientos_BanosController@store')->name('mantenimientos_banos.store');
-Route::match(['get', 'post'], 'mantenimientos_banos/update', 'servicios_generales\Mantenimientos_BanosController@update')->name('mantenimientos_banos.update');
-Route::match(['get', 'post'], 'mantenimientos_banos/buscar_baño', 'servicios_generales\Mantenimientos_BanosController@search')->name('mantenimientos_banos.buscar_piso');
-
-//Mantenimiento oficinas
-
-Route::match(['get', 'post'], 'mantenimientos_oficinas/index', 'servicios_generales\Mantenimientos_OficinasController@index')->name('mantenimientos_oficinas.index');
-Route::match(['get', 'post'], 'mantenimientos_oficinas/create', 'servicios_generales\Mantenimientos_OficinasController@create')->name('mantenimientos_oficinas.create');
-Route::match(['get', 'post'], 'mantenimientos_oficinas/edit/{id}', 'servicios_generales\Mantenimientos_OficinasController@edit')->name('mantenimientos_oficinas.edit');
-Route::match(['get', 'post'], 'mantenimientos_oficinas/store', 'servicios_generales\Mantenimientos_OficinasController@store')->name('mantenimientos_oficinas.store');
-Route::match(['get', 'post'], 'mantenimientos_oficinas/update', 'servicios_generales\Mantenimientos_OficinasController@update')->name('mantenimientos_oficinas.update');
-Route::match(['get', 'post'], 'mantenimientos_oficinas/buscar_baño', 'servicios_generales\Mantenimientos_OficinasController@search')->name('mantenimientos_oficinas.buscar_piso');
-
-
-
-Route::post('mantenimiento/examenes/buscador', 'servicios_generales\MantenimientoController@buscador')->name('mantenimientoexcel.buscador');
-//5/7/2022
-Route::get('subir/examenes/excel', 'servicios_generales\MantenimientoController@excel_tubos');
-Route::get('login/css', 'servicios_generales\MantenimientoController@login_css');
-Route::match(['get', 'post'],'mantenimiento/examenes/buscador', 'servicios_generales\MantenimientoController@buscador')->name('mantenimientoexcel.buscador');
-
-//imprimir codigo barras
-Route::get('imprimir/codigo/barras/{id}', 'servicios_generales\MantenimientoController@imprimir_barra')->name('imprimir_codigo_barra');
-
+Route::get('laboratorio/subir/documento', 'limpieza_pentax\LimpiezaPentaxController@subir_documento')->name('subir_documento_laboratorio');
+Route::post('laboratorio/subir/subir/documento', 'limpieza_pentax\LimpiezaPentaxController@subir_documento_save')->name('subir_documento_laboratorio_save');
+Route::get('laboratorio/subir/documento/ver', 'limpieza_pentax\LimpiezaPentaxController@vizualizar_docs_subidos')->name('vizualizar_docs_subidos');
+Route::get('laboratorio/subir/documento/vizualizar_pdf', 'limpieza_pentax\LimpiezaPentaxController@vizualizar_pdf')->name('vizualizar_pdf_docs_subidos');
+Route::get('laboratorio/subir/documento/cambiar_estado', 'limpieza_pentax\LimpiezaPentaxController@cambiar_estado')->name('cambiar_estado_documentos');
+Route::match(['get', 'post'], 'laboratorio/subir/documento/buscar/documento', 'limpieza_pentax\LimpiezaPentaxController@buscar_documento')->name('cambiar_buscar_documento');

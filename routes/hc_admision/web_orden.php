@@ -11,17 +11,13 @@
 |
 */
  
-Route::get('orden_proc/crear_editar/{hcid}', 'hc_admision\Orden_ProcController@crear_editar')->name('orden_proc.crear_editar');//listo
+Route::get('orden_proc/crear_editar/{hcid}', 'hc_admision\Orden_ProcController@crear_editar')->name('orden_proc.crear_editar');
 
-Route::get('orden_proc/imprimir_orden/{id}', 'hc_admision\Orden_ProcController@imprimir_orden')->name('orden_proc.imprimir_orden');//listo
-
-Route::match(['get', 'post'],'orden_proc/imprimir_orden/{id}/guardar', 'hc_admision\Orden_ProcController@guardar')->name('orden_proc.guardar');//listo
-
-Route::get('orden_proc/imprimir_orden/{hcid}/validaexiste/{id}', 'hc_admision\Orden_ProcController@existe')->name('orden_proc.existe');//listo
-
-Route::get('orden_proc/imprimir_orden/crear_detalle/{hcid}/{id}', 'hc_admision\Orden_ProcController@crear_detalle')->name('orden_proc.crear_detalle');//listo
-
-Route::get('orden_proc/imprimir_orden/elimina/{hcid}/{id}', 'hc_admision\Orden_ProcController@eliminar')->name('orden_proc.eliminar');//listo
+Route::get('orden_proc/imprimir_orden/{id}', 'hc_admision\Orden_ProcController@imprimir_orden')->name('orden_proc.imprimir_orden');
+Route::match(['get', 'post'],'orden_proc/imprimir_orden/{id}/guardar', 'hc_admision\Orden_ProcController@guardar')->name('orden_proc.guardar');
+Route::get('orden_proc/imprimir_orden/{hcid}/validaexiste/{id}', 'hc_admision\Orden_ProcController@existe')->name('orden_proc.existe');
+Route::get('orden_proc/imprimir_orden/crear_detalle/{hcid}/{id}', 'hc_admision\Orden_ProcController@crear_detalle')->name('orden_proc.crear_detalle');
+Route::get('orden_proc/imprimir_orden/elimina/{hcid}/{id}', 'hc_admision\Orden_ProcController@eliminar')->name('orden_proc.eliminar');
 
 
 //Nueva Funcionalidad
@@ -34,7 +30,6 @@ Route::get('imprimir/orden_hc3/general/{id_orden}','hc_admision\Orden_ProcContro
 
 /* Excel para 053 */
 Route::get('imprimir/orden_053/general/excel/{id}','hc_admision\Orden_ProcController@excel_053_nuevo')->name('imprimir.excel_053_nuevo');
-
 
 //LABORATORIO
 //Ruta para Historial de Ordenes de Laboratorio

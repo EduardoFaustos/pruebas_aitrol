@@ -11,7 +11,6 @@ $empresa= Sis_medico\Empresa::find($id_empresa);
         color: red;
     }
 </style>
-
 <div class="container">
     <div class="row">
         <div class="box box-primary col-xs-24">
@@ -47,12 +46,26 @@ $empresa= Sis_medico\Empresa::find($id_empresa);
                         </div>
                     </div>
                     <div class="form-group col-xs-12{{ $errors->has('id_empresa') ? ' has-error' : '' }}">
-                        <label for="id_empresa" class="col-md-2 control-label">Empresa</label>
+                        <label for="id_empresa" class="col-md-2 control-label">Razón social</label>
                         <div class="col-md-7">
                             <input id="id_empresa" type="text" class="form-control" value="{{ $empresa->nombrecomercial }}" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" required autofocus readonly>
                             @if ($errors->has('id_empresa'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('id_empresa') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-12{{ $errors->has('agente_retencion') ? ' has-error' : '' }}">
+                        <label for="tipo_contribuyente" class="col-md-2 control-label">Tipo contribuyente</label>
+                        <div class="col-md-7">
+                            <select id="tipo_contribuyente" name="tipo_contribuyente" class="form-control">
+                                <option {{$deempresa->tipo_contribuyente == 0 ? 'selected' : ''}} value="0">Natural</option>
+                                <option {{$deempresa->tipo_contribuyente == 1 ? 'selected' : ''}} value="1">Juridica</option>
+                            </select>
+                            @if ($errors->has('agente_retencion'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('agente_retencion') }}</strong>
                             </span>
                             @endif
                         </div>
@@ -71,6 +84,18 @@ $empresa= Sis_medico\Empresa::find($id_empresa);
                             @endif
                         </div>
                     </div>
+                    <div class="form-group col-xs-12{{ $errors->has('contribuyente_especial') ? ' has-error' : '' }}">
+                        <label for="contribuyente_especial" class="col-md-2 control-label">{{trans('DeEmpresa.Contribuyente_Especial')}}</label>
+                        <div class="col-md-7">
+                            <input id="contribuyente_especial" type="text" class="form-control" name="contribuyente_especial" value="{{ $deempresa->contribuyente_especial }}" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" required autofocus>
+                            @if ($errors->has('contribuyente_especial'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('contribuyente_especial') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+
                     <div class="form-group col-xs-12{{ $errors->has('ambiente') ? ' has-error' : '' }}">
                         <label for="ambiente" class="col-md-2 control-label">{{trans('DeEmpresa.Ambiente')}}</label>
                         <div class="col-md-7">
@@ -99,23 +124,14 @@ $empresa= Sis_medico\Empresa::find($id_empresa);
                             @endif
                         </div>
                     </div>
-                    <div class="form-group col-xs-12{{ $errors->has('contribuyente_especial') ? ' has-error' : '' }}">
-                        <label for="contribuyente_especial" class="col-md-2 control-label">{{trans('DeEmpresa.Contribuyente_Especial')}}</label>
-                        <div class="col-md-7">
-                            <input id="contribuyente_especial" type="text" class="form-control" name="contribuyente_especial" value="{{ $deempresa->contribuyente_especial }}" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" required autofocus>
-                            @if ($errors->has('contribuyente_especial'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('contribuyente_especial') }}</strong>
-                            </span>
-                            @endif
-                        </div>
-                    </div>
+
                     <div class="form-group col-xs-12{{ $errors->has('tipo_rimpe') ? ' has-error' : '' }}">
                         <label for="tipo_rimpe" class="col-md-2 control-label">{{trans('DeEmpresa.Tipo_rimpe')}}</label>
                         <div class="col-md-7">
                             <select id="tipo_rimpe" name="tipo_rimpe" class="form-control">
                                 <option {{$deempresa->tipo_rimpe == 0 ? 'selected' : ''}} value="0">{{trans('DeEmpresa.Rimpe_Popular')}}</option>
                                 <option {{$deempresa->tipo_rimpe == 1 ? 'selected' : ''}} value="1">{{trans('DeEmpresa.Rimpe_Emprendedor')}}</option>
+                                <option {{$deempresa->tipo_rimpe == 2 ? 'selected' : ''}} value="2">{{trans('DeEmpresa.Regimen_General')}}</option>
                             </select>
                             @if ($errors->has('tipo_rimpe'))
                             <span class="help-block">
@@ -128,7 +144,7 @@ $empresa= Sis_medico\Empresa::find($id_empresa);
                         <label class="col-md-2 control-label">{{trans('DeEmpresa.Firma')}}</label>
                         <div class="col-md-7">
                             <p class="help-block"><?= isset($id) ? ($deempresa->ruta_firma == '' ? 'No Existe Firma Electr&oacute;nica' : 'Ok') : ''; ?></p>
-                            <label title="A&ntilde;adir Archivo" for="entidadFirma" class="btn btn-primary">
+                            <label title="A&ntilde;adir Archivo" for="entidadFirma" class="btn btn-primary btn-gray">
                                 <input type="file" name="entidadFirma" id="entidadFirma" class="hide" value="{{ $deempresa->ruta_firma }}">
                                 A&ntilde;adir Archivo&nbsp;&nbsp;<i class="fa fa-paperclip"></i>
                             </label>
@@ -150,6 +166,10 @@ $empresa= Sis_medico\Empresa::find($id_empresa);
                         <div class="col-md-6 col-md-offset-4">
                             <button type="submit" class="btn btn-success btn-gray">
                                 {{trans('DeEmpresa.Actualizar')}}
+                            </button>
+
+                            <button type="button" onclick="history.back()" class="btn btn-danger btn-gray">
+                                Regresar
                             </button>
                         </div>
                     </div>
@@ -187,8 +207,22 @@ $empresa= Sis_medico\Empresa::find($id_empresa);
             });
         }
     }
-
     $(document).ready(function() {
+        $('#tipo_contribuyente').change(function() {
+            var option = '';
+            $('#tipo_rimpe').html('');
+            $('#tipo_rimpe').trigger('change');
+            if ($('#tipo_contribuyente').val() == 0) {
+                option += "<option {{$deempresa->tipo_rimpe == 0 ? 'selected' : ''}} value=\"0\">{{trans('DeEmpresa.Rimpe_Popular')}}</option>";
+                option += "<option {{$deempresa->tipo_rimpe == 1 ? 'selected' : ''}} value=\"1\">{{trans('DeEmpresa.Rimpe_Emprendedor')}}</option>";
+            } else {
+                option += "<option {{$deempresa->tipo_rimpe == 0 ? 'selected' : ''}} value=\"0\">{{trans('DeEmpresa.Rimpe_Popular')}}</option>";
+                option += "<option {{$deempresa->tipo_rimpe == 1 ? 'selected' : ''}} value=\"1\">{{trans('DeEmpresa.Rimpe_Emprendedor')}}</option>";
+                option += "<option {{$deempresa->tipo_rimpe == 2 ? 'selected' : ''}} value=\"2\">{{trans('DeEmpresa.Regimen_General')}}</option>'";
+            }
+            $('#tipo_rimpe').html(option);
+            $('#tipo_rimpe').trigger('change');
+        });
         $('#entidadFirma').change(function() {
             var inputFile = document.getElementById('entidadFirma');
             var file = inputFile.files[0];
@@ -213,6 +247,7 @@ $empresa= Sis_medico\Empresa::find($id_empresa);
                         var firma = data.split('|');
                         if (firma[0] == 'ok') {
                             $('#rutFirma').html(firma[1]);
+                            $('#texfirma').val(firma[1]);
                             //alert($('#texfirma').val());
                         } else {
                             $('#entidadFirma').val('');

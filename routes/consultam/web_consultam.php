@@ -48,20 +48,10 @@ Route::match(['get', 'post'], 'consultam/reportetiempo', 'ConsultaMController@ti
 Route::match(['get', 'post'], 'consultam/reporte/excel', 'ConsultaMController@excel_reporte')->name('consultam.reporte_excel');
 //Ordenes Fausto 7/06/2021
 Route::match(['get', 'post'],'consulta/ordernes/revisarhoy', 'OrdenesListadoController@index')->name('consulta_ordenes.index');
-Route::get('consulta/ordernes/numero', 'OrdenesListadoController@cantidad')->name('consulta_ordenes.numero');
-//Nano
-Route::match(['get', 'post'],'gestionar_orden_procedimiento', 'GestionarOrdenController@index')->name('gestionarorden.index');
-Route::get('gestionar_orden_procedimiento/{id}', 'GestionarOrdenController@editar_gestion')->name('gestionarorden.editar_gestion');
-Route::post('gestionar_orden_procedimiento/store', 'GestionarOrdenController@guardar_gestion')->name('gestionarorden.guardar_gestion');
-Route::match(['get', 'post'],'cargar/correo/seguro', 'GestionarOrdenController@cargar_correo')->name('consultar_correo_seguro');
+Route::get('consulta/ordernes/numero', 'OrdenesListadoController@cantidad')->name('consulta_ordenes.numero'); 
 
-Route::get('consult/order/nume', 'GestionarOrdenController@cantidad')->name('gestionarorden.cantidad'); 
-//Fin Nano
-
-Route::get('training/procedimeintos/{id_fellow}', 'ConsultaMController@reporte_fellows')->name('consultam.reporte_fellows');
+Route::get('training/procedimeintos/{id_fellow}', 'ConsultaMController@reporte_fellows')->name('consultam.reporte_fellows'); 
 
 //Reportes Fellows
-Route::get('consultas/reporte/index', 'ConsultaMController@index_rfellows')->name('consultas.index_rfellows');
-Route::match(['get', 'post'], 'consultas/reporte/descargar', 'ConsultaMController@descargar_rfellows')->name('consultas.descargar_rfellows');
-
-
+Route::get('consultas/reporte/index', 'ConsultaMController@index_rfellows')->name('consultas.index_rfellows'); 
+Route::match(['get', 'post'], 'consultas/reporte/descargar', 'ConsultaMController@descargar_rfellows')->name('consultas.descargar_rfellows'); 

@@ -145,7 +145,7 @@ class InvCabMovimientos extends Model
                 $movimientos = $movimientos->where('inv_cab_movimientos.fecha', '<=', ["{$fecha_hasta} 00:00:00"])->get();
 
             } else if ($fecha_desde != "" and $fecha_hasta != "") {
-                $movimientos = $movimientos->whereBetween('fecha', [$fecha_desde . " 00:00:00", $fecha_hasta . " 00:00:00"])->get();
+                $movimientos = $movimientos->whereBetween('inv_cab_movimientos.fecha', [$fecha_desde . " 00:00:00", $fecha_hasta . " 23:59:59"])->get();
             }
 
         }

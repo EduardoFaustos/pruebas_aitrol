@@ -200,23 +200,22 @@ class De_Documentos_Electronicos extends Model
         DB::beginTransaction();
         try {
             $existe = De_Documentos_Electronicos::where('clave_acceso', $datos['clave_acceso'])->first();
-            if ($existe == '') {
+            if ($existe == '' || is_null($existe)) {
                 $id = De_Documentos_Electronicos::insertGetId($datos);
-                $estado = $id;
             } else {
-                $estado = $existe->id;
+                $id = $existe->id;
                 $array = [
                     'id_de_pasos' => $idPaso,
                     'id_usuariomod' => $datos['id_usuariomod'],
                     'ip_modificacion' =>  $datos['ip_modificacion'],
                 ];
-                De_Documentos_Electronicos::where('id', $estado)->update($array);
+                De_Documentos_Electronicos::where('id', $id)->update($array);
             }
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            $estado = 'Error: ' . $e->getMessage();
+            return $estado = 'Error: ' . $e->getMessage();
         }
-        return $estado;
+        return $id;
     }
 }

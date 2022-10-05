@@ -13,43 +13,43 @@
               <table id="example2" class="table table-bordered table-hover">
                 <thead>
                   <tr class='well-dark'>
-                    <th width="50%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending" >Cedula</th>
-                    <th width="50%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending" >Nombres</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Sueldo Mensual</th>
-                    <th width="50%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending" >Dias Laborados</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Cantidad HR al 50%</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Horas al 50%</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Cantidad HR al 100%</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Horas al 100%</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Bono</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Bono Imputable</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Alimentación</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Transporte</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Parqueo</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Fondo Reserva M/A</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Prop Fondo Reserva</th>
-                    <!--<th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Beneficios Sociales M/A</th>-->
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Decimo Tercero</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Valor Decimo III</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Decimo Cuarto</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Valor Decimo IV</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Total Ingreso</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Aportes 9.45% Iess</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Multa</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Fondo Reserva Cobrar Trabajadores</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Otros Egresos</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Seguro Médico</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Examen Laboratorio</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Impuesto Renta</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Prestamo Empresa</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">{{trans('contableM.SaldoInicial')}}</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Anticipo 1RA Quincena</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Otro Anticipo</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">{{trans('contableM.totalegreso')}}</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Prestamo Hipotecario</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Prestamo Quirografario</th>
-                    <th width="10%" class="" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">Neto Recibido</th>
-                    <th width="5%" class="" tabindex="0" aria-controls="example2" rowspan="5" colspan="5" aria-label="Codigo: activate to sort column ascending">{{trans('contableM.accion')}}</th>
+                    <th >Cedula</th>
+                    <th >Nombres</th>
+                    <th>Sueldo Mensual</th>
+                    <th >Dias Laborados</th>
+                    <th>Cantidad HR al 50%</th>
+                    <th>Horas al 50%</th>
+                    <th>Cantidad HR al 100%</th>
+                    <th>Horas al 100%</th>
+                    <th>Bono</th>
+                    <th>Bono Imputable</th>
+                    <th>Alimentación</th>
+                    <th>Transporte</th>
+                    <th>Parqueo</th>
+                    <th>Fondo Reserva M/A</th>
+                    <th>Prop Fondo Reserva</th>
+                    <!--<th>Beneficios Sociales M/A</th>-->
+                    <th>Decimo Tercero</th>
+                    <th>Valor Decimo III</th>
+                    <th>Decimo Cuarto</th>
+                    <th>Valor Decimo IV</th>
+                    <th>Total Ingreso</th>
+                    <th>Aportes 9.45% Iess</th>
+                    <th>Multa</th>
+                    <th>Fondo Reserva Cobrar Trabajadores</th>
+                    <th>Otros Egresos</th>
+                    <th>Seguro Médico</th>
+                    <th>Examen Laboratorio</th>
+                    <th>Impuesto Renta</th>
+                    <th>Prestamo Empresa</th>
+                    <th>{{trans('contableM.SaldoInicial')}}</th>
+                    <th>Anticipo 1RA Quincena</th>
+                    <th>Otro Anticipo</th>
+                    <th>{{trans('contableM.totalegreso')}}</th>
+                    <th>Prestamo Hipotecario</th>
+                    <th>Prestamo Quirografario</th>
+                    <th>Neto Recibido</th>
+                    <th>{{trans('contableM.accion')}}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -161,46 +161,10 @@
                       </td>
                     </tr>
                   @endforeach
-                  <tr>
-                    <td>&nbsp;</td>
-                    <td style="font-size: 10px;"><p style="font-weight: bold;">TOTALES &nbsp;</p></td>
-                    <td style="font-size: 10px;@if($total_sueldo < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_sueldo ,2)}}</p></td>
-                    <td>&nbsp;</td>
-                    <td style="font-size: 10px;@if($total_cantidad_50 < 0) color:red; @endif" ><p style="font-weight: bold;">{{$total_cantidad_50}}</p></td>
-                    <td style="font-size: 10px;@if($total_horas_50 < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_horas_50,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_cantidad_100 < 0) color:red; @endif" ><p style="font-weight: bold;">{{$total_cantidad_100}}</p></td>
-                    <td style="font-size: 10px;@if($total_horas_100 < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_horas_100,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_bono < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_bono,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_bonoimp < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_bonoimp,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_alimentacion < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_alimentacion,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_transporte < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_transporte,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_parqueo < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_parqueo,2)}}</p></td>
-                    <td>&nbsp;</td>
-                    <td style="font-size: 10px;@if($total_fond_reserva < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_fond_reserva,2)}}</p></td>
-                    <td>&nbsp;</td>
-                    <td style="font-size: 10px;@if($total_decimo_tercero < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_decimo_tercero,2)}}</p></td>
-                    <td>&nbsp;</td>
-                    <td style="font-size: 10px;@if($total_decimo_cuarto < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_decimo_cuarto,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_ingreso < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_ingreso,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_iess < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_iess,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_multa < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_multa,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_reserva_cobrar < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_reserva_cobrar,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_otro_egreso < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_otro_egreso,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_seguro_privado < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_seguro_privado,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_seguro_privado < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_exlaboratorio,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_imp_renta < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_imp_renta,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_prestamos < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_prestamos,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_sald_ini < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_sald_ini,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_anticipos < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_anticipos,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_otro_anticipos < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_otro_anticipos,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_egresos < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_egresos,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_cuot_hipot < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_cuot_hipot,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_cuot_quir < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_cuot_quir,2)}}</p></td>
-                    <td style="font-size: 10px;@if($total_neto_recibido < 0) color:red; @endif" ><p style="font-weight: bold;">{{number_format($total_neto_recibido,2)}}</p></td>
-                    <td>&nbsp;</td>
-                  </tr>
                 </tbody>
+
                 <tfoot>
+                  
                 </tfoot>
               </table>
               <label style="padding-left: 15px;font-size: 15px">{{trans('contableM.TotalRegistros')}}: {{$rol_det_consulta->count()}}</label>
@@ -212,12 +176,13 @@
   </div> 
 </div>
 
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="{{ asset ("/js/jquery-ui.js")}}"></script>
-
 <script type="text/javascript">
-
-    $('#example2').DataTable({
+$('#example2').DataTable({
+        responsive: true,
+        info:false,
+        "searching": false
+    });
+   /* $('#example2').DataTable({
     'paging'      : false,
     'lengthChange': true,
     'searching'   : false,
@@ -229,7 +194,7 @@
     'language': {
         "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
     }
-    });
+    });*/
 
    
 

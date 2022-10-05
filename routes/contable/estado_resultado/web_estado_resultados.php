@@ -13,5 +13,5 @@
 
 #Route::get('contable/balance_comprobacion/index', 'contable\BalanceComprobacionController@index')->name('balance_comprobacion.index');
 #Route::match(['get', 'post'], 'contable/libro_mayor', 'contable\LibroDiarioController@libro_mayor')->name('libro_mayor.index');
-Route::match(['get', 'post'], 'contable/contabilidad/estado/resultados/', 'contable\EstadoResultadosController@index')->name('estadoresultados.index');
-Route::match(['get', 'post'], 'contable/contabilidad/estado/resultados/sshow/', 'contable\EstadoResultadosController@show')->name('estadoresultados.show');
+Route::match(['get', 'post'], 'contable/contabilidad/estado/resultados', 'contable\EstadoResultadosController@index')->name('estadoresultados.index');
+Route::match(['get', 'post'], 'contable/contabilidad/estado/resultados/sshow', 'contable\EstadoResultadosController@show')->name('estadoresultados.show');

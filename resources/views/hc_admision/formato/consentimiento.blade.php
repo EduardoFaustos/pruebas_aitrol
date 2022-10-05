@@ -1,7 +1,4 @@
-@php
-  $id_empresa  = \Session::get('id_empresa');
-  $empresa  =  \Sis_medico\Empresa::find($id_empresa);
-@endphp
+
 <html>
 
 <head>
@@ -85,8 +82,13 @@ style='font-size:11.0pt'>{{$empresa->nombre_form}}</span></b></p>
 
 <p class=MsoNoSpacing><b><span lang=ES style='font-size:3.0pt'>&nbsp;</span></b></p>
 
-<p class=MsoNoSpacing><span lang=ES>{{ucfirst(strtolower($empresa->ciudad))}}, @if($data->tipo=='0')______ @else {{substr($date,8,2)}} @endif de <?php $mes = substr($date, 5, 2); if($mes == 01){ echo "Enero";} if($mes == 02){ echo "Febrero";} if($mes == 03){ echo "Marzo";} if($mes == 04){ echo "Abril";} if($mes == 05){ echo "Mayo";} if($mes == 06){ echo "Junio";} if($mes == 07){ echo "Julio";} if($mes == '08'){ echo "Agosto";}  if($mes == '09'){ echo "Septiembre";} if($mes == '10'){ echo "Octubre";} if($mes == '11'){ echo "Noviembre";} if($mes == '12'){ echo "Diciembre";} ?> del {{substr($date, 0, 4)}}</span></p>
+@if($data->id_seguro != 6)
 
+<p class=MsoNoSpacing><span lang=ES>Guayaquil, @if($data->tipo=='0') ______ @else {{substr($date,8,2)}} @endif de <?php $mes = substr($date, 5, 2); if($mes == 01){ echo "Enero";} if($mes == 02){ echo "Febrero";} if($mes == 03){ echo "Marzo";} if($mes == 04){ echo "Abril";} if($mes == 05){ echo "Mayo";} if($mes == 06){ echo "Junio";} if($mes == 07){ echo "Julio";} if($mes == '08'){ echo "Agosto";}  if($mes == '09'){ echo "Septiembre";} if($mes == '10'){ echo "Octubre";} if($mes == '11'){ echo "Noviembre";} if($mes == '12'){ echo "Diciembre";} ?> del {{substr($date, 0, 4)}}</span></p>
+
+@else
+<p class=MsoNoSpacing><span lang=ES>Guayaquil, @if($data->tipo=='0') @if(strtoupper($data->nombre) == 'ISSPOL') {{substr($data->fechaini,0,2)}} @else ______ @endif @else {{substr($date,8,2)}} @endif de <?php $mes = substr($date, 5, 2); if($mes == 01){ echo "Enero";} if($mes == 02){ echo "Febrero";} if($mes == 03){ echo "Marzo";} if($mes == 04){ echo "Abril";} if($mes == 05){ echo "Mayo";} if($mes == 06){ echo "Junio";} if($mes == 07){ echo "Julio";} if($mes == '08'){ echo "Agosto";}  if($mes == '09'){ echo "Septiembre";} if($mes == '10'){ echo "Octubre";} if($mes == '11'){ echo "Noviembre";} if($mes == '12'){ echo "Diciembre";} ?> del {{substr($date, 0, 4)}}</span></p>
+@endif
 <p class=MsoNoSpacing><b><span lang=ES style='font-size:6.0pt'>&nbsp;</span></b></p>
 <p class=MsoNoSpacing><b><span lang=ES style='font-size:6.0pt'>&nbsp;</span></b></p>
 <p class=MsoNoSpacing><b><span lang=ES style='font-size:6.0pt'>&nbsp;</span></b></p>
@@ -277,9 +279,9 @@ style='font-size:6.0pt'>&nbsp;</span></p>
  style='width:538.7pt;margin-left:0pt;border-collapse:collapse;border:
  none'>
  <tr style='height:12.75pt'>
-  <td width=290 valign=top style='width:200.7pt;border:solid windowtext 1.0pt;
-  padding:0cm 5.4pt 0cm 5.4pt;height:12.75pt'>
-  <p class=MsoNoSpacing align=center style='text-align:center;font-size: 10px;'><span lang=ES><b>NOMBRE
+ <td width=284 valign=top style='width:180pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:14.85pt'>
+  <p class=MsoNoSpacing align=center style='text-align:center'><span lang=ES><b>NOMBRE
   DEL PROFESIONAL DE LA SALUD</b></span></p>
   </td>
   <td width=60 valign=top style='width:50pt;border:solid windowtext 1.0pt;
@@ -307,22 +309,46 @@ style='font-size:6.0pt'>&nbsp;</span></p>
   <td width=290 valign=top style='width:200.7pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:13.5pt'>
   <!--p class=MsoNoSpacing align=center style='text-align:center'><span
-  lang=ES >{{$doctor->nombre1}} {{$doctor->apellido1}} </span></b></p-->
-  <p class=MsoNoSpacing align=center style='text-align:center'><span
-  lang=ES >{{$doctor->nombre1}} {{$doctor->apellido1}} </span></b></p>
+  lang=ES >@if($empresa->id=='0992704152001') {{$doctor->nombre1}} {{$doctor->apellido1}} @if($doctor->apellido2!='(N/A)'){{$doctor->apellido2}} @endif @else Carlos Robles Medranda @endif</span></b></p-->
+  <p class=MsoNoSpacing align=center style='text-align:center;font-size: 13px;'>
+  <span lang=ES >
+  @php
+  $docProcedimiento = Sis_medico\User::where('id',$data->id_doctor1)->first();
+  @endphp
+  
+  @if($data->id_seguro == 6)
+    @if(!is_null($docProcedimiento))
+      @if(strtoupper($docProcedimiento->nombre1) == 'PENTAX')
+
+      @else
+      {{$docProcedimiento->nombre1}} {{$docProcedimiento->apellido1}}
+      @endif
+    @endif
+  @else
+    @if($empresa->id=='0992704152001') @else Carlos Robles Medranda @endif
+  @endif
+  </span></p>
   </td>
   @php
     $libro='';$folio='';$numero='';
-    $firma = Sis_medico\Firma_Usuario::where('id_usuario',$doctor->id)->first();
-    if(!is_null($firma)){
-      $libro=$firma->libro;
-      $folio=$firma->folio;
-      $numero=$firma->num;
-      if($numero==null){
-        $folio=null;
-      }  
+    if($data->id_seguro == 6){
+      if(!is_null($docProcedimiento)){
+        $libro=$docProcedimiento->libro;
+        $folio=$docProcedimiento->folio;
+        $numero=$docProcedimiento->num;
+      }
     }
-    
+    else{
+      $firma = Sis_medico\Firma_Usuario::where('id_usuario',$doctor->id)->first();
+      if(!is_null($firma)){
+        $libro=$firma->libro;
+        $folio=$firma->folio;
+        $numero=$firma->num;
+        if($numero==null){
+          $folio=null;
+        }  
+      }
+    }
   @endphp
   <td width=60 valign=top style='width:50pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
@@ -330,7 +356,7 @@ style='font-size:6.0pt'>&nbsp;</span></p>
   <!--p class=MsoNoSpacing align=center style='text-align:center;font-size: 10px;'><span
   lang=ES >@if($empresa->id=='0992704152001') {{$libro}} @else 1 @endif</span></p-->
   <p class=MsoNoSpacing align=center style='text-align:center;font-size: 10px;'><span
-  lang=ES >@if($empresa->id=='0992704152001') @else 1 @endif</span></p>
+  lang=ES >@if($data->id_seguro == 6) {{$docProcedimiento->libro}} @else @if($empresa->id=='0992704152001') @else 1 @endif @endif</span></p>
   </td>
   <td width=60 valign=top style='width:35.0pt;border-top:none;border-left:none;
   border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
@@ -338,7 +364,7 @@ style='font-size:6.0pt'>&nbsp;</span></p>
   <!--p class=MsoNoSpacing align=center style='text-align:center;font-size: 10px;'><span
   lang=ES >@if($empresa->id=='0992704152001') {{$folio}} @else 3771 @endif</span></p-->
    <p class=MsoNoSpacing align=center style='text-align:center;font-size: 10px;'><span
-  lang=ES >@if($empresa->id=='0992704152001') @else 3771 @endif</span></p>
+  lang=ES >@if($data->id_seguro == 6) {{$docProcedimiento->folio}} @else @if($empresa->id=='0992704152001') @else 3771 @endif @endif</span></p>
   </td>
   <td width=80 valign=top style='width:44.05pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
@@ -346,7 +372,7 @@ style='font-size:6.0pt'>&nbsp;</span></p>
   <!--p class=MsoNoSpacing align=center style='text-align:center;font-size: 10px;'><span
   lang=ES >@if($empresa->id=='0992704152001') {{$numero}} @else 11003 @endif</span></p-->
   <p class=MsoNoSpacing align=center style='text-align:center;font-size: 10px;'><span
-  lang=ES >@if($empresa->id=='0992704152001') @else 11003 @endif</span></p>
+  lang=ES >@if($data->id_seguro == 6) {{$docProcedimiento->numero}} @else @if($empresa->id=='0992704152001') @else 11003 @endif @endif</span></p>
   </td>
   <td width=90 valign=top style='width:67.55pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
@@ -360,7 +386,7 @@ style='font-size:6.0pt'>&nbsp;</span></p>
   <!--p class=MsoNoSpacing align=center style='text-align:center;font-size: 10px;'><span
   lang=ES >@if($empresa->id=='0992704152001') {{$doctor->id}} @else 1307189140 @endif</span></p-->
    <p class=MsoNoSpacing align=center style='text-align:center;font-size: 10px;'><span
-  lang=ES >@if($empresa->id=='0992704152001') @else 1307189140 @endif</span></p>
+  lang=ES >@if($data->id_seguro == 6) {{$docProcedimiento->id}} @else @if($empresa->id=='0992704152001') @else 1307189140 @endif @endif</span></p>
   </td>
  </tr>
  </table>
@@ -391,13 +417,13 @@ style='font-size:6.0pt'>&nbsp;</span></p>
   <td width=290 valign=top style='width:200.7pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:13.5pt'>
   <p class=MsoNoSpacing align=center style='text-align:center'><span
-  lang=ES >Dr. {{$doctor->nombre1}} {{$doctor->nombre2}} {{$doctor->apellido1}} {{$doctor->apellido2}}</span></b></p>
+  lang=ES >@if($data->id_seguro == 6) @if(!is_null($docProcedimiento)) Dr. {{$docProcedimiento->nombre1}} {{$doctor->nombre2}} {{$doctor->apellido1}} {{$doctor->apellido2}} @endif @else Dr. {{$doctor->nombre1}} {{$doctor->nombre2}} {{$doctor->apellido1}} {{$doctor->apellido2}} @ @endif</span></b></p>
   </td>
   <td width=60 valign=top style='width:100pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt;height:13.5pt'>
   <p class=MsoNoSpacing align=center style='text-align:center'><span
-  lang=ES >{{$doctor->registro_doctor}}</span></p>
+  lang=ES >@if($data->id_seguro == 6) @if(!is_null($docProcedimiento)) {{$docProcedimiento->registro_doctor}} @endif @else {{$doctor->registro_doctor}} @endif</span></p>
   </td>
   <td width=90 valign=top style='width:80pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
@@ -409,7 +435,7 @@ style='font-size:6.0pt'>&nbsp;</span></p>
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt;height:13.5pt'>
   <p class=MsoNoSpacing align=center style='text-align:center'><span
-  lang=ES >{{$doctor->id}}</span></p>
+  lang=ES >@if($data->id_seguro == 6) @if(!is_null($docProcedimiento)) {{$docProcedimiento->id}} @endif @else {{$doctor->id}} @endif</span></p>
   </td>
  </tr>
 </table>

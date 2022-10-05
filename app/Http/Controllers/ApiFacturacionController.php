@@ -1500,7 +1500,6 @@ class ApiFacturacionController extends Controller
         if ($data['tipo'] == "comprobante") {
             //$url = $empresa->url . "billing/FACTURA_" . $data['empresa'] . "_" . $data['comprobante'];
             $url = 'https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl';
-
         } elseif ($data['tipo'] == "pdf") {
             //$url = $empresa->url . "billing/ride/FACTURA_" . $data['empresa'] . "_" . $data['comprobante'];
             $url = 'https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl';

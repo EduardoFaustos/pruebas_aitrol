@@ -6312,4 +6312,14 @@ EXTREMIDADES: SIN LESIONES NI ALTERACIONES';
 
         return redirect()->route('agenda.fecha', ['id' => $request['id_doctor1'], 'fecha' => $request['unix']]);
     }
+
+    public function guardarCie10_isspol(Request $request){
+
+        $agenda = Agenda::find($request->idAgenda);
+        $arrayAg = [
+            'cie10' => $request->cie10,
+        ];
+        $agenda->update($arrayAg);
+        
+    }
 }

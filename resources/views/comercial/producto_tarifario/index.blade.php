@@ -2,33 +2,29 @@
 @section('action-content')
 
 <style type="text/css">
- 
-
-    .ui-corner-all
-    {
+    .ui-corner-all {
         -moz-border-radius: 4px 4px 4px 4px;
     }
 
-    .ui-widget
-    {
-        font-family: Verdana,Arial,sans-serif;
+    .ui-widget {
+        font-family: Verdana, Arial, sans-serif;
         font-size: 12px;
     }
-    .ui-menu
-    {
+
+    .ui-menu {
         display: block;
         float: left;
         list-style: none outside none;
         margin: 0;
         padding: 2px;
-        opacity : 1;
+        opacity: 1;
     }
-    .ui-autocomplete
-    {
-        opacity : 1;
+
+    .ui-autocomplete {
+        opacity: 1;
         overflow-x: hidden;
         max-height: 200px;
-        width:1px;
+        width: 1px;
         position: absolute;
         top: 100%;
         left: 0;
@@ -57,24 +53,24 @@
         *border-right-width: 2px;
         *border-bottom-width: 2px;
     }
-    .ui-menu .ui-menu-item
-    {
+
+    .ui-menu .ui-menu-item {
         clear: left;
         float: left;
         margin: 0;
         padding: 0;
         width: 100%;
     }
-    .ui-menu .ui-menu-item a
-    {
+
+    .ui-menu .ui-menu-item a {
         display: block;
         padding: 3px 3px 3px 3px;
         text-decoration: none;
         cursor: pointer;
         background-color: #ffffff;
     }
-    .ui-menu .ui-menu-item a:hover
-    {
+
+    .ui-menu .ui-menu-item a:hover {
         display: block;
         padding: 3px 3px 3px 3px;
         text-decoration: none;
@@ -82,8 +78,8 @@
         cursor: pointer;
         background-color: #006699;
     }
-    .ui-widget-content a
-    {
+
+    .ui-widget-content a {
         color: #222222;
     }
 </style>
@@ -95,7 +91,7 @@
         <div class="box-body">
 
             <form id="form_producto" method="post" action="{{route('prodtarifario.buscar_productos_contenido')}}">
-                {{ csrf_field() }}    
+                {{ csrf_field() }}
                 <!-- <div class="alert-danger"><span id="cant_ord"></span></div>
                     <div class="form-group col-md-4{{ $errors->has('id') ? ' has-error' : '' }}">
                         <label for="id" class="control-label">{{trans('prod_tar.productos')}}:</label>
@@ -104,71 +100,67 @@
                     </div>
                 </div> -->
                 <div class="alert-danger"><span id="busca"></span></div>
-                    <div class="form-group col-md-4{{ $errors->has('id') ? ' has-error' : '' }}">
-                        <label for="producto" class="control-label">{{trans('prod_tar.productos')}}:</label>
-                        <div class="input-group">
-                            <input id="producto" class="form-control input-sm" type="text" name="producto" value="{{ $nombre_buscar }}" required autofocus style="background-color: #fff0e6;">
-                            @if ($errors->has('producto'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('producto') }}</strong>
-                            </span>
-                            @endif
-                            <div class="input-group-addon">
-                                <i class="glyphicon glyphicon-remove-circle" onclick="document.getElementById('producto').value = '';"></i>
-                            </div> 
+                <div class="form-group col-md-4{{ $errors->has('id') ? ' has-error' : '' }}">
+                    <label for="producto" class="control-label">{{trans('prod_tar.productos')}}:</label>
+                    <div class="input-group">
+                        <input id="producto" class="form-control input-sm" type="text" name="producto" value="{{ $nombre_buscar }}" required autofocus style="background-color: #fff0e6;">
+                        @if ($errors->has('producto'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('producto') }}</strong>
+                        </span>
+                        @endif
+                        <div class="input-group-addon">
+                            <i class="glyphicon glyphicon-remove-circle" onclick="document.getElementById('producto').value = '';"></i>
                         </div>
                     </div>
-                    <div>
-                        <div class="form-group col-md-2 ">
-                            <div class="col-md-7">
-                                <button type="submit" class="btn btn-primary" id="boton_buscar">
-                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> {{trans('prod_tar.buscar')}}</button>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="hidden" id="excel" name="excel">
-                                <button type="submit" class="btn btn-success" onclick="changeExcel()">
-                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Excel</button>
-                            </div>
-                           
-
+                </div>
+                <div>
+                    <div class="form-group col-md-2 ">
+                        <div class="col-md-7">
+                            <button type="submit" class="btn btn-primary" id="boton_buscar">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> {{trans('prod_tar.buscar')}}</button>
                         </div>
-                        <div class="form-group col-md-2">
-                            <div class="col-md-8">
-                                <a href="{{route('prodtarifario.excel')}}" class="btn btn-success">Excel</a>
-                            </div>
-
-                        </div>
-
-
-                    </div>
-                    <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                        <div class="row" id="listado">
-                            <div class="table-responsive col-md-12">
-                                <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                                    <thead>
-                                        <tr>
-                                            <th>{{trans('prod_tar.codigo')}}</th>
-                                            <th>{{trans('prod_tar.producto')}}</th>
-                                            <th>{{trans('prod_tar.Valor')}}</th>
-                                            <th>{{trans('prod_tar.accion')}}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($productos as $prod)
-                                        <tr>
-                                            <td>{{$prod->codigo}}</td>
-                                            <td>{{$prod->nombre}} </td>
-                                            <td>{{$prod->valor_total_paq}} </td>
-                                            <td>
-                                                <a href="{{ route('prodtarifario.index_tarifario', ['id_producto' => $prod->id])}}" class="btn btn-warning"><i class="fa fa-plus"></i></a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="col-md-4">
+                            <input type="hidden" id="excel" name="excel">
+                            <button type="submit" class="btn btn-success" onclick="changeExcel()">
+                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Excel</button>
                         </div>
                     </div>
+                    <div class="form-group col-md-2">
+                        <div class="col-md-8">
+                            <a href="{{route('prodtarifario.excel')}}" class="btn btn-success">Excel</a>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                    <div class="row" id="listado">
+                        <div class="table-responsive col-md-12">
+                            <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                <thead>
+                                    <tr>
+                                        <th>{{trans('prod_tar.codigo')}}</th>
+                                        <th>{{trans('prod_tar.producto')}}</th>
+                                        <th>{{trans('prod_tar.Valor')}}</th>
+                                        <th>{{trans('prod_tar.accion')}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($productos as $prod)
+                                    <tr>
+                                        <td>{{$prod->codigo}}</td>
+                                        <td>{{$prod->nombre}} </td>
+                                        <td>{{$prod->valor_total_paq}} </td>
+                                        <td>
+                                            <a href="{{ route('prodtarifario.index_tarifario', ['id_producto' => $prod->id])}}" class="btn btn-warning"><i class="fa fa-plus"></i></a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </form>
             <!--div class="col-md-4">
                                 <input type="hidden" id="excel" name="excel">
@@ -216,35 +208,36 @@
     }
 
     $("#producto").autocomplete({
-        
-        source: function( request, response ) {
-             //alert("hola");
+
+        source: function(request, response) {
+            //alert("hola");
             $.ajax({
-                url:"{{route('prodtarifario.buscar_todos_productos')}}",
-                headers:{'X-CSRF-TOKEN':$('input[name=_token]').val()},
+                url: "{{route('prodtarifario.buscar_todos_productos')}}",
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name=_token]').val()
+                },
                 data: {
                     term: request.term
-                        },
+                },
                 dataType: "json",
                 type: 'post',
-                success: function(data){
+                success: function(data) {
                     response(data);
-                   // console.log(data);
+                    // console.log(data);
 
                 },
-                
+
             })
         },
         minLength: 3,
-        select: function(data, ui){
+        select: function(data, ui) {
             //alert(data);
             //console.log(ui.item.label);
             $('#producto').val(ui.item.label);
         }
-    } );
+    });
 
-    var contador = 0;    
-
+    var contador = 0;
 </script>
 
 @endsection

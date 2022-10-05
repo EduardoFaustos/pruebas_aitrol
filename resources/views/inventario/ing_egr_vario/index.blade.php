@@ -187,13 +187,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="seguimiento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
 
-    </div>
-  </div>
-</div>
 <link rel="stylesheet" href="{{ asset("/css/bootstrap-datetimepicker.css")}}">
 
 <!-- Main content -->
@@ -204,7 +198,7 @@
             <div class="col-sm-12">
                 <h3 class="box-title">{{trans('winsumos.ingreso')}} / {{trans('winsumos.egreso')}} </h3>
             </div>
-            <form action="{{route('transito.index_transito')}}" method="POST">
+            <form action="{{route('inventario.ingresos.egresos.varios')}}" method="POST">
                 {{ csrf_field() }}
             <div>
                 <div class="row">

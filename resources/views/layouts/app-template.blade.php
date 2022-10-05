@@ -10,7 +10,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>SM | Sistema Medico</title>
   <!-- Tell the browser to be responsive to screen width -->
-  <base href="{{ url('./') }}" />
+
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <!-- Bootstrap 3.3.6 -->
@@ -25,8 +25,6 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <link href="{{ asset("/bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap.css")}}" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" type="text/css" href="{{ asset('/bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap4.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ asset('/bower_components/AdminLTE/plugins/datatables/responsive.dataTables.min.css') }}">
   <link href="{{ asset("/bower_components/select2/dist/css/select2.min.css")}}" rel="stylesheet" type="text/css" />
   <!-- Bootstrap time Picker -->
   <link href="{{ asset("/plugins/timepicker/bootstrap-timepicker.min.css")}}" rel="stylesheet" type="text/css" />
@@ -100,8 +98,8 @@ Full screen Modal
 
   <script src="{{ asset ("/bower_components/jquery/dist/jquery.min.js")}}"></script>
 
-  <script src="{{ asset ("/bower_components/datatables.net/js/jquery.dataTables.min.js") }}"></script>
-  <script src="{{ asset ("/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js") }}"></script>
+  <!--<script src="{{ asset ("/bower_components/datatables.net/js/jquery.dataTables.min.js") }}"></script>-->
+  <!--<script src="{{ asset ("/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js") }}"></script>-->
 
   <!-- bootstrap time picker -->
   <script src="{{ asset ("/plugins/timepicker/bootstrap-timepicker.min.js") }}"></script>
@@ -121,11 +119,9 @@ Full screen Modal
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
   <!-- Select2 -->
-
-
-
-
-
+  <!-- AdminLTE App -->
+  <script src="{{ asset ("/bower_components/AdminLTE/dist/js/app.min.js") }}" type="text/javascript"></script>
+  <script src="{{ asset ("/bower_components/AdminLTE/dist/js/demo.js") }}" type="text/javascript"></script>
   <script type="text/javascript"></script>
   <!--
 <script language="JavaScript">
@@ -221,14 +217,12 @@ document.onmousedown=click
   if (config('data.controlador') != null) {
     $njs = config('data.controlador');
   ?>
+    <link rel="stylesheet" type="text/css" href="{{ asset('/bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/bower_components/AdminLTE/plugins/datatables/responsive.dataTables.min.css') }}">
     <script src="{{asset('/bower_components/AdminLTE/sistema/function_'.$njs.'.js')}}"></script>
   <?php
   }
   ?>
-
-  <!-- AdminLTE App -->
-  <script src="{{ asset ("/bower_components/AdminLTE/dist/js/app.min.js") }}" type="text/javascript"></script>
-  <script src="{{ asset ("/bower_components/AdminLTE/dist/js/demo.js") }}" type="text/javascript"></script>
   <!-- Optionally, you can add Slimscroll and FastClick plugins.
       Both of these plugins are recommended to enhance the
       user experience. Slimscroll is required when using the

@@ -61,7 +61,7 @@ Route::get('contable/anula_producto_tarifario/paquete','contable\Productos_Servi
 Route::get('contable/carga/tarifario_paquete/{id_prod}/{id_paq}', 'contable\Productos_ServiciosController@recarga_prod_tarifario');
 
 Route::get('contable/carga/tarifario_paquete', 'contable\Productos_ServiciosController@recarga_prod_tarifario')->name('recarga_prod_tarifario.index');
-Route::post('contable/insumo/buscar/precio_producto', 'contable\Productos_ServiciosController@buscar_precio')->name('productos_servicios.buscar_precio');
+
 Route::post('contable/productos_servicios/actualizar/{codigo}', 'contable\Productos_ServiciosController@update')->name('productos_servicios.update');
 Route::post('contable/insumo/nombre', 'contable\Productos_ServiciosController@buscar_insumo')->name('contable_find_insumo');
 Route::post('contable/insumo/equipo', 'contable\Productos_ServiciosController@buscar_producto')->name('contable_find_producto');
@@ -183,6 +183,7 @@ Route::get('contable/establecimiento/crear', 'contable\SucursalesController@crea
 Route::post('contable/establecimiento/guardar', 'contable\SucursalesController@store')->name('establecimiento.store');
 Route::get('contable/establecimiento/editar/{id}/{id_empresa}', 'contable\SucursalesController@editar')->name('establecimiento.editar');
 Route::post('contable/establecimiento/update', 'contable\SucursalesController@update')->name('establecimiento.update');
+Route::post('sucursales/guardarCiudad/{ciudad}', 'contable\SucursalesController@guardarCiudad');
 Route::match(['get', 'post'], 'contable/establecimiento/buscar', 'contable\SucursalesController@buscar')->name('establecimiento.buscar');
 Route::match(['get', 'post'],'contable/establecimiento/editardatos/{id}', 'contable\SucursalesController@editardatos')->name('establecimiento.editardatos');
 Route::match(['get', 'post'],'contable/establecimiento/update_datos', 'contable\SucursalesController@update_datos')->name('establecimiento.update_datos');

@@ -10,10 +10,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-  
-//consulta máster 
-
  
+//consulta máster
+
+
 
 
 Route::get('historiaclinica/video/captura/{protocolo_id}/{agendas}/{ruta}', 'hc_admision\VideoController@mostrar')->name('hc_video.mostrar');
@@ -26,10 +26,7 @@ Route::post('historiaclinica/documentos/grabacion_captura_documentos/', 'hc_admi
 Route::post('historiaclinica/estudios/grabacion_captura_estudios/', 'hc_admision\VideoController@guardado_foto2_estudios')->name('hc_video.guardado_foto2_estudios');
 Route::post('historiaclinica/biopsias/grabacion_captura_biopsias/', 'hc_admision\VideoController@guardado_foto2_biopsias')->name('hc_video.guardado_foto2_biopsias');
 
-
-
-Route::get('ver_historiaclinica/video/mostar_foto/{id}', 'hc_admision\VideoController@mostrar_foto')->name('hc_video.mostrar_foto');
-
+Route::get('historiaclinica/video/mostar_foto/{id}', 'hc_admision\VideoController@mostrar_foto')->name('hc_video.mostrar_foto');
 Route::get('historiaclinica/video/mostar_foto/', 'hc_admision\VideoController@mostrar_foto')->name('hc_video.mostrar_foto2');
 
 Route::get('historiaclinica/video/eliminar_foto/{id}', 'hc_admision\VideoController@eliminar_foto')->name('hc_video.eliminar_foto');
@@ -51,6 +48,9 @@ Route::post('historiaclinica2/biopsias2/grabacion_captura_biopsias_recepcion/', 
 //cambio de fecha
 Route::post('historia_clinica/convenios/revision/fecha', 'hc_admision\VideoController@fecha_convenios')->name('hc_foto.fecha_convenios');
 
+
+
+
 Route::get('hc_ima_nombre/{name}', 'hc_admision\ProcedimientosController@load3');
 
 //para examenes anteriores
@@ -65,12 +65,13 @@ Route::get('laboratorio_externo_descarga/{name}', 'hc_admision\VideoController@d
 Route::get('images_ingreso_biopsias/{id_paciente}', 'hc_admision\VideoController@examenes_biopsias')->name('ingreso.biopsias2');
 Route::post('images_ingreso_biopsias/ingreso/documento', 'hc_admision\VideoController@guardar_biopsias_nuevo')->name('ingreso_biopsias.guardar');
 
+
 // seleccionar todas las fotos para recortar
 Route::get('seleccion_imagenes_recortar/{id_paciente}', 'hc_admision\VideoController@recortar_todas')->name('seleccionar_todas.recortar');
 
 //descargar multiples en zip
 Route::post('historiaclinica/descargar_subida_fotos/subida_fotos_historial2/descarga/', 'hc_admision\VideoController@descargar_zip')->name('hc_video.descargar_zip');
- 
+
 //historial de imagenes de paciente
 Route::get('paciente/historial/imagenes/{id_paciente}', 'PacienteController@historial_imagenes')->name('paciente.historial_imagenes');
 

@@ -38,6 +38,7 @@ use Sis_medico\Ct_Rh_Prestamos_Detalle;
 class RolPagoController extends Controller
 {
 
+    private $controlador = 'rolpago';
     public function __construct()
     {
         $this->middleware('auth');
@@ -52,9 +53,9 @@ class RolPagoController extends Controller
         }
     }
 
-
     public function index($id, $id_empresa)
     {
+       
         if ($this->rol()) {
             return response()->view('errors.404');
         }
@@ -71,7 +72,7 @@ class RolPagoController extends Controller
 
         $empresas = Empresa::all();
 
-        $rh_valores = Ct_Rh_Valores::where('id_empresa',$id_empresa)->get();
+        $rh_valores = Ct_Rh_Valores::where('id_empresa', $id_empresa)->get();
 
         $val_fond_reserv = Ct_Rh_Valores::where('id_empresa', $id_empresa)->where('tipo', 4)->first();
         $val_sal_basico = Ct_Rh_Valores::where('id_empresa', $id_empresa)->where('tipo', 3)->first();
@@ -129,47 +130,45 @@ class RolPagoController extends Controller
             ->first();
 
         /** Calcula el fondo de reserva*/
-        $fecha=date("Y-m-d");
-        $fec=new DateTime($fecha);
+        $fecha = date("Y-m-d");
+        $fec = new DateTime($fecha);
 
-        $fec2=new DateTime($registro->fecha_ingreso);
+        $fec2 = new DateTime($registro->fecha_ingreso);
         $diff = $fec->diff($fec2);
-        $intervalMeses=$diff->format("%m");      
-        $intervalAnos = $diff->format("%y")*12;
+        $intervalMeses = $diff->format("%m");
+        $intervalAnos = $diff->format("%y") * 12;
         $añosAhora = $diff->format("%y");
         $intervalDias = $diff->format("%d");
 
         $diaActual = $fec->format("d");
         $meses_totales = $intervalMeses + $intervalAnos;
-        
-        
+
+
         $monto_fondo_reserva = 0;
-       
+
         $pago_fondo = 0;
-        
-        if($añosAhora>0){
-            
-            if($registro->pago_fondo_reserva==2){
-                
-                    $pago_fondo = ($registro->sueldo_neto) * ($val_fond_reserv->valor/100);
-                
-            }else if($registro->pago_fondo_reserva==1){
-    
-                if($añosAhora>0 && $diaActual > 15){
-                    $intervalMeses +=1;
-                    $pago_fondo = ($registro->sueldo_neto * $intervalMeses) * ($val_fond_reserv->valor/100);
-                }else{
-                    $pago_fondo = ($registro->sueldo_neto * $intervalMeses) * ($val_fond_reserv->valor/100);
+
+        if ($añosAhora > 0) {
+
+            if ($registro->pago_fondo_reserva == 2) {
+
+                $pago_fondo = ($registro->sueldo_neto) * ($val_fond_reserv->valor / 100);
+            } else if ($registro->pago_fondo_reserva == 1) {
+
+                if ($añosAhora > 0 && $diaActual > 15) {
+                    $intervalMeses += 1;
+                    $pago_fondo = ($registro->sueldo_neto * $intervalMeses) * ($val_fond_reserv->valor / 100);
+                } else {
+                    $pago_fondo = ($registro->sueldo_neto * $intervalMeses) * ($val_fond_reserv->valor / 100);
                 }
-                
             }
         }
-        
+
 
         if (!is_null($existe_rol)) {
             return redirect()->route('rol_pago.editar', ['id' => $existe_rol->id]);
         } else {
-            return view('contable/rol_pago/create_rol', ['empresa' => $empresa, 'usuario' => $usuario, 'registro' => $registro, 'ct_tipo_rol' => $ct_tipo_rol, 'val_aport_pers' => $val_aport_pers, 'tipo_pago_rol' => $tipo_pago_rol, 'val_fond_reserv' => $val_fond_reserv, 'val_sal_basico' => $val_sal_basico, 'tipo_cuenta' => $tipo_cuenta, 'lista_banco' => $lista_banco, 'prestam_empl' => $prestam_empl, 'anio' => $anio, 'mes' => $mes, 'monto_fondo_reserva'=>$monto_fondo_reserva, 'pago_fondo' =>$pago_fondo]);
+            return view('contable/rol_pago/create_rol', ['empresa' => $empresa, 'usuario' => $usuario, 'registro' => $registro, 'ct_tipo_rol' => $ct_tipo_rol, 'val_aport_pers' => $val_aport_pers, 'tipo_pago_rol' => $tipo_pago_rol, 'val_fond_reserv' => $val_fond_reserv, 'val_sal_basico' => $val_sal_basico, 'tipo_cuenta' => $tipo_cuenta, 'lista_banco' => $lista_banco, 'prestam_empl' => $prestam_empl, 'anio' => $anio, 'mes' => $mes, 'monto_fondo_reserva' => $monto_fondo_reserva, 'pago_fondo' => $pago_fondo]);
         }
 
         //Guia Forma de Pago Factura de Venta
@@ -177,7 +176,6 @@ class RolPagoController extends Controller
         //$tipo_tarjeta = Ct_Tipo_Tarjeta::all();
 
         /*return view('contable/rol_pago/create', ['empresa' => $empresa,'usuario' => $usuario,'registro' => $registro,'ct_tipo_rol' => $ct_tipo_rol,'val_aport_pers' => $val_aport_pers]);*/
-
     }
 
     public function store_rol_pago(Request $request)
@@ -330,9 +328,7 @@ class RolPagoController extends Controller
                         'ip_modificacion' => $ip_cliente,
 
                     ]);
-
                 }
-
             }
 
             //Guardado en la Tabla Ct_Detalle_Rol
@@ -441,12 +437,12 @@ class RolPagoController extends Controller
                 }
             }
 
-            $prestamo = Ct_Rh_Prestamos::where('id_empl', $request['id_user'])->where('estado','1')->first();
+            $prestamo = Ct_Rh_Prestamos::where('id_empl', $request['id_user'])->where('estado', '1')->first();
 
             if (!is_null($prestamo)) {
                 $resta = $prestamo->saldo_total - $request['prestamo_empleado'];
                 $arr_prestamo = [
-                    'saldo_total'      => $resta,//restante del prestamo
+                    'saldo_total'      => $resta, //restante del prestamo
                     'id_usuariomod'    => $idusuario,
                     'ip_modificacion'  => $ip_cliente,
                 ];
@@ -464,9 +460,9 @@ class RolPagoController extends Controller
                 }
             }
 
-            $saldo_inicial = Ct_Rh_Saldos_Iniciales::where('id_empl', $request['id_user'])->where('estado','1')->first();
+            $saldo_inicial = Ct_Rh_Saldos_Iniciales::where('id_empl', $request['id_user'])->where('estado', '1')->first();
 
-            if(!is_null($saldo_inicial)){
+            if (!is_null($saldo_inicial)) {
                 $rest_sal = $saldo_inicial->saldo_res - $request['saldo_inicial'];
                 $arr_saldo = [
                     'saldo_res'        => $rest_sal,
@@ -508,7 +504,6 @@ class RolPagoController extends Controller
         if ($sueldo_mensual != null) {
 
             $total_ingreso = ($sueldo_mensual) + ($request['sobre_tiempo_50']) + ($request['sobre_tiempo_100']) + ($request['valor_bono']) + ($request['bono_imputable']) + ($request['fondo_reserva']) + ($request['decimo_tercero']) + ($request['decimo_cuarto']) + ($request['alimentacion']) + ($request['transporte']);
-
         }
 
         //Calculo Total Egresos
@@ -656,9 +651,7 @@ class RolPagoController extends Controller
                     'ip_creacion'     => $ip_cliente,
                     'ip_modificacion' => $ip_cliente,
                 ]);
-
             }
-
         }
 
         //ELIMINAMOS CUOTAS QUIROGRAFARIAS
@@ -721,58 +714,57 @@ class RolPagoController extends Controller
             }
         }
 
-        $prestamo = Ct_Rh_Prestamos::where('id_empl', $request['id_user'])->where('estado','1')->first();
+        $prestamo = Ct_Rh_Prestamos::where('id_empl', $request['id_user'])->where('estado', '1')->first();
 
-            if (!is_null($prestamo)) {
-                $resta = $prestamo->saldo_total - $request['prestamo_empleado'];
-                $arr_prestamo = [
-                    'saldo_total'      => $resta,//restante del prestamo
-                    'id_usuariomod'    => $idusuario,
-                    'ip_modificacion'  => $ip_cliente,
+        if (!is_null($prestamo)) {
+            $resta = $prestamo->saldo_total - $request['prestamo_empleado'];
+            $arr_prestamo = [
+                'saldo_total'      => $resta, //restante del prestamo
+                'id_usuariomod'    => $idusuario,
+                'ip_modificacion'  => $ip_cliente,
+            ];
+
+            $prestamo->update($arr_prestamo);
+
+            if ($resta == '0') {
+                $arr_prest = [
+                    'prest_cobrad'      => '1',
+                    'estado'            => '0',
+                    'id_usuariomod'     => $idusuario,
+                    'ip_modificacion'   => $ip_cliente,
                 ];
-
-                $prestamo->update($arr_prestamo);
-
-                if ($resta == '0') {
-                    $arr_prest = [
-                        'prest_cobrad'      => '1',
-                        'estado'            => '0',
-                        'id_usuariomod'     => $idusuario,
-                        'ip_modificacion'   => $ip_cliente,
-                    ];
-                    $prestamo->update($arr_prest);
-                }
+                $prestamo->update($arr_prest);
             }
+        }
 
-            $saldo_inicial = Ct_Rh_Saldos_Iniciales::where('id_empl', $request['id_user'])->where('estado','1')->first();
+        $saldo_inicial = Ct_Rh_Saldos_Iniciales::where('id_empl', $request['id_user'])->where('estado', '1')->first();
 
-            if(!is_null($saldo_inicial)){
-                $rest_sal = $saldo_inicial->saldo_res - $request['saldo_inicial'];
-                $arr_saldo = [
-                    'saldo_res'        => $rest_sal,
-                    'id_usuariomod'    => $idusuario,
-                    'ip_modificacion'  => $ip_cliente,
+        if (!is_null($saldo_inicial)) {
+            $rest_sal = $saldo_inicial->saldo_res - $request['saldo_inicial'];
+            $arr_saldo = [
+                'saldo_res'        => $rest_sal,
+                'id_usuariomod'    => $idusuario,
+                'ip_modificacion'  => $ip_cliente,
+            ];
+
+            $saldo_inicial->update($arr_saldo);
+
+            if ($rest_sal == '0') {
+                $arr_sal = [
+                    'prest_cobrad'      => '1',
+                    'estado'            => '0',
+                    'id_usuariomod'     => $idusuario,
+                    'ip_modificacion'   => $ip_cliente,
                 ];
-
-                $saldo_inicial->update($arr_saldo);
-
-                if ($rest_sal == '0') {
-                    $arr_sal = [
-                        'prest_cobrad'      => '1',
-                        'estado'            => '0',
-                        'id_usuariomod'     => $idusuario,
-                        'ip_modificacion'   => $ip_cliente,
-                    ];
-                    $prestamo->update($arr_sal);
-                }
+                $prestamo->update($arr_sal);
             }
+        }
 
         //$r_f_pago->update($input_forma_pago);
 
         $msj = "ok";
 
         return ['msj' => $msj, 'id_rol_pago' => $id_rol];
-
     }
 
     public function imprimir_rol_pago($id_rolpag)
@@ -955,6 +947,9 @@ class RolPagoController extends Controller
     /**************************************************/
     public function buscador_index(Request $request)
     {
+        config(['data' => []]);
+        $data['controlador'] = $this->controlador;
+            config(['data' => $data]);
         if ($this->rol()) {
             return response()->view('errors.404');
         }
@@ -1026,8 +1021,9 @@ class RolPagoController extends Controller
                 'drol.fond_reserv_cobrar as fond_reserv_cobr',
                 'drol.otros_egresos as otro_egres',
                 'drol.dias_laborados as dias_laborados',
-                'u.apellido1')
-            ->orderby('u.apellido1','asc')
+                'u.apellido1'
+            )
+            ->orderby('u.apellido1', 'asc')
             ->get();
         //dd($rol_det_consulta);
 
@@ -1048,7 +1044,7 @@ class RolPagoController extends Controller
         $mes            = $request['mes'];
         $cuenta_destino = $request['id_cuenta_destino'];
         $opcion_store   = 0;
-        
+
         $fechas = $request->fecha;
         $fecha = explode("-", $fechas);
         $mes1 = intval($fecha[1]);
@@ -1081,7 +1077,7 @@ class RolPagoController extends Controller
         } elseif ($mes == 1) {
             $txt_mes = 'ENERO';
         }
-        
+
         /*Verifica si Existe Asiento de Diario Registrado por Empresa Año Mes*/
         /*$existe_asiento = Ct_Asientos_Cabecera::where('ct_asientos_cabecera.estado', '1')
             ->where('ct_asientos_cabecera.observacion', 'like', '%' . $id_empresa . '%')
@@ -1091,16 +1087,16 @@ class RolPagoController extends Controller
             ->first();*/
 
         $existe_asiento = DB::table('rol_asiento')
-                         ->where('id_empresa', $id_empresa)
-                         ->where('anio', $anio1)
-                         ->where('mes', $mes1)
-                         ->where('estado', '1')
-                         ->first();
+            ->where('id_empresa', $id_empresa)
+            ->where('anio', $anio1)
+            ->where('mes', $mes1)
+            ->where('estado', '1')
+            ->first();
         //dd($existe_asiento);
         //dd("hola");
         if (!is_null($existe_asiento)) {
             $msj = "ok";
-            return [ 'msj'=> $msj, 'mensaje' => "Ya existe un Asiento Creado en el Año : {$anio} Mes : {$txt_mes}"];
+            return ['msj' => $msj, 'mensaje' => "Ya existe un Asiento Creado en el Año : {$anio} Mes : {$txt_mes}"];
         } else {
             //dd("{$anio} - {$mes} - {$id_empresa}");
             $total_sum = Ct_Rol_Pagos::where('ct_rol_pagos.estado', '1')
@@ -1139,15 +1135,15 @@ class RolPagoController extends Controller
                 )
                 ->first();
 
-               // dd($total_sum);
-                if(is_null($total_sum->total_ingreso)){
-                    return [ 'msj'=> "ok", 'mensaje' => "No existe roles de pago en el Año : {$anio} Mes : {$txt_mes}, verifique la fecha de la creación del asiento"];
-                }
-                //Texto de Asiento Dario
-                $text = 'Total Roles de Pago' . ':' . ' ' . 'Id_Empresa' . ':' . $id_empresa . ' ' . 'Año' . ':' . $request['year'] . ' ' . 'Mes' . ':' . $txt_mes;
-                //dd($total_sum->total_ingreso);
-                
-            
+            // dd($total_sum);
+            if (is_null($total_sum->total_ingreso)) {
+                return ['msj' => "ok", 'mensaje' => "No existe roles de pago en el Año : {$anio} Mes : {$txt_mes}, verifique la fecha de la creación del asiento"];
+            }
+            //Texto de Asiento Dario
+            $text = 'Total Roles de Pago' . ':' . ' ' . 'Id_Empresa' . ':' . $id_empresa . ' ' . 'Año' . ':' . $request['year'] . ' ' . 'Mes' . ':' . $txt_mes;
+            //dd($total_sum->total_ingreso);
+
+
             $input_cabecera = [
                 'fecha_asiento'   => $fecha_actual,
                 'id_empresa'      => $id_empresa,
@@ -1187,7 +1183,7 @@ class RolPagoController extends Controller
                 //$plan_cuentas = Plan_Cuentas::where('id', '5.2.02.01.01')->first(); //ROLPAGO_SUELDO
 
                 $cuenta = Ct_Configuraciones::obtener_cuenta('ROLPAGO_SUELDO');
-                
+
 
                 Ct_Asientos_Detalle::create([
 
@@ -1221,20 +1217,19 @@ class RolPagoController extends Controller
 
                 Ct_Asientos_Detalle::create([
 
-                'id_asiento_cabecera' => $id_asiento_cabecera,
-                //'id_plan_cuenta'      => '5.2.02.01.02',
-                'id_plan_cuenta'      => $plan_cuentas->cuenta_guardar,
-                'descripcion'         => $plan_cuentas->nombre_mostrar,
-                'fecha'               => $fecha_actual,
-                'debe'                => $total_sobre_tiempo,
-                'haber'               => '0',
-                'id_usuariocrea'      => $idusuario,
-                'id_usuariomod'       => $idusuario,
-                'ip_creacion'         => $ip_cliente,
-                'ip_modificacion'     => $ip_cliente,
+                    'id_asiento_cabecera' => $id_asiento_cabecera,
+                    //'id_plan_cuenta'      => '5.2.02.01.02',
+                    'id_plan_cuenta'      => $plan_cuentas->cuenta_guardar,
+                    'descripcion'         => $plan_cuentas->nombre_mostrar,
+                    'fecha'               => $fecha_actual,
+                    'debe'                => $total_sobre_tiempo,
+                    'haber'               => '0',
+                    'id_usuariocrea'      => $idusuario,
+                    'id_usuariomod'       => $idusuario,
+                    'ip_creacion'         => $ip_cliente,
+                    'ip_modificacion'     => $ip_cliente,
 
                 ]);
-
             }
 
 
@@ -1551,7 +1546,7 @@ class RolPagoController extends Controller
             if ($val_multa > 0) {
                 //$plan_cuentas = Plan_Cuentas::where('id', '4.1.05.01')->first();
                 $plan_cuentas = \Sis_medico\Ct_Configuraciones::obtener_cuenta('ROL_PAGOS_MULTAS_EMPLEADOS');
-                
+
                 Ct_Asientos_Detalle::create([
 
                     'id_asiento_cabecera' => $id_asiento_cabecera,
@@ -1620,7 +1615,6 @@ class RolPagoController extends Controller
                     'ip_modificacion'     => $ip_cliente,
 
                 ]);
-
             }
 
             /* PRESTAMOS A EMPLEADOS MAS SALDO INICIAL ACTIVO */
@@ -1895,7 +1889,7 @@ class RolPagoController extends Controller
         $existe_empleado = Ct_Rh_Prestamos::where('id_empl', $empleado_busqueda)
             ->where('id_empresa', $empresa_busqueda)
             ->where('ct_rh_prestamos.anio_inicio_cobro', '=', $anio_busqueda)
-            ->where('estado','1')
+            ->where('estado', '1')
             ->get();
         //dd($existe_empleado);
 
@@ -1953,7 +1947,6 @@ class RolPagoController extends Controller
                             }
                         }
                     }
-
                 } else if ($sum_mes > $val_13) {
 
                     $mes_fin = ($sum_mes) - ($val_13);
@@ -1980,11 +1973,9 @@ class RolPagoController extends Controller
                         }
                     }
                 }
-
             }
 
             return ['existe_mes' => $existe_mes, 'val_cuot' => $sum_cuot, 'obser_prest' => $obser_prest];
-
         }
     }
 
@@ -2153,7 +2144,7 @@ class RolPagoController extends Controller
             $existe_mes      = 0;
         }
 
-        return ['existe_mes' => $existe_mes, 'existe_anticipo' => $existe_anticipo, 'mont_anticip' => $mont_anticip, 'concept_anticip' => $concept_anticip,'existe_empleado' =>$existe_empleado];
+        return ['existe_mes' => $existe_mes, 'existe_anticipo' => $existe_anticipo, 'mont_anticip' => $mont_anticip, 'concept_anticip' => $concept_anticip, 'existe_empleado' => $existe_empleado];
     }
 
     /****************************************************
@@ -2186,11 +2177,11 @@ class RolPagoController extends Controller
             ->where('estado', '1')
             ->get();
 
-            $total_sum = 0;
-            $acum_obs = "";
+        $total_sum = 0;
+        $acum_obs = "";
         foreach ($existe as $value) {
             $total_sum += $value->monto_anticipo;
-            $acum_obs = $acum_obs.'|'.$value->concepto;
+            $acum_obs = $acum_obs . '|' . $value->concepto;
         }
 
         if ($existe_empleado != null) {
@@ -2204,7 +2195,7 @@ class RolPagoController extends Controller
             $existe_mes      = 0;
         }
 
-        return ['existe_mes' => $existe_mes, 'existe_anticipo' => $existe_anticipo, 'mont_anticip' => $mont_anticip, 'concept_anticip' => $concept_anticip, 'total_sum' =>$total_sum, 'acum_obs' => $acum_obs];
+        return ['existe_mes' => $existe_mes, 'existe_anticipo' => $existe_anticipo, 'mont_anticip' => $mont_anticip, 'concept_anticip' => $concept_anticip, 'total_sum' => $total_sum, 'acum_obs' => $acum_obs];
     }
 
     public function exportar_excel(Request $request)
@@ -3152,7 +3143,6 @@ class RolPagoController extends Controller
         $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true, 'chroot'  => base_path('/')]);
         $pdf->setPaper('A4', 'landscape');
         return $pdf->stream('Comprobante Rol Pago.pdf');
-
     }
 
     public function existe_new_rol_pago(Request $request)
@@ -3174,12 +3164,13 @@ class RolPagoController extends Controller
         }
     }
 
-    public function log_eliminar (Request $request){
+    public function log_eliminar(Request $request)
+    {
         $id_empresa       = $request->session()->get('id_empresa');
         $ip_cliente   = $_SERVER["REMOTE_ADDR"];
         $idusuario    = Auth::user()->id;
         Log_horas_extras::create([
-            
+
             'id_usuario'              => $idusuario,
             'nombre_accion'           => $request['detalle'],
             'accion'                  => "eliminado",
@@ -3187,14 +3178,8 @@ class RolPagoController extends Controller
             'id_usuariomod'           => $idusuario,
             'ip_creacion'             => $ip_cliente,
             'ip_modificacion'         => $ip_cliente,
-           
+
         ]);
         return json_encode('ok');
     }
-
-
-    
-
-
-      
 }

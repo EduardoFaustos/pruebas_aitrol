@@ -82,10 +82,8 @@ class DocumentoFacturaController extends Controller
         if ($this->rol()) {
             return response()->view('errors.404');
         }
-
         $id_empresa = $request->session()->get('id_empresa');
         $empresa    = Empresa::where('id', $id_empresa)->where('estado', '1')->first();
-
         $documentos  = AfFacturaActivoCabecera::where('id_empresa', $id_empresa)->orderBy('id', 'DESC')->where('estado', '1')->paginate('20');
         $proveedores = Proveedor::get();
         $usuarios    = User::where('id_tipo_usuario', 1)->get();
@@ -1506,12 +1504,7 @@ class DocumentoFacturaController extends Controller
     {
         $ip_cliente = $_SERVER["REMOTE_ADDR"];
         $idusuario  = Auth::user()->id;
-
-
-
         $af_marca = Marca::where('nombre', 'like', '%' . $request['mdmarca' . $id] . '%')->where('estado', '1')->first();
-
-
         if (is_null($af_marca)) {
             $arr_marca = [
                 'nombre'            => strtoupper($request['mdmarca' . $id]),
@@ -1521,13 +1514,10 @@ class DocumentoFacturaController extends Controller
                 'ip_creacion'       => $ip_cliente,
                 'ip_modificacion'   => $ip_cliente,
             ];
-
             Marca::create($arr_marca);
         }
-
         return "ok";
     }
-
     public function buscar_proveedor(Request $request)
     {
         $id_proveedor = $request['id_proveedor'];

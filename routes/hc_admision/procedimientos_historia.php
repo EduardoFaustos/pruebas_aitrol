@@ -9,9 +9,12 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
- */
-
+*/
+ 
 //consulta máster
+
+
+
 
 Route::get('historiaclinica/procedimientos/{ag}', 'hc_admision\ProcedimientosController@mostrar')->name('procedimientos_historia.mostrar');
 Route::get('historiaclinica/procedimientos/agregar/{hc_id}', 'hc_admision\ProcedimientosController@agregar')->name('procedimientos_hc.agregar');
@@ -31,6 +34,9 @@ Route::post('procedimientos/recupera/tecnica/quiri', 'hc_admision\Procedimientos
 
 Route::get('hc_ima/{name}', 'hc_admision\ProcedimientosController@load');
 
+
+
+
 //ruta para descargar el reporte// para resumen de historia
 Route::get('Procedimiento/descargar/resumen/{id}/{tipo}', 'hc_admision\ProcedimientosController@descarga_resumen')->name('hc_reporte.descargar');
 Route::get('Procedimiento2/descargar2/resumen2/{id}/{tipo}', 'hc_admision\ProcedimientosController@descarga_resumen2')->name('hc_reporte.descargar2');
@@ -45,4 +51,8 @@ Route::get('historia/imagenes2/cambio2/seleccion2/', 'hc_admision\Procedimientos
 //ruta para cargar las imagenes por default
 Route::get('procedimiento_completo/grupo_imagenes/{imagen}', 'hc_admision\ProcedimientosController@load2')->name('grupo_imagen.load');
 
+
 Route::get('Procedimiento/seleccion_descargar/resumen/{id_protocolo}/', 'hc_admision\ProcedimientosController@seleccion_descargar')->name('hc_reporte.seleccion_descargar');
+
+
+

@@ -1046,7 +1046,7 @@ class DebitoBancarioController extends Controller
         //dd($registro);
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
-        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true, 'chroot'  => base_path('/')]);
+        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
         $pdf->setPaper('A4', 'portraint');
         return $pdf->stream('Debito Comprobante-' . $id . '.pdf');
     }
@@ -1067,7 +1067,7 @@ class DebitoBancarioController extends Controller
         //dd($registro);
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
-        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true, 'chroot'  => base_path('/')]);
+        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
         $pdf->setPaper('A4', 'portraint');
         return $pdf->stream('Debito Comprobante-' . $id . '.pdf');
     }
@@ -1087,7 +1087,7 @@ class DebitoBancarioController extends Controller
         //dd($registro);
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
-        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true, 'chroot'  => base_path('/')]);
+        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
         $pdf->setPaper('A4', 'portraint');
         return $pdf->stream('Debito Comprobante-' . $id . '.pdf');
 

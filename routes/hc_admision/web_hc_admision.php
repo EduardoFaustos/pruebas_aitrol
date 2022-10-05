@@ -138,19 +138,8 @@ Route::match(['get', 'post'], 'adelantado/log_agenda/{id}', 'AdelantadoControlle
 // MUESTRAS DE BIOPSIAS
 Route::match(['get', 'post'], 'listado/muestras_biopsia', 'hc_admision\MuestraBiopiasController@index_muestras')->name('muestrabiopsias.index');
 Route::match(['get', 'post'],'muestras_biopsia/update' , 'hc_admision\MuestraBiopiasController@update')->name('muestrabiopsias.update');
-Route::match(['get', 'post'], 'muestras_biopsia/reporte_biopsias', 'hc_admision\MuestraBiopiasController@reporte_muestras_biopsias')->name('muestrabiopsias.reporte_muestras_biopsias');
-Route::match(['get', 'post'],'reporte/muestras_biopsias.pdf', 'hc_admision\MuestraBiopiasController@pdf_muestras_biopsias')->name('muestrabiopsias.pdf_muestras_biopsias');
 
-//Insumos Record Anestesiologico
-Route :: get('nuevo_record/carga_plantillas/medicina/{id_record}/{id_plantilla}','hc_admision\AnestesiologiaController@record_seleccionar_insumos')->name('anestesiologia.record_seleccionar_record');
 Route::get('nuevo_record/csv/eliminar/{id}', 'hc_admision\AnestesiologiaController@eliminar_csv')->name('anestesiologia.eliminar_csv');
 
-//21/6/2022
+//4/4/2022
 Route::get('nuevo_record/csv/editar', 'hc_admision\AnestesiologiaController@editar_csv')->name('anestesiologia.editar_csv');
-
-//Actualizar y Eliminar 22/6/2022
-Route::get('nuevo_record/csv/editarcheck', 'hc_admision\AnestesiologiaController@editarcheck')->name('anestesiologia.editarcheck');
-Route::get('nuevo_record/csv/eliminarcheck', 'hc_admision\AnestesiologiaController@eliminarcheck')->name('anestesiologia.eliminarcheck');
-
-
-

@@ -103,7 +103,6 @@ class ComprasController extends Controller
 
     public function crear(Request $request)
     {
-
         if ($this->rol()) {
             return response()->view('errors.404');
         }
@@ -139,6 +138,7 @@ class ComprasController extends Controller
             ->where('id_empresa', $id_empresa)
             ->get();
         $productos = Ct_productos::where('id_empresa', $id_empresa)->get();
+        //dd($productos);
         //dd($sucursales);
         return view('contable/compra/create', ['divisas' => $divisas, 'empresa' => $empresa, 'rubros' => $rubros, 'iva_param' => $iva_param, 'tipo_tarjeta' => $tipo_tarjeta, 'lista_banco' => $lista_banco, 'tipo_pago' => $tipo_pago, 'proveedor' => $proveedor, 'productos' => $productos, 'bodega' => $bodega, 't_comprobante' => $t_comprobante, 'c_tributario' => $c_tributario, 'empresa_sucurs' => $empresa_sucurs, 'empresa_general' => $empresa_general, 'termino' => $termino, 'sucursales' => $sucursales]);
     }
@@ -321,7 +321,6 @@ class ComprasController extends Controller
             $empresa      = Empresa::find($id_empresa);
             $total_final  = $objeto_validar->set_round($request['total1']);
             $contador_ctv = DB::table('ct_compras')->where('id_empresa', $id_empresa)->where('sucursal', $sucursal)->where('punto_emision', $punto_emision)->get()->count();
-            
             $numero_factura = 0;
             if ($contador_ctv == 0) {
                 $num            = '1';
@@ -342,7 +341,6 @@ class ComprasController extends Controller
 
             //$numeroconcadenado   = "{$c_sucursal}-{$c_caja}-{$request['secuencia_factura']}";
             $comprobacion_compra = Ct_compras::where('numero', $numeroconcadenado)->where('tipo', '1')->where('proveedor', $request['proveedor'])->where('id_empresa', $id_empresa)->where('estado', '<>', '0')->first();
-            
             if (is_null($comprobacion_compra) || $comprobacion_compra == '[]') {
                 $fechahoy = $request['fecha'];
                 // $comp= Ct_compras::where('pedido',$request->pedido_nombre)->where('estado','<>','0')->first();
@@ -459,12 +457,11 @@ class ComprasController extends Controller
                         array_push($arr_total, $arr);
                     }
                 }
-                
                 $cuentas_iva = [];
                 foreach ($arr_total as $valor) {
                     $consulta_product = Ct_productos::where('codigo', $valor['codigo'])->first();
 
-                    if ($consulta_product != '') {
+                    if (count($consulta_product) > 0) {
                         $cuentas_iva = $consulta_product->impuesto_iva_compras;
                     }
                     $detalle = [

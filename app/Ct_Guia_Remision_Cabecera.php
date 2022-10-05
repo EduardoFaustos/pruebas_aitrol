@@ -191,7 +191,8 @@ class Ct_Guia_Remision_Cabecera extends Model
             'num_autorizacion_sustento',
             'razon_social_destinatario',
             'email_traslado_destinatario',
-            'fecha_emision_documento'
+            'fecha_emision_documento',
+            'codigo_est_destino'
         ]);
         //echo '<pre>';print_r(DB::getQueryLog());exit;
     }

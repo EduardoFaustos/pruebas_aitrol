@@ -428,7 +428,7 @@ $envio = ApiFacturacionController::crea_factura($data, $info_comprobante); */
         }
         $empresa = Empresa::find($id);
         // Redirect to user list if updating user wasn't existed
-        if ($empresa == null || count($empresa) == 0) {
+        if ($empresa == null || $empresa == '') {
             return redirect()->intended('/empresa');
         }
         $prefijos= Titulo_Profesional::where('estado', '1')->get();

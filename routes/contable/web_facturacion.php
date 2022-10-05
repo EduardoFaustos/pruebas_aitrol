@@ -58,7 +58,7 @@ Route::post('contable/orden/venta/cliente/', 'contable\Factura_AgendaController@
 Route::get('comprobante/orden/venta/{id_orden}', 'contable\Factura_AgendaController@imprimir_ride')->name('facturacion.imprimir_ride');
 
 //Nueva ruta
-Route::get('contable/modal//{id_orden}', 'contable\Factura_AgendaController@obtener_modal')->name('facturacion.modal_recibo');
+Route::get('contable/modal/recibo/cobro/{id_orden}', 'contable\Factura_AgendaController@obtener_modal')->name('facturacion.modal_recibo');
 
 Route::post('contable/recibo/cobro/anular', 'contable\Factura_AgendaController@anular_recibo_cobro')->name('recibo_cobro.anular');
 
@@ -69,8 +69,6 @@ Route::post('reporte/exportar/cierre', 'contable\CierreCajaController@reporte')-
 
 Route::post('reporte/imprimir_excel', 'contable\CierreCajaController@imprimir_excel')->name('cierrecaja.imprimir_excel');
 
-//REPORTE APPS
-Route::get('reporte/facturacion/aplicaciones', 'contable\Factura_AgendaController@index_reporte_aps')->name('factura.reporteapps');
 //editar comprobante pago
 Route::get('contable/facturacion/agenda_a/editar/{id}/{valor}', 'contable\Factura_AgendaController@facturar_editar')->name('factura.editar_cp');
 Route::get('contable/facturacion/agenda/editar/listado/{id}', 'contable\Factura_AgendaController@facturar_listado')->name('factura.listado');
@@ -130,19 +128,11 @@ Route::get('contable/cierre_caja/orden/{id}/{s}', 'contable\CierreCajaController
 Route::post('contable/orden/facturacion', 'contable\CierreCajaController@storenew')->name('c.enviocopago');
 Route::get('contable/facturacion/getUser', 'contable\CierreCajaController@getUserByCierre')->name('c.getUserByCierre');
 
-Route::match(['get','post'],'cierre_caja_usuarios', 'contable\CierreCajaController@buscar_usuarios')->name('cierrecaja.buscar_usuarios');
+Route::get('cierre_caja_usuarios', 'contable\CierreCajaController@buscar_usuarios')->name('cierrecaja.buscar_usuarios');
 Route::match(['get','post'],'contable/cierre_caja/observacion/{id}', 'contable\CierreCajaController@observacion')->name('cierre_caja.observacion');
 
-//Arqueo Caja
-Route::match(['get', 'post'],'contable/arqueo_caja/crear','contable\Ct_Arqueo_CajaController@crear_arqueo')->name('ct_arqueo_caja.crear_arqueo');
-Route::post('contable/arqueo_caja/update_arqueo', 'contable\Ct_Arqueo_CajaController@update_arqueo')->name('ct_arqueo_caja.update_arqueo');
+//POR TIPO DE SE3GURO
+Route::post('nrc/tipifica/seguros', 'contable\Factura_AgendaController@tipifica_seguros')->name('facturaagenda.tipifica_seguros');
+Route::get('nrc/recibo_cobro/devolver/{id_orden}', 'contable\NuevoReciboCobroController@devolver')->name('nuevorecibocobro.devolver');
 
 
-
-//mantenimiento Ct_Denominacion
-Route::get('contable/arqueo_caja/index', 'contable\Ct_DenominacionController@index')->name('ct_denominacion.index');
-Route::get('contable/arqueo_caja/create', 'contable\Ct_DenominacionController@create')->name('ct_denominacion.create');
-Route::post('contable/arqueo_caja/store', 'contable\Ct_DenominacionController@store')->name('ct_denominacion.store');
-Route::get('contable/arqueo_caja/edit/{id}', 'contable\Ct_DenominacionController@edit')->name('ct_denominacion.edit');
-Route::post('contable/arqueo_caja/update', 'contable\Ct_DenominacionController@update')->name('ct_denominacion.update');
-Route::match(['get', 'post'],'contable/arqueo_caja/delete/{id}', 'contable\Ct_DenominacionController@delete')->name('ct_denominacion.delete');

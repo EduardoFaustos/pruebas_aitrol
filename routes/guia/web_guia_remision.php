@@ -22,7 +22,7 @@ Route::post('guia/remision/modal/crear/agregar_opcion', 'guia\GuiaRemisionContro
 Route::get('contable/Guia_Remision/Transportistas/index', 'guia\TransportistasController@index')->name('transportistas.index');
 Route::get('contable/Guia_Remision/Transportistas/crear', 'guia\TransportistasController@crear')->name('transportistas.crear');
 Route::post('contable/Guia_Remision/Transportistas/store', 'guia\TransportistasController@store')->name('transportistas.store');
-Route::get('contable/Guia_Remision/Transportistas/editar{id}', 'guia\TransportistasController@editar')->name('transportistas.editar');
+Route::get('contable/Guia_Remision/Transportistas/editar/{id}', 'guia\TransportistasController@editar')->name('transportistas.editar');
 Route::post('contable/Guia_Remision/Transportistas/update', 'guia\TransportistasController@update')->name('transportistas.update');
 Route::match(['get', 'post'], 'contable/Guia_Remision/Transportistas/delete', 'guia\TransportistasController@delete')->name('transportistas.delete');
 

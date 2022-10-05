@@ -49,3 +49,6 @@ Route::post('app/buscar/usuario', 'BigDataController@buscar_usuario')->name('lab
 Route::post('app/buscar/examenes', 'BigDataController@buscar_examenes')->name('bd.buscar_examenes');
 Route::post('app/listado/examenes', 'BigDataController@listado_examenes')->name('bd.listado_examenes');
 Route::post('app/crear/orden_labs', 'BigDataController@crear_orden_labs')->name('bd.crear_orden_labs');
+
+Route::post('labs_gestion_servicios', 'PaginaLabsController@labs_gestion_servicios')->name('Pagina.labs_gestion_servicios');
+Route::post('app/buscar/referido', 'BigDataController@buscar_referido')->name('buscar_referido');

@@ -414,16 +414,7 @@
         let tipo_representante = document.querySelector(".tipo_representante")
         let selectValor = document.getElementById("persona_nat_jur").value
 
-        
-        let v1 = `
-            <label for="id_representante" class="col-md-4 control-label">{{trans('empresa.replegal')}}</label>
-                <div class="col-md-7">
-                    <select class="form-control select2_contador2" style="width: 100%;" name="id_representante" id="id_representante">
-                    <option value="{{$empresa->id_representante}}">{{$empresa->usuario_contador->nombre1}} {{$empresa->usuario_contador->apellido1}} {{$empresa->usuario_contador->apellido2}}</option>
-                    
-                    </select>
-                </div>                 
-        `;
+
         
         let v2 = `
             <label for="pref_representante" class="col-md-4 control-label">{{trans('empresa.abreviaturaprofesional2')}}</label>

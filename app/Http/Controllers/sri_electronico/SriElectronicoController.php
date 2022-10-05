@@ -79,31 +79,15 @@ class SriElectronicoController extends Controller
     }
     public function pruebas_sri()
     {
-<<<<<<< HEAD
-        $empresa['ruc'] = '1803954195001';
-        $empresa['nombreComercial'] = 'Mavica';
-        $empresa['razonSocial'] = 'Mavica';
-        $empresa['dirMatriz'] = 'venezuela y calle 16'; //cambiar
-=======
         $empresa['ruc'] = '0922729587001'; //'1803954195001';
         $empresa['nombreComercial'] = 'Eduardo Faustos Nivelo';
         $empresa['razonSocial'] = 'Eduardo Faustos Nivelo';
         $empresa['dirMatriz'] = 'Sauces 6'; //cambiar
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
         $empresa['telefono1'] = '0000000';
         $empresa['telefono2'] = '0000000';
         $empresa['ciudad'] = 'Guayaquil';
         $empresa['email'] = 'jorgezarama@hotmail.com';
         $data['empresa'] = $empresa;
-<<<<<<< HEAD
-        $infoTributaria['ambiente'] = 1; //agregar
-        $infoTributaria['ruc'] = $empresa['ruc']; //1803954195001/eduardo/
-        $infoTributaria['codDoc'] = 6;
-        $infoTributaria['tipoEmision'] = 1;
-        $infoTributaria['nombreComercial'] = 'Mavica';
-        $infoTributaria['razonSocial'] = 'Mavica';
-        $infoTributaria['secuencial'] = 52;
-=======
         $firma['ruta_firma'] = 'firma.p12';
         $firma['clave_firma'] = '3duard0faustos';
         $data['datosfirma'] = $firma;
@@ -114,7 +98,6 @@ class SriElectronicoController extends Controller
         $infoTributaria['nombreComercial'] = 'Mavica';
         $infoTributaria['razonSocial'] = 'Mavica';
         $infoTributaria['secuencial'] = str_pad(1, 9, 0, STR_PAD_LEFT);
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
         $infoTributaria['dirMatriz'] = 'venezuela y calle 16';
         $infoTributaria['fecha_emision'] = date('Y-m-d H:i:s');
         $infoTributaria['estab'] = '001'; //cambiar eliminar sucursal agregar a data directamente
@@ -138,21 +121,6 @@ class SriElectronicoController extends Controller
         $infoTributaria['rimpe_emprendedor'] = 0;
         $infoTributaria['rimpe_popular'] = 0;
         $data['infoTributaria'] = $infoTributaria;
-<<<<<<< HEAD
-        //factura
-        // $cliente = [];
-        // $cliente['tipoIdentificacionComprador'] = '05';
-        // $cliente['cedula'] = '0950457978';
-        // $cliente['nombre'] = 'JORGE AARON';
-        // $cliente['apellido'] = 'ZARAMA HEREDIA';
-        // $cliente['email'] = 'jorgezarama@hotmail.com';
-        // $cliente['telefono'] = '0967938107';
-        // $direccion['calle'] = 'sauces 9';
-        // $direccion['ciudad'] = 'GUAYAQUIL';
-        // $cliente['direccion'] = $direccion['ciudad'] .', ' .$direccion['calle'];
-        // $data['cliente'] = $cliente;
-
-=======
 
         //infoFactura
         $infoFactura = [];
@@ -212,7 +180,6 @@ class SriElectronicoController extends Controller
         $infoFactura['valorRetIva'] = '0';
         $infoFactura['valorRetRenta'] = '0';
 
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
         // $totalImpuesto['porc_imp'] = '12';
         // $totalImpuesto['valor_imp'] = '2.04';
         // $totalImpuestos = [];
@@ -317,18 +284,12 @@ class SriElectronicoController extends Controller
         //dd($data);
 
         $est = $this->consultarEstadoSRI($empresa['ruc']);
+        dd($est);
         $ruta_p12 = base_path() . '/storage/app/facturaelectronica/p12/firma3.p12'; //firma.p12
         $password = 'integra123456'; //'3duard0faustos';
         //generar xml
 
         //$this->llamarApiGuiaRemision();
-<<<<<<< HEAD
-
-        // $validacion = $this->validarData($data);
-        // if(!empty($validacion)){
-        //     return $validacion;
-        // }
-=======
         $dataAutorizacion = '<RespuestaAutorizacionComprobante>
         <claveAccesoConsultada>1909202207092272958700110010010000000240000002416</claveAccesoConsultada>
         <numeroComprobantes>1</numeroComprobantes>
@@ -486,7 +447,6 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
         if (!empty($validacion)) {
             return $validacion;
         }
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
         //$this->envio_documento($data);
         ini_set('max_execution_time', '300');
         $comprobante = $this->generarDocElectronicoXml($data);
@@ -496,13 +456,9 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
 
             if (!empty($docAnte)) {
                 //validar xsd
-<<<<<<< HEAD
-                $validacion = $this->validarXmlToXsd($comprobante);
-=======
                 // dd($validac);
                 $validacion = $this->validarXmlToXsd($comprobante);
                 //dd($validacion);
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
                 if (!empty($validacion)) {
                     return $validacion;
                 }
@@ -535,8 +491,6 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
         exit;
     }
 
-<<<<<<< HEAD
-=======
     private function validarFechaCorrecta($fecha)
     {
         $respuesta = true;
@@ -562,7 +516,6 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
         return $respuesta;
     }
 
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
     public function parshearXML($xml)
     {
 
@@ -571,14 +524,11 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
 
     public function generarXmlAutorizacion($data)
     {
+        $xmlRespuesta=null;
         $nombreArchivo = "noName";
         $estado = "sin procesar";
         try {
-<<<<<<< HEAD
-            //dd($xmlRespuesta);
-=======
             $xmlRespuesta= simplexml_load_string($data);
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
             $xml = new \DOMDocument('1.0', 'UTF-8');
             $root = $xml->createElement('RespuestaAutorizacionComprobante');
             $clave = $xml->createElement('claveAccesoConsultada', $xmlRespuesta->claveAccesoConsultada);
@@ -744,11 +694,6 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                     break;
             }
 
-<<<<<<< HEAD
-            $jarXSD = base_path() . '/ValidadorXSD/dist/ValidadorXSD.jar';
-            $commandXSD = "java -jar $jarXSD $xsd $pathxml 2>&1";
-            $respuestaCmdXSD = exec($commandXSD, $output, $return_value);
-=======
             $doc = new \DOMDocument('1.0', 'utf-8');
             if (!file_exists($pathxml) || !file_exists($xsd)) {
                 $errors = "Archivo <b>$pathxml</b> o <b>$xsd</b> no existe.";
@@ -775,7 +720,6 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
             // $commandXSD = "java -jar $jarXSD $xsd $pathxml 2>&1";
             // $respuestaCmdXSD = exec($commandXSD, $output, $return_value);
             //return $errors;
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
             return $respuestaCmdXSD;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -908,6 +852,7 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
 
     public function consultarEstadoSRI($idEmpresa)
     {
+        
         $url = '';
         $tipoAmbiente = 1;
         $deEmpresa = De_Empresa::where('id_empresa', $idEmpresa)->first();
@@ -957,84 +902,208 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
         return $valida_cedula->llamarValidarCedula($cedula);
     }
 
-    public function validarData($data)
+    private function validarData($data)
     {
         $flag_error = false;
-        $error = "";
-        $tipoIdentificacionCliente = 0;
+        $error = [];
+        $cont = 0;
         $valida_cedula = false;
-<<<<<<< HEAD
-        $empresa = Empresa::where('id', $data['empresa'])->first();
-        if (is_null($empresa)) {
-=======
         $codDoc = '';
         $codigo = '';
         $codigoRetencion = '';
         $porcentajeRetener = '';
-
         if (!isset($data['datosfirma']['clave_firma'])) {
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
             $flag_error = true;
-            $error = "no existe la empresa";
+            $error[$cont] =  'Error: ' . ($cont + 1) . ': clave de firma no registrada (' . $data['datosfirma']['clave_firma'] . ')';
+            $cont++;
         } else {
-            $codDoc = $data['infoTributaria']['codDoc'];
-
-            //validar si la empresa esta habilitada como facturacion electronica
-            if ($empresa->electronica != 1 && !is_null($empresa->appid) && !is_null($empresa->appsecret) && !is_null($empresa->url) && !is_null($empresa->establecimiento) && !is_null($empresa->punto_emision)) {
+            if ($data['datosfirma']['clave_firma'] == '') {
                 $flag_error = true;
-                $error = $error . "empresa no permite facturacion electronica";
-            } elseif ($empresa->electronica != 1) {
-                $flag_error = true;
-                $error = $error . "empresa no permite facturacion electronica";
+                $error[$cont] =  'Error: ' . ($cont + 1) . ': clave de firma no registrada (' . $data['datosfirma']['clave_firma'] . ')';
+                $cont++;
             }
-
-            //validar si existe un registro de de_empresa con la informacion del ruc para facturacion electronica
-            $deEmpresa = De_Empresa::where('id_empresa', $empresa);
-            if (is_null($deEmpresa)) {
+        }
+        if (!isset($data['datosfirma']['ruta_firma'])) {
+            $flag_error = true;
+            $error[$cont] =  "Error: " . ($cont + 1) . ": firma no registrada";
+            $cont++;
+        } else {
+            if ($data['datosfirma']['ruta_firma'] == '') {
                 $flag_error = true;
-                $error('No se encuentra informacion de facturacion electronica');
-            }
-
-            $caja = $data['caja'];
-
-            //validar si existe un registro de infoTributaria
-            // $infoTributaria = De_Info_Tributaria::where('id_empresa', $empresa->id)->where('id_caja', $caja['id'])->where('id_maestro_documentos', '');
-            // if (is_null($infoTributaria)) {
-            //     $flag_error = true;
-            //     $error('No se encuentra informacion tributaria');
-            // }
-
-            //validar codigo documento si no esta en el arreglo no es un codigo valido
-            if (in_array($codDoc, array(1, 4, 5, 6, 7)) == false) {
-                $flag_error = true;
-                $error = $error . '/error codigo de documento no valido';
-            }
-
-            //validacion x factura
-            if ($codDoc != 6) {
-                $productos = $data['productos'];
-                $cliente = $data['cliente'];
-                $direccion = $cliente['direccion'];
-                $pagos = $data['pagos'];
-                //validaciones de cliente
-                if ($cliente != null) {
-                    if ($cliente['nombre'] == null) {
+                $error[$cont] =  "Error: " . ($cont + 1) . ": firma no registrada";
+                $cont++;
+            } else {
+                if (!file_exists(base_path() . '/storage/app/facturaelectronica/p12/' . $data['datosfirma']['ruta_firma'])) {
+                    $flag_error = true;
+                    $error[$cont] =  'Error: ' . ($cont + 1) . ': el archivo de la firma no existe (' . $data['datosfirma']['ruta_firma'] . ')';
+                    $cont++;
+                } else {
+                    if (!$this->verificar_token(base_path() . '/storage/app/facturaelectronica/p12/' . $data['datosfirma']['ruta_firma'], $data['datosfirma']['clave_firma'])) {
                         $flag_error = true;
-                        $msn_error  = $error . '/Error en Nombre, vacio';
-                    } else {
-                        if (strlen($cliente['nombre']) > 300) {
-                            $flag_error = true;
-                            $msn_error  = $error . '/Error en Nombre, longitud mayor a 300';
-                        }
-<<<<<<< HEAD
+                        $error[$cont] =  "Error: " . ($cont + 1) . ": la clave no corresponde al archivo de la firma";
+                        $cont++;
                     }
-
-                    if ($cliente['email'] == null) {
+                }
+            }
+        }
+        if (isset($data['infoTributaria']['ruc'])) {
+            if ($data['infoTributaria']['ruc'] == '') {
+                $flag_error = true;
+                $error[$cont] = "Error " . ($cont + 1) . ': el campo ruc debe contener 13 caracteres';
+                $cont++;
+            }
+            if (strlen($data['infoTributaria']['ruc']) != 13) {
+                $flag_error = true;
+                $error[$cont] = "Error " . ($cont + 1) . ': el campo ruc debe contener 13 caracteres';
+                $cont++;
+            }
+            $empresa = Empresa::where('id', $data['infoTributaria']['ruc'])->first();
+            if (is_null($empresa)) {
+                $flag_error = true;
+                $error[$cont] =  "Error: " . ($cont + 1) . ": no existe la empresa";
+                $cont++;
+            } else {
+                //InfoFactura
+                //validar si la empresa esta habilitada como facturacion electronica
+                $deEmpresa = De_Empresa::where('id_empresa', $empresa);
+                if (is_null($deEmpresa)) {
+                    $flag_error = true;
+                    $error[$cont] =  "Error: " . ($cont + 1) . ": No se encuentra informacion de facturacion electronica";
+                    $cont++;
+                } elseif ($empresa->electronica != 1 && !is_null($empresa->appid) && !is_null($empresa->appsecret) && !is_null($empresa->url) && !is_null($empresa->establecimiento) && !is_null($empresa->punto_emision)) {
+                    $flag_error = true;
+                    $error[$cont] = "Error " . ($cont + 1) . ": empresa no permite facturacion electronica";
+                    $cont++;
+                }
+                //validar ambiente
+                if (isset($data['infoTributaria']['ambiente'])) {
+                    if ($data['infoTributaria']['ambiente'] == '') {
                         $flag_error = true;
-                        $error  = $error . '/Error en email, vacio';
+                        $error[$cont] =  "Error " . ($cont + 1) . ': el campo ambiente es obligatorio';
+                        $cont++;
+                    }
+                    if (strlen($data['infoTributaria']['ambiente']) != 1) {
+
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el ambiente debe contener un digito';
+                        $cont++;
+                    }
+                    if ($data['infoTributaria']['ambiente'] != 1 && $data['infoTributaria']['ambiente'] != 2) {
+                        $flag_error = true;
+                        $error[$cont] = 'Error ' . ($cont + 1) . ': el ambiente solo puede ser 1 o 2';
+                        $cont++;
+                    }
+                    if (!is_numeric($data['infoTributaria']['ambiente'])) {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el ambiente debe ser numerico';
+                        $cont++;
+                    }
+                } else {
+                    $flag_error = true;
+                    $error[$cont] = "Error " . ($cont + 1) . ': el campo ambiente es obligatorio';
+                    $cont++;
+                }
+                //validar tipo Emision
+                if (isset($data['infoTributaria']['tipoEmision'])) {
+                    if ($data['infoTributaria']['tipoEmision'] == '') {
+                        $flag_error = true;
+                        $error[$cont] =  "Error " . ($cont + 1) . ': el campo tipoEmision es obligatorio';
+                        $cont++;
+                    }
+                    if (strlen($data['infoTributaria']['tipoEmision']) != 1) {
+
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el tipoEmision debe contener un digito';
+                        $cont++;
+                    }
+                    if ($data['infoTributaria']['tipoEmision'] != 1) {
+                        $flag_error = true;
+                        $error[$cont] = 'Error ' . ($cont + 1) . ': el tipoEmision solo puede ser 1';
+                        $cont++;
+                    }
+                    if (!is_numeric($data['infoTributaria']['tipoEmision'])) {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el tipoEmision debe ser numerico';
+                        $cont++;
+                    }
+                } else {
+                    $flag_error = true;
+                    $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoEmision es obligatorio';
+                    $cont++;
+                }
+                //Validar razonSocial
+                if (isset($data['infoTributaria']['razonSocial'])) {
+                    if ($data['infoTributaria']['razonSocial'] == '') {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo razonSocial debe contener hasta 300 caracteres maximo';
+                        $cont++;
+                    }
+                    if (strlen($data['infoTributaria']['razonSocial']) > 300) {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo razonSocial debe contener hasta 300 caracteres maximo';
+                        $cont++;
+                    }
+                } else {
+                    $flag_error = true;
+                    $error[$cont] = "Error " . ($cont + 1) . ': el campo razonSocial es obligatorio';
+                    $cont++;
+                }
+                //Validar nombreComercial
+                if (isset($data['infoTributaria']['nombreComercial'])) {
+                    if ($data['infoTributaria']['nombreComercial'] != '') {
+                        if (strlen($data['infoTributaria']['nombreComercial']) > 300) {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo nombreComercial debe contener hasta 300 caracteres maximo';
+                            $cont++;
+                        }
                     } else {
-                        if (strlen($cliente['email']) > 300) {
-=======
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo nombreComercial no puede ser vacio';
+                        $cont++;
+                    }
+                } else {
+                    $flag_error = true;
+                    $error[$cont] = "Error " . ($cont + 1) . ': el campo nombreComercial es obligatorio';
+                    $cont++;
+                }
+                //validar ruc
+                if (isset($data['infoTributaria']['ruc'])) {
+                    if ($data['infoTributaria']['ruc'] == '') {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo ruc debe contener 13 caracteres';
+                        $cont++;
+                    }
+                    if (strlen($data['infoTributaria']['ruc']) != 13) {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo ruc debe contener 13 caracteres';
+                        $cont++;
+                    } else {
+                        $correcto = $this->validarCedula($data['infoTributaria']['ruc']);
+                        if (!$correcto) {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': numero de ruc incorrecto';
+                            $cont++;
+                        }
+                    }
+                } else {
+                    $flag_error = true;
+                    $error[$cont] = "Error " . ($cont + 1) . ': el campo ruc es obligatorio';
+                    $cont++;
+                }
+                //Validar si puede emitir documentos electronicos
+                if ($empresa->electronica != 1) {
+                    $flag_error = true;
+                    $error[$cont] = "Error " . ($cont + 1) . ": empresa no permite facturacion electronica";
+                    $cont++;
+                }
+                //validar ClaveAcceso
+                if (isset($data['infoTributaria']['claveAcceso'])) {
+                    if (!$data['infoTributaria']['claveAcceso'] == '') {
+                        if (strlen($data['infoTributaria']['claveAcceso']) != 49) {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo claveAcceso debe contener 49 caracteres (' . $data['infoTributaria']['claveAcceso'] . ' No. de caracteres ingresados: ' . strlen($data['infoTributaria']['claveAcceso']) . ' )';
+                            $cont++;
+                        }
                         if (!is_numeric($data['infoTributaria']['claveAcceso'])) {
                             $flag_error = true;
                             $error[$cont] = "Error " . ($cont + 1) . ': el campo claveAcceso debe ser numerico (' . $data['infoTributaria']['claveAcceso'] . ')';
@@ -1068,7 +1137,6 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                             $error[$cont] = "Error " . ($cont + 1) . ': el campo codDoc solo pueden ser una de siguientes opciones 01 - 03 - 04 - 05 - 06 - 07 (' . $data['infoTributaria']['codDoc'] . ')';
                             $cont++;
                         }
-                        $codDoc = $data['infoTributaria']['codDoc'];
                     } else {
                         $flag_error = true;
                         $error[$cont] = "Error " . ($cont + 1) . ': el campo codDoc no puede ser vacio';
@@ -1166,6 +1234,7 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                     $error[$cont] = "Error " . ($cont + 1) . ': el campo dirMatriz es obligatorio';
                     $cont++;
                 }
+                $codDoc = $data['infoTributaria']['codDoc'];
                 // infoGuiadeRemision
                 if ($codDoc == '06') {
                     //validar dirEstablecimiento
@@ -1672,9 +1741,7 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                         $error[$cont] = "Error " . ($cont + 1) . ': el campo detalles es obligatorio';
                         $cont++;
                     }
-                }
-                // infoFactura
-                elseif ($codDoc == '01') {
+                }elseif ($codDoc == '01') {//Factura
                     //fechaEmision
                     if (isset($data['infoFactura']['fechaEmision'])) {
                         if ($data['infoFactura']['fechaEmision'] != '') {
@@ -1859,89 +1926,86 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                     if (isset($data['infoFactura']['totalConImpuestos'])) {
                         if ($data['infoFactura']['totalConImpuestos'] != '') {
                             $totalConImpuestos = $data['infoFactura']['totalConImpuestos'];
-                            $r = $this->validarTotalConImpuestos($totalConImpuestos, $cont);
-                            if (isset($totalConImpuestos['totalConImpuesto'])) {
-                                if ($totalConImpuestos['totalConImpuesto'] != '') {
-                                    $conImp = 0;
-                                    foreach ($totalConImpuestos as $totalConImpuesto) {
-                                        //codigo
-                                        if (isset($totalConImpuesto['codigo'])) {
-                                            if ($totalConImpuesto['codigo'] != '') {
-                                                $digitsCod = str_replace(array('.', ','), array('', ''), strrev($totalConImpuesto['codigo']));
-                                                if (!ctype_digit($digitsCod)) {
-                                                    $flag_error = true;
-                                                    $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo del impuesto ' . ($conImp + 1) . ' debe contener solo numeros';
-                                                    $cont++;
-                                                }
-                                            } else {
+                            if (count($totalConImpuestos['totalConImpuesto']) > 0) {
+                                $conImp = 0;
+                                foreach ($totalConImpuestos as $totalConImpuesto) {
+                                    //codigo
+                                    if (isset($totalConImpuesto['codigo'])) {
+                                        if ($totalConImpuesto['codigo'] != '') {
+                                            $digitsCod = str_replace(array('.', ','), array('', ''), strrev($totalConImpuesto['codigo']));
+                                            if (!ctype_digit($digitsCod)) {
                                                 $flag_error = true;
-                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo del impuesto ' . ($conImp + 1) . ' no puede estar vacio';
+                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo del impuesto ' . ($conImp + 1) . ' debe contener solo numeros';
                                                 $cont++;
                                             }
                                         } else {
                                             $flag_error = true;
-                                            $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo del impuesto ' . ($conImp + 1) . ' es obligatorio';
+                                            $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo del impuesto ' . ($conImp + 1) . ' no puede estar vacio';
                                             $cont++;
                                         }
-                                        //codigoPorcentaje
-                                        if (isset($totalConImpuesto['codigoPorcentaje'])) {
-                                            if ($totalConImpuesto['codigoPorcentaje'] != '') {
-                                                $digitsCod = str_replace(array('.', ','), array('', ''), strrev($totalConImpuesto['codigoPorcentaje']));
-                                                if (!ctype_digit($digitsCod)) {
-                                                    $flag_error = true;
-                                                    $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo porcentaje del impuesto ' . ($conImp + 1) . ' debe contener solo numeros';
-                                                    $cont++;
-                                                }
-                                            } else {
-                                                $flag_error = true;
-                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo porcentaje del impuesto ' . ($conImp + 1) . ' no puede estar vacio';
-                                                $cont++;
-                                            }
-                                        } else {
-                                            $flag_error = true;
-                                            $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo porcentaje del impuesto ' . ($conImp + 1) . ' es obligatorio';
-                                            $cont++;
-                                        }
-                                        //baseImponible
-                                        if (isset($totalConImpuesto['baseImponible'])) {
-                                            if ($totalConImpuesto['baseImponible'] != '') {
-                                                $digitsCod = str_replace(array('.', ','), array('', ''), strrev($totalConImpuesto['baseImponible']));
-                                                if (!ctype_digit($digitsCod)) {
-                                                    $flag_error = true;
-                                                    $error[$cont] = "Error " . ($cont + 1) . ': el campo baseImponible del impuesto ' . ($conImp + 1) . ' debe contener solo numeros';
-                                                    $cont++;
-                                                }
-                                            } else {
-                                                $flag_error = true;
-                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo baseImponible del impuesto ' . ($conImp + 1) . ' no puede estar vacio';
-                                                $cont++;
-                                            }
-                                        } else {
-                                            $flag_error = true;
-                                            $error[$cont] = "Error " . ($cont + 1) . ': el campo baseImponible del impuesto ' . ($conImp + 1) . ' es obligatorio';
-                                            $cont++;
-                                        }
-                                        //valor
-                                        if (isset($totalConImpuesto['valor'])) {
-                                            if ($totalConImpuesto['valor'] != '') {
-                                                $digitsCod = str_replace(array('.', ','), array('', ''), strrev($totalConImpuesto['valor']));
-                                                if (!ctype_digit($digitsCod)) {
-                                                    $flag_error = true;
-                                                    $error[$cont] = "Error " . ($cont + 1) . ': el campo valor del impuesto ' . ($conImp + 1) . ' debe contener solo numeros';
-                                                    $cont++;
-                                                }
-                                            } else {
-                                                $flag_error = true;
-                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo valor del impuesto ' . ($conImp + 1) . ' no puede estar vacio';
-                                                $cont++;
-                                            }
-                                        } else {
-                                            $flag_error = true;
-                                            $error[$cont] = "Error " . ($cont + 1) . ': el campo valor del impuesto ' . ($conImp + 1) . ' es obligatorio';
-                                            $cont++;
-                                        }
-                                        $conImp++;
+                                    } else {
+                                        $flag_error = true;
+                                        $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo del impuesto ' . ($conImp + 1) . ' es obligatorio';
+                                        $cont++;
                                     }
+                                    //codigoPorcentaje
+                                    if (isset($totalConImpuesto['codigoPorcentaje'])) {
+                                        if ($totalConImpuesto['codigoPorcentaje'] != '') {
+                                            $digitsCod = str_replace(array('.', ','), array('', ''), strrev($totalConImpuesto['codigoPorcentaje']));
+                                            if (!ctype_digit($digitsCod)) {
+                                                $flag_error = true;
+                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo porcentaje del impuesto ' . ($conImp + 1) . ' debe contener solo numeros';
+                                                $cont++;
+                                            }
+                                        } else {
+                                            $flag_error = true;
+                                            $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo porcentaje del impuesto ' . ($conImp + 1) . ' no puede estar vacio';
+                                            $cont++;
+                                        }
+                                    } else {
+                                        $flag_error = true;
+                                        $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo porcentaje del impuesto ' . ($conImp + 1) . ' es obligatorio';
+                                        $cont++;
+                                    }
+                                    //baseImponible
+                                    if (isset($totalConImpuesto['baseImponible'])) {
+                                        if ($totalConImpuesto['baseImponible'] != '') {
+                                            $digitsCod = str_replace(array('.', ','), array('', ''), strrev($totalConImpuesto['baseImponible']));
+                                            if (!ctype_digit($digitsCod)) {
+                                                $flag_error = true;
+                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo baseImponible del impuesto ' . ($conImp + 1) . ' debe contener solo numeros';
+                                                $cont++;
+                                            }
+                                        } else {
+                                            $flag_error = true;
+                                            $error[$cont] = "Error " . ($cont + 1) . ': el campo baseImponible del impuesto ' . ($conImp + 1) . ' no puede estar vacio';
+                                            $cont++;
+                                        }
+                                    } else {
+                                        $flag_error = true;
+                                        $error[$cont] = "Error " . ($cont + 1) . ': el campo baseImponible del impuesto ' . ($conImp + 1) . ' es obligatorio';
+                                        $cont++;
+                                    }
+                                    //valor
+                                    if (isset($totalConImpuesto['valor'])) {
+                                        if ($totalConImpuesto['valor'] != '') {
+                                            $digitsCod = str_replace(array('.', ','), array('', ''), strrev($totalConImpuesto['valor']));
+                                            if (!ctype_digit($digitsCod)) {
+                                                $flag_error = true;
+                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo valor del impuesto ' . ($conImp + 1) . ' debe contener solo numeros';
+                                                $cont++;
+                                            }
+                                        } else {
+                                            $flag_error = true;
+                                            $error[$cont] = "Error " . ($cont + 1) . ': el campo valor del impuesto ' . ($conImp + 1) . ' no puede estar vacio';
+                                            $cont++;
+                                        }
+                                    } else {
+                                        $flag_error = true;
+                                        $error[$cont] = "Error " . ($cont + 1) . ': el campo valor del impuesto ' . ($conImp + 1) . ' es obligatorio';
+                                        $cont++;
+                                    }
+                                    $conImp++;
                                 }
                             }
                         } else {
@@ -1969,15 +2033,10 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                                 $cont++;
                             }
                         } else {
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
                             $flag_error = true;
-                            $error  = $error . '/Error en email, longitud mayor a 300';
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo propina no puede ser vacio';
+                            $cont++;
                         }
-<<<<<<< HEAD
-                    }
-
-                    if ($cliente['telefono'] == null) {
-=======
                     } else {
                         $flag_error = true;
                         $error[$cont] = "Error " . ($cont + 1) . ': el campo propina es obligatorio';
@@ -2105,336 +2164,351 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                             }
                         } else {
                             $flag_error = true;
-                            $error[$cont] = "Error " . ($cont + 1) . ': el campo totalConImpuestos no puede ser vacio';
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo pagos no puede ser vacio';
                             $cont++;
                         }
                     } else {
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
                         $flag_error = true;
-                        $error  = $error . '/Error en telefono, vacio';
-                    } else {
-                        if (strlen($cliente['telefono']) > 300) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en telefono, longitud mayor a 300';
-                        }
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo pagos es obligatorio';
+                        $cont++;
                     }
-
-                    if ($direccion['calle'] == null) {
-                        $flag_error = true;
-                        $error  = $error . '/Error en calle';
-                    } else {
-                        if (strlen($direccion['calle']) > 300) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en calle';
-                        }
-                    }
-
-                    if ($direccion['ciudad'] == null) {
-                        $flag_error = true;
-                        $error  = $error . '/Error en direccion Ciudad, vacio';
-                    } else {
-                        if (strlen($direccion['ciudad']) > 300) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en direccion Ciudad, longitud mayor a 300';
-                        }
-                    }
-
-                    $direccion_full = $direccion['ciudad'] . ', ' . $direccion['calle'];
-
-                    if (strlen($direccion_full) > 300) {
-                        $flag_error = true;
-                        $error  = $error . '/Error en direccion completa, longitud mayor a 300';
-                    }
-
-                    //VALIDO SI LA CEDULA O RUC ES VALIDO
-
-                    if (!empty($cliente['cedula'])) {
-                        $valida_cedula = $this->validaCedula($cliente['cedula']);
-
-                        if ($cliente['cedula'] == '9999999999999') { //consumidor final
-                            $tipoIdentificacionCliente = 7;
-                        } elseif (strlen($cliente['cedula']) == 13) { //ruc
-                            $tipoIdentificacionCliente = 4;
-                        } elseif (strlen($cliente['cedula']) == 10) { //cedula
-                            $tipoIdentificacionCliente = 5;
-                        } elseif (strlen($cliente['cedula']) > 13 && strlen($cliente['cedula']) <= 20) { //pasaporte
-                            $tipoIdentificacionCliente = 6;
-                        } else {
-                            //validacion x IDENTIFICACION DELEXTERIOR 8
-                            //validacion x PLACA 9
-                        }
-                    } else {
-                        $flag_error = true;
-                        $error = $error . '/numero de Identificacion Cliente no puede estar vacio';
-                    }
-
-                    if (!$valida_cedula && ($tipoIdentificacionCliente == 4 || $tipoIdentificacionCliente == 5)) {
-                        $flag_error = true;
-                        $error = $error . '/numero de Identificacion Cliente incorrecto';
-                    }
-<<<<<<< HEAD
-                }
-
-                //validaciones de productos
-                if (count($productos) <= 0) {
-                    $flag_error = true;
-                    $error = $error . '/no existen productos';
-                }
-
-                foreach ($productos as $producto) {
-                    if ($producto['sku'] == null) {
-                        $flag_error = true;
-                        $error = $error . '/error en codigo interno de producto, vacio';
-                    } else {
-                        if (strlen($producto['sku']) > 25) {
-                            $flag_error = true;
-                            $error = $error . '/error en nombre de producto, longitud mayor a 25';
-                        }
-
-                        if (str_contains($producto['sku'], '/')) {
-                            $producto['sku'] = str_replace('/', '-', $producto['sku']);
-                        }
-                    }
-
-                    if ($producto['descripcion'] == null) {
-                        $flag_error = true;
-                        $error = $error . '/error en nombre de producto, vacio';
-                    } else {
-                        if (strlen($producto['descripcion']) > 300) {
-                            $flag_error = true;
-                            $error = $error . '/error en nombre de producto, longitud mayor a 300';
-                        }
-
-                        if (str_contains($producto['descripcion'], '/')) {
-                            $producto['descripcion'] = str_replace('/', '-', $producto['descripcion']);
-                        }
-                    }
-                }
-
-                if (count($pagos) <= 0) {
-                    $error = $error . '/no existe ningun pago';
-                }
-                //dd($pagos);
-                if (count($pagos) > 0) {
-                    for ($i = 0; $i < count($pagos); $i++) {
-                        if (in_array($pagos[$i]['forma_pago'], array('01', '15', '16', '17', '18', '19', '20', '21')) == false) {
-                            $flag_error = true;
-                            $error = $error . '/error cod de forma de pago no valido';
-                        }
-                    }
-                }
-
-                $total = 0;
-                foreach ($productos as $producto) {
-                    $total = $total + $producto['subtotal'];
-                }
-
-                $impuestoTotal = 0;
-                foreach ($productos as $producto) {
-                    $impuestoTotal = $impuestoTotal + ($producto['subtotal'] * $producto['tax']);
-                }
-
-                if ($impuestoTotal != $producto['tax']) {
-                    $flag_error = true;
-                    $error = $error . '/error calculando el impuesto';
-                }
-
-                if ($total != $data['total']) {
-                    $flag_error = true;
-                    $error = $error . '/error el total no coincide con el calculo';
-                }
-            }
-
-            //validacion guia_remision
-            if ($codDoc == 6) {
-
-                $guiaRemision = $data['guiaRemision'];
-                if (!is_null($guiaRemision)) {
-                    //validaciones transportista
-
-                    if (!empty($guiaRemision['rucTransportista'])) {
-
-
-                        if (strlen($guiaRemision['rucTransportista']) == 13) { //ruc
-                            $tipoIdentificacionTransportista = 4;
-                        } elseif (strlen($guiaRemision['rucTransportista']) == 10) { //cedula
-                            $tipoIdentificacionTransportista = 5;
-                        } elseif (strlen($guiaRemision['rucTransportista']) > 13 && strlen($guiaRemision['rucTransportista']) <= 20) { //pasaporte
-                            $tipoIdentificacionTransportista = 6;
-                        } else {
-                            //validacion x IDENTIFICACION DELEXTERIOR 8
-                            //validacion x PLACA 9
-                        }
-                    } else {
-                        $flag_error = true;
-                        $error = $error . '/numero de Identificacion Transportista no puede estar vacio';
-                    }
-
-                    if ($tipoIdentificacionTransportista != 6) {
-                        $valida_cedula = $this->validaCedula($guiaRemision['rucTransportista']);
-                    }
-
-                    if (!$valida_cedula && ($tipoIdentificacionTransportista == 4 || $tipoIdentificacionTransportista == 5)) {
-                        $flag_error = true;
-                        $error = $error . '/numero de Identificacion Transportista incorrecto';
-                    }
-
-                    if ($guiaRemision['razonSocialTransportista'] == null) {
-                        $flag_error = true;
-                        $msn_error  = $error . '/Error en razon Social Transportista, vacio';
-                    } else {
-                        if (strlen($guiaRemision['razonSocialTransportista']) > 300) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en razon Social Transportista, longitud mayor a 300';
-                        }
-                    }
-
-                    if ($guiaRemision['rise'] != null) {
-                        if (strlen($guiaRemision['rise']) > 40) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en rise, longitud mayor a 40';
-                        }
-                    }
-
-                    if ($guiaRemision['fechaIniTransporte'] == null) {
-                        $flag_error = true;
-                        $msn_error  = $error . '/Error en fecha Inicial Transporte, vacio';
-                    }
-
-                    if ($guiaRemision['fechaFinTransporte'] == null) {
-                        $flag_error = true;
-                        $msn_error  = $error . '/Error en fecha final Transporte, vacio';
-                    }
-
-                    if ($guiaRemision['placa'] == null) {
-                        $flag_error = true;
-                        $msn_error  = $error . '/Error en placa, vacio';
-                    } else {
-                        if (strlen($guiaRemision['placa']) > 20) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en placa, longitud mayor a 20';
-                        }
-                    }
-                }
-
-                //validaciones destinatario
-                $destinatarios = $data['destinatarios'];
-                foreach ($destinatarios as $destinatario) {
-                    if ($destinatario != null) {
-                        if ($destinatario['razonSocialDestinatario'] == null) {
-                            $flag_error = true;
-                            $msn_error  = $error . '/Error en razon Social Destinatario, vacio';
-                        } else {
-                            if (strlen($destinatario['razonSocialDestinatario'] > 300)) {
+                } elseif ($codDoc == '03') {//LiquidacionCompra
+                    
+                } elseif ($codDoc == '04') {//NotaCredito
+                    //fechaEmision
+                    if (isset($data['infoNotaCredito']['fechaEmision'])) {
+                        if ($data['infoNotaCredito']['fechaEmision'] != '') {
+                            if (!$this->validarFechaCorrecta($data['infoNotaCredito']['fechaEmision'])) {
                                 $flag_error = true;
-                                $msn_error  = $error . '/Error en razon Social Destinatario, longitud mayor a 300';
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo fechaEmision no es valida (' . $data['infoNotaCredito']['fechaEmision'] . ')';
+                                $cont++;
                             }
-                        }
-
-                        if ($destinatario['dirDestinatario'] == null) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en direccion destinatario, vacio';
-                        } else {
-                            if (strlen($destinatario['dirDestinatario'] > 300)) {
+                            if (!$this->validarFecha($data['infoNotaCredito']['fechaEmision'])) {
                                 $flag_error = true;
-                                $error  = $error . '/Error en direccion destinatario, longitud mayor a 300';
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo fechaEmision no tiene el formato correcto dd/mm/yyyy (' . $data['infoGuiaRemision']['fechaFinTransporte'] . ')';
+                                $cont++;
                             }
-
-                            if (str_contains($destinatario['dirDestinatario'], '/')) {
-                                $destinatario['dirDestinatario'] = str_replace('/', '-', $destinatario['dirDestinatario']);
-                            }
-                        }
-
-                        if ($destinatario['motivoTraslado'] == null) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en motivo Traslado, vacio';
                         } else {
-                            if (strlen($destinatario['motivoTraslado'] > 300)) {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo fechaEmision no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo fechaEmision es obligatorio';
+                        $cont++;
+                    }
+                    //validar dirEstablecimiento
+                    if (isset($data['infoNotaCredito']['dirEstablecimiento'])) {
+                        if ($data['infoNotaCredito']['dirEstablecimiento'] != '') {
+                            if (strlen($data['infoNotaCredito']['dirEstablecimiento']) > 300) {
                                 $flag_error = true;
-                                $error  = $error . '/Error en motivo Traslado, longitud mayor a 300';
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo dirEstablecimiento debe contener hasta 300 caracteres maximo';
+                                $cont++;
                             }
-
-                            if (str_contains($destinatario['motivoTraslado'], '/')) {
-                                $destinatario['motivoTraslado'] = str_replace('/', '-', $destinatario['motivoTraslado']);
-                            }
-                        }
-
-                        if ($destinatario['codDocSustento'] == null) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en codigo documento sustento, vacio';
-                        }
-
-                        if ($destinatario['numDocSustento'] == null) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en numero documento sustento, vacio';
-                        }
-
-                        if ($destinatario['numAutDocSustento'] == null) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en numero autenticacion documento sustento, vacio';
-                        }
-
-                        if ($destinatario['docAduaneroUnico'] == null) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en codigo Aduanero Unico, vacio';
                         } else {
-                            if (strlen($destinatario['docAduaneroUnico']) > 20) {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo dirEstablecimiento no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo dirEstablecimiento es obligatorio';
+                        $cont++;
+                    }
+                    //validar tipoIdentificacionComprador
+                    if (isset($data['infoNotaCredito']['tipoIdentificacionComprador'])) {
+                        if ($data['infoNotaCredito']['tipoIdentificacionComprador'] != '') {
+                            if (strlen($data['infoNotaCredito']['tipoIdentificacionComprador']) != 2) {
                                 $flag_error = true;
-                                $error  = $error . '/Error en codigo Aduanero Unico, longitud mayor a 20';
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionComprador debe contener 2 caracteres (' . $data['infoNotaCredito']['tipoIdentificacionComprador'] . ')';
+                                $cont++;
                             }
-                        }
-
-                        if ($destinatario['ruta'] == null) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en ruta, vacio';
-                        } else {
-                            if (strlen($destinatario['ruta'] > 300)) {
+                            if (!is_numeric($data['infoNotaCredito']['tipoIdentificacionComprador'])) {
                                 $flag_error = true;
-                                $error  = $error . '/Error en ruta, longitud mayor a 300';
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionComprador debe ser numerico (' . $data['infoNotaCredito']['tipoIdentificacionComprador'] . ')';
+                                $cont++;
                             }
-
-                            if (str_contains($destinatario['ruta'], '/')) {
-                                $destinatario['ruta'] = str_replace('/', '-', $destinatario['ruta']);
+                            if ($data['infoNotaCredito']['tipoIdentificacionComprador'] != '04' && $data['infoNotaCredito']['tipoIdentificacionComprador'] != '05') {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionComprador solo puede ser 04 o 05 (' . $data['infoNotaCredito']['tipoIdentificacionComprador'] . ')';
+                                $cont++;
                             }
-                        }
-
-                        if ($destinatario['fechaEmisionDocSustento'] == null) {
-                            $flag_error = true;
-                            $error  = $error . '/Error en fecha Emision Documento Sustento, vacio';
-                        }
-
-                        $valida_cedula = $this->validaCedula($destinatario['identificacionDestinatario']);
-                        if (strlen($destinatario['identificacionDestinatario']) == 13) { //ruc
-                            $tipoIdentificacionDestinatario = 4;
-                        } elseif (strlen($destinatario['identificacionDestinatario']) == 10) { //cedula
-                            $tipoIdentificacionDestinatario = 5;
-                        } elseif (strlen($destinatario['identificacionDestinatario']) > 13 && strlen($destinatario['identificacionDestinatario']) <= 20) { //pasaporte
-                            $tipoIdentificacionDestinatario = 6;
                         } else {
-                            //validacion x IDENTIFICACION DELEXTERIOR 8
-                            //validacion x PLACA 9
-                        }
-                        //VALIDO SI LA CEDULA O RUC DESTINATARIO ES VALIDO
-                        $valida_cedula = true;
-                        // if ($destinatario['tipo'] != 6) {
-                        //     //$valida_cedula_destinatario = ApiFacturacionController::validarCedula($destinatario->cedula);
-                        // }
-
-                        if (!$valida_cedula && ($tipoIdentificacionDestinatario == 4 || $tipoIdentificacionDestinatario == 5)) {
                             $flag_error = true;
-                            $error = $error . '/numero de cedula de destinatario incorrecto';
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionComprador no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionComprador es obligatorio';
+                        $cont++;
+                    }
+                    //validar razonSocial
+                    if (isset($data['infoNotaCredito']['razonSocialComprador'])) {
+                        if ($data['infoNotaCredito']['razonSocialComprador'] != '') {
+                            if (strlen($data['infoNotaCredito']['razonSocialComprador']) > 300) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo razonSocialComprador debe contener hasta 300 caracteres maximo';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo razonSocialComprador no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo razonSocialComprador es obligatorio';
+                        $cont++;
+                    }
+                    //validar identificacionComprador
+                    if (isset($data['infoNotaCredito']['identificacionComprador'])) {
+                        if ($data['infoNotaCredito']['identificacionComprador'] != '') {
+                            if (strlen($data['infoNotaCredito']['identificacionComprador']) > 20) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo identificacionComprador debe contener hasta 20 caracteres maximo';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo identificacionComprador no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo identificacionDestinatario es obligatorio';
+                        $cont++;
+                    }
+                    //validar contribuyenteEspecial
+                    if (isset($data['infoNotaCredito']['contribuyenteEspecial'])) {
+                        if ($data['infoNotaCredito']['contribuyenteEspecial'] != '') {
+                            if (strlen($data['infoNotaCredito']['contribuyenteEspecial']) >= 3 && strlen($data['infoNotaCredito']['contribuyenteEspecial']) <= 13) {
+                            } else {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo contribuyenteEspecial debe contener entre 3 y 13 caracteres (' . $data['infoNotaCredito']['contribuyenteEspecial'] . ')';
+                                $cont++;
+                            }
                         }
                     }
-                }
-            }
-=======
-                } elseif ($codDoc == '03') {
-                    # code...
-                } elseif ($codDoc == '04') {
-                    # code...
-                } elseif ($codDoc == '05') {
-                    # code...
-                } elseif ($codDoc == '07') {
+                    //validar obligadoContabilidad
+                    if (isset($data['infoNotaCredito']['obligadoContabilidad'])) {
+                        if ($data['infoNotaCredito']['obligadoContabilidad'] != '') {
+                            if (strtoupper($data['infoNotaCredito']['obligadoContabilidad']) != 'SI' && strtoupper($data['infoNotaCredito']['obligadoContabilidad']) != 'NO') {
+                                $data['infoNotaCredito']['obligadoContabilidad'] = strtoupper($data['infoNotaCredito']['obligadoContabilidad']);
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo obligadoContabilidad Solo puiede ser SI o NO (' . $data['infoNotaCredito']['obligadoContabilidad'] . ')';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo obligadoContabilidad no puede ser vacio';
+                            $cont++;
+                        }
+                    }
+                    //validar rise
+                    if (isset($data['infoNotaCredito']['rise'])) {
+                        if ($data['infoNotaCredito']['rise'] != '') {
+                            if (strlen($data['infoNotaCredito']['rise']) > 40) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo rise debe contener hasta 40 caracteres';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo rise no puede ser vacio';
+                            $cont++;
+                        }
+                    }
+                    //validar codDocModificado
+                    if (isset($data['infoNotaCredito']['codDocModificado'])) {
+                        if ($data['infoNotaCredito']['codDocModificado'] != '') {
+                            if (strlen($data['infoNotaCredito']['codDocModificado']) != 2) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codDocModificado debe contener 2 caracteres (' . $data['infoNotaCredito']['codDocModificado'] . ')';
+                                $cont++;
+                            }
+                            if (!is_numeric($data['infoNotaCredito']['codDocModificado'])) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codDocModificado debe ser numerico (' . $data['infoNotaCredito']['codDocModificado'] . ')';
+                                $cont++;
+                            }
+                            if ($data['infoNotaCredito']['codDocModificado'] != '01' && $data['infoNotaCredito']['codDocModificado'] != '03' && $data['infoNotaCredito']['codDocModificado'] != '04' && $data['infoNotaCredito']['codDocModificado'] != '05' && $data['infoNotaCredito']['codDocModificado'] != '06' && $data['infoNotaCredito']['codDocModificado'] != '07') {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codDocModificado solo pueden ser una de siguientes opciones 01 - 03 - 04 - 05 - 06 - 07 (' . $data['infoNotaCredito']['codDocModificado'] . ')';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo codDocModificado no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo codDocModificado es obligatorio';
+                        $cont++;
+                    }
+                } elseif ($codDoc == '05') {//NotaDebito
+                    //fechaEmision
+                    if (isset($data['infoNotaDebito']['fechaEmision'])) {
+                        if ($data['infoNotaDebito']['fechaEmision'] != '') {
+                            if (!$this->validarFechaCorrecta($data['infoNotaDebito']['fechaEmision'])) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo fechaEmision no es valida (' . $data['infoNotaDebito']['fechaEmision'] . ')';
+                                $cont++;
+                            }
+                            if (!$this->validarFecha($data['infoNotaDebito']['fechaEmision'])) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo fechaEmision no tiene el formato correcto dd/mm/yyyy (' . $data['infoGuiaRemision']['fechaFinTransporte'] . ')';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo fechaEmision no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo fechaEmision es obligatorio';
+                        $cont++;
+                    }
+                    //validar dirEstablecimiento
+                    if (isset($data['infoNotaDebito']['dirEstablecimiento'])) {
+                        if ($data['infoNotaDebito']['dirEstablecimiento'] != '') {
+                            if (strlen($data['infoNotaDebito']['dirEstablecimiento']) > 300) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo dirEstablecimiento debe contener hasta 300 caracteres maximo';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo dirEstablecimiento no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo dirEstablecimiento es obligatorio';
+                        $cont++;
+                    }
+                    //validar tipoIdentificacionComprador
+                    if (isset($data['infoNotaDebito']['tipoIdentificacionComprador'])) {
+                        if ($data['infoNotaDebito']['tipoIdentificacionComprador'] != '') {
+                            if (strlen($data['infoNotaDebito']['tipoIdentificacionComprador']) != 2) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionComprador debe contener 2 caracteres (' . $data['infoNotaDebito']['tipoIdentificacionComprador'] . ')';
+                                $cont++;
+                            }
+                            if (!is_numeric($data['infoNotaDebito']['tipoIdentificacionComprador'])) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionComprador debe ser numerico (' . $data['infoNotaDebito']['tipoIdentificacionComprador'] . ')';
+                                $cont++;
+                            }
+                            if ($data['infoNotaDebito']['tipoIdentificacionComprador'] != '04' && $data['infoNotaDebito']['tipoIdentificacionComprador'] != '05') {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionComprador solo puede ser 04 o 05 (' . $data['infoNotaDebito']['tipoIdentificacionComprador'] . ')';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionComprador no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionComprador es obligatorio';
+                        $cont++;
+                    }
+                    //validar razonSocial
+                    if (isset($data['infoNotaDebito']['razonSocialComprador'])) {
+                        if ($data['infoNotaDebito']['razonSocialComprador'] != '') {
+                            if (strlen($data['infoNotaDebito']['razonSocialComprador']) > 300) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo razonSocialComprador debe contener hasta 300 caracteres maximo';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo razonSocialComprador no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo razonSocialComprador es obligatorio';
+                        $cont++;
+                    }
+                    //validar identificacionComprador
+                    if (isset($data['infoNotaDebito']['identificacionComprador'])) {
+                        if ($data['infoNotaDebito']['identificacionComprador'] != '') {
+                            if (strlen($data['infoNotaDebito']['identificacionComprador']) > 20) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo identificacionComprador debe contener hasta 20 caracteres maximo';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo identificacionComprador no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo identificacionDestinatario es obligatorio';
+                        $cont++;
+                    }
+                    //validar contribuyenteEspecial
+                    if (isset($data['infoNotaDebito']['contribuyenteEspecial'])) {
+                        if ($data['infoNotaDebito']['contribuyenteEspecial'] != '') {
+                            if (strlen($data['infoNotaDebito']['contribuyenteEspecial']) >= 3 && strlen($data['infoNotaDebito']['contribuyenteEspecial']) <= 13) {
+                            } else {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo contribuyenteEspecial debe contener entre 3 y 13 caracteres (' . $data['infoNotaDebito']['contribuyenteEspecial'] . ')';
+                                $cont++;
+                            }
+                        }
+                    }
+                    //validar codDocModificado
+                    if (isset($data['infoNotaDebito']['codDocModificado'])) {
+                        if ($data['infoNotaDebito']['codDocModificado'] != '') {
+                            if (strlen($data['infoNotaDebito']['codDocModificado']) != 2) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codDocModificado debe contener 2 caracteres (' . $data['infoNotaDebito']['codDocModificado'] . ')';
+                                $cont++;
+                            }
+                            if (!is_numeric($data['infoNotaDebito']['codDocModificado'])) {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codDocModificado debe ser numerico (' . $data['infoNotaDebito']['codDocModificado'] . ')';
+                                $cont++;
+                            }
+                            if ($data['infoNotaDebito']['codDocModificado'] != '01' && $data['infoNotaDebito']['codDocModificado'] != '03' && $data['infoNotaDebito']['codDocModificado'] != '04' && $data['infoNotaCredito']['codDocModificado'] != '05' && $data['infoNotaCredito']['codDocModificado'] != '06' && $data['infoNotaCredito']['codDocModificado'] != '07') {
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codDocModificado solo pueden ser una de siguientes opciones 01 - 03 - 04 - 05 - 06 - 07 (' . $data['infoNotaCredito']['codDocModificado'] . ')';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo codDocModificado no puede ser vacio';
+                            $cont++;
+                        }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo codDocModificado es obligatorio';
+                        $cont++;
+                    }
+                    //validar numDocModificado
+                    if (isset($data['infoNotaDebito']['numDocModificado'])) {
+                        if ($data['infoNotaDebito']['numDocModificado'] != '') {
+                            if (strtoupper($data['infoNotaDebito']['numDocModificado']) != 'SI' && strtoupper($data['infoNotaDebito']['numDocModificado']) != 'NO') {
+                                $data['infoNotaDebito']['numDocModificado'] = strtoupper($data['infoNotaDebito']['numDocModificado']);
+                                $flag_error = true;
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo numDocModificado Solo puiede ser SI o NO (' . $data['infoNotaDebito']['numDocModificado'] . ')';
+                                $cont++;
+                            }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo numDocModificado no puede ser vacio';
+                            $cont++;
+                        }
+                    }
+                } elseif ($codDoc == '07') {//Retencion
                     //fechaEmision
                     if (isset($data['infoCompRetencion']['fechaEmision'])) {
                         if ($data['infoCompRetencion']['fechaEmision'] != '') {
@@ -2515,9 +2589,9 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                                 $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionSujetoRetenido debe ser numerico (' . $data['infoCompRetencion']['tipoIdentificacionSujetoRetenido'] . ')';
                                 $cont++;
                             }
-                            if ($data['infoCompRetencion']['tipoIdentificacionSujetoRetenido'] != '04' && $data['infoCompRetencion']['tipoIdentificacionSujetoRetenido'] != '05') {
+                            if ($data['infoCompRetencion']['tipoIdentificacionSujetoRetenido'] != '04' && $data['infoCompRetencion']['tipoIdentificacionSujetoRetenido'] != '05' && $data['infoCompRetencion']['tipoIdentificacionSujetoRetenido'] != '06' && $data['infoCompRetencion']['tipoIdentificacionSujetoRetenido'] != '08') {
                                 $flag_error = true;
-                                $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionSujetoRetenido solo puede ser 04 o 05 (' . $data['infoCompRetencion']['tipoIdentificacionSujetoRetenido'] . ')';
+                                $error[$cont] = "Error " . ($cont + 1) . ': el campo tipoIdentificacionSujetoRetenido solo puede ser 04, 05, 06, o 08 (' . $data['infoCompRetencion']['tipoIdentificacionSujetoRetenido'] . ')';
                                 $cont++;
                             }
                         } else {
@@ -2589,19 +2663,23 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                     if (isset($data['impuestos'])) {
                         if ($data['impuestos'] != '') {
                             $impuestos = $data['impuestos'];
-                            $conImp = 0;
                             if (count($impuestos) > 0) {
+                                $conImp = 0;
                                 foreach ($impuestos as $impuesto) {
-
-
                                     //codigo
                                     if (isset($impuesto['codigo'])) {
-                                        if ($impuesto['codigo'] == '') {
+                                        if ($impuesto['codigo'] != '') {
+                                            $codigo = $impuesto['codigo'];
+                                            if ($impuesto['codigo'] != '1' && $impuesto['codigo'] != '2' && $impuesto['codigo'] != '6') {
+                                                $flag_error = true;
+                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo del impuesto ' . ($conImp + 1) . ' debe ser 1,2 o 6';
+                                                $cont++;
+                                            }
+                                        } else {
+
                                             $flag_error = true;
                                             $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo del impuesto ' . ($conImp + 1) . ' no puede estar vacio';
                                             $cont++;
-                                        } else {
-                                            $codigo = $impuesto['codigo'];
                                         }
                                     } else {
                                         $flag_error = true;
@@ -2611,12 +2689,11 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                                     //codigoRetencion
                                     if (isset($impuesto['codigoRetencion'])) {
                                         if ($impuesto['codigoRetencion'] != '') {
-                                            if (!is_numeric($impuesto['codigoRetencion'])) {
+                                            $codigoRetencion = $impuesto['codigoRetencion'];
+                                            if (strlen($impuesto['codigoRetencion']) < 1 || strlen($impuesto['codigoRetencion']) > 5) {
                                                 $flag_error = true;
-                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigoRetencion del impuesto ' . ($conImp + 1) . ' debe contener solo numeros';
+                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigoRetencion del impuesto ' . ($conImp + 1) . ' debe contener entre 1 y 5 caracteres';
                                                 $cont++;
-                                            } else {
-                                                $codigoRetencion = $impuesto['codigoRetencion'];
                                             }
                                         } else {
                                             $flag_error = true;
@@ -2655,11 +2732,11 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                                                 $error[$cont] = "Error " . ($cont + 1) . ': el campo porcentajeRetener del impuesto ' . ($conImp + 1) . ' debe contener solo numeros';
                                                 $cont++;
                                             }
-                                            if (strlen($impuesto['porcentajeRetener']) < 1 || strlen($impuesto['porcentajeRetener']) > 3) {
-                                                $flag_error = true;
-                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo porcentajeRetener debe contener entre 1 y 3 caracteres';
-                                                $cont++;
-                                            }
+                                            // if (strlen($impuesto['porcentajeRetener']) < 1 || strlen($impuesto['porcentajeRetener']) > 3) {
+                                            //     $flag_error = true;
+                                            //     $error[$cont] = "Error " . ($cont + 1) . ': el campo porcentajeRetener debe contener entre 1 y 3 caracteres';
+                                            //     $cont++;
+                                            // }
                                             $porcentajeRetener = $impuesto['porcentajeRetener'];
                                         } else {
                                             $flag_error = true;
@@ -2689,21 +2766,34 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                                         $error[$cont] = "Error " . ($cont + 1) . ': el campo valorRetenido del impuesto ' . ($conImp + 1) . ' es obligatorio';
                                         $cont++;
                                     }
-
+                                    
                                     //validar Informacion impuesto
-                                    if ($codigo != '' && $codigoRetencion != '') {
-                                        $deCodigo = De_Codigo_Impuestos::where('codigo', $codigo)->first();
-                                        if ($porcentajeRetener == $deCodigo->porcentaje_retencion) {
+                                    if ($codigo != '' && $codigoRetencion != '' && $porcentajeRetener != '') {
+                                        $deCodigo = De_Codigo_Impuestos::where('codigo', $codigoRetencion)->first();
+                                        if($deCodigo!=''){
+                                            if ($porcentajeRetener != $deCodigo->porcentaje_retencion) {
+                                                $flag_error = true;
+                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo porcentajeRetener. ('.$porcentajeRetener.') del impuesto ' . ($conImp + 1) . ' no corresponde al porcentajeRetener ('.$deCodigo->porcentaje_retencion.') del impuesto';
+                                                $cont++;
+                                            }
+    
+                                            if ($codigoRetencion != $deCodigo->codigo) {
+                                                $flag_error = true;
+                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigoRetencion del impuesto ' . ($conImp + 1) . ' no corresponde al codigoRetencion del impuesto';
+                                                $cont++;
+                                            }
+    
+                                            if ($codigo != $deCodigo->codigo_impuesto) {
+                                                $flag_error = true;
+                                                $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo del impuesto ' . ($conImp + 1) . ' no corresponde al codigo del impuesto';
+                                                $cont++;
+                                            }
+                                        }else{
                                             $flag_error = true;
-                                            $error[$cont] = "Error " . ($cont + 1) . ': el campo porcentajeRetener del impuesto ' . ($conImp + 1) . ' no corresponde al codigoRetencion del impuesto';
+                                            $error[$cont] = "Error " . ($cont + 1) . ': el codigo ('.$codigoRetencion.') del impuesto ' . ($conImp + 1) . ' se encuentra desactualizado o es incorrecto';
                                             $cont++;
                                         }
-
-                                        if ($codigo != $deCodigo->codigo) {
-                                            $flag_error = true;
-                                            $error[$cont] = "Error " . ($cont + 1) . ': el campo codigo del impuesto ' . ($conImp + 1) . ' no corresponde al codigoRetencion del impuesto';
-                                            $cont++;
-                                        }
+                                        
                                     }
                                     //codDocSustento
                                     if (isset($impuesto['codDocSustento'])) {
@@ -2773,7 +2863,15 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
                                 $error[$cont] = "Error " . ($cont + 1) . ': el campo impuestos debe contener al menos un impuesto';
                                 $cont++;
                             }
+                        } else {
+                            $flag_error = true;
+                            $error[$cont] = "Error " . ($cont + 1) . ': el campo impuestos no puede ser vacio';
+                            $cont++;
                         }
+                    } else {
+                        $flag_error = true;
+                        $error[$cont] = "Error " . ($cont + 1) . ': el campo impuestos es obligatorio';
+                        $cont++;
                     }
                 }
             }
@@ -2781,8 +2879,8 @@ zWUDkynDbkQiKdagaPYNnjkTHtrawUON6gteIcvsmGFr5+ffgDfGjkMpVTmzBGiniuls47a0pU0P
             $flag_error = true;
             $error[$cont] = "Error " . ($cont + 1) . ': el campo identificacionSujetoRetenido es obligatorio';
             $cont++;
->>>>>>> 1b2d433774e068e4a5965fb50b077bf8005b5acd
         }
+        //dd($error);
         return $error;
     }
 

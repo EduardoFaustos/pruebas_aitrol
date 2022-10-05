@@ -57,9 +57,6 @@ Route::get('contable/productos/buscar/productos', 'contable\KardexInternoControl
 
 Route::match(['get','post'],'contable/pedidos/inventario', 'contable\KardexInternoController@pedidos')->name('pedidos_inventario.index');
 
-Route::get('honorarios_procedimientos/generar_asiento/{tipo}/{id}', 'contable\ProductosController@genera_asiento_honorarios')->name('productos.genera_asiento_honorarios');
-Route::post('honorarios_procedimientos/guardar_asiento_honorarios', 'contable\ProductosController@guardar_asiento_honorarios')->name('productos.guardar_asiento_honorarios');
-
 
 
 Route::get('contable/asientos/descuadres/observar', 'contable\BancoClientesController@ver_asientos_descuadrados')->name('web_producto.ver_asientos');
@@ -70,5 +67,11 @@ Route::get('tarifario_masivo/subir/actualizar/producto/new', 'contable\SubirTari
 
 Route::get('cm_detalles_paquetes/carga_masiva', 'contable\SubirTarifarioController@carga_masiva_paquetes')->name('subirtarifario.carga_masiva_paquetes');
 
-Route::match(['get','post'],'vt_dar_baja_producto', 'insumos\ProductoController@vt_dar_baja_producto')->name('insumos.producto.vt_dar_baja_producto');
+Route::match(['get','post'],'vt_dar_baja_producto', 'Insumos\ProductoController@vt_dar_baja_producto')->name('insumos.producto.vt_dar_baja_producto');
+
+//MEMBRESIAS
+Route::get('ieced_membresias/{id_paciente}', 'laboratorio\MembresiasLabsController@buscar_membresia_IECED')->name('membresiaslabs.buscar_membresia_IECED');
+Route::match(['get','post'],'ieced_membresias/modal/agenda', 'laboratorio\MembresiasLabsController@agenda_IECED')->name('membresiaslabs.agenda_IECED');
+
+Route::get('nuevo_dar_baja/modal/{serie}/{bodega}/{id_producto}', 'Insumos\ProductoController@nuevo_dar_baja_serie')->name('insumo.producto.nuevo_dar_baja');
 

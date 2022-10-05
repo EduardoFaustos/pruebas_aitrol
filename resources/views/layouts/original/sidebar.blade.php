@@ -647,31 +647,21 @@ $id_auth = Auth::user()->id;
     </li>
     </ul>
     </li>
-
-
-    @if(in_array($rolUsuario, array(1)) == true)
-    <?php
-    if ($id_auth == '0921605895') {
-    ?>
-      <li class="treeview">
-        <a href="#"> <i class="fa fa-truck" aria-hidden="true"></i>Guia de Remisión
-          <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-rigth"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          <li class="treeview">
-          <li><a href="{{ route('guia_remision_index') }}">Guia de remisión</a></li>
-          <li><a href="{{ route('transportistas.index') }}">Transportistas</a></li>
-      </li>
-      </ul>
-      </li>
-    <?php
-    }
-    ?>
+    @if(in_array($rolUsuario, array(1,20,21)) == true)
+    <li class="treeview">
+      <a href="#"> <i class="fa fa-truck" aria-hidden="true"></i>Guia de Remisión
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-rigth"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li class="treeview">
+        <li><a href="{{ route('guia_remision_index') }}">Guia de remisión</a></li>
+        <li><a href="{{ route('transportistas.index') }}">Transportistas</a></li>
+    </li>
+    </ul>
+    </li>
     @endif
-
-
     </li>
     <li class="treeview">
       <a href="#"> <i class="fa fa-cogs"> </i>Mantenimiento
@@ -755,13 +745,9 @@ $id_auth = Auth::user()->id;
     @if(in_array($rolUsuario, array(10)) == true)
     <li><a href="{{ route('orden.index_control') }}"><i class="ionicons ion-ios-flask"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span>Laboratorio - Control </span></a></li>
     <li><a href="{{ route('agendalabs.agenda') }}"><i class="fa fa-calendar"></i>&nbsp;&nbsp;<span>Agenda </span></a></li>
-    @php
-    $permisos = \Sis_medico\Agenda_Permiso::where('id_usuario', $id_auth)->where('estado', 1)->first();
-    @endphp
-    @if(!is_null($permisos))
-      <li><a href="{{ route('tipo_tubo.index') }}"><i class="fa fa-wrench"> </i> Mantenimiento Tubos</a></li>
-      <li><a href="{{ route('mantenimientoexcel.index') }}"><i class="fa fa-plus-square"> </i> Administración de Tubos</a></li>
-    @endif
+    <li><a href="{{ route('tipo_tubo.index') }}"><i class="fa fa-wrench"> </i> Mantenimiento Tubos</a></li>
+    <li><a href="{{ route('mantenimientoexcel.index') }}"><i class="fa fa-plus-square"> </i> Administración de Tubos</a></li>
+    <li><a href="{{ route('mantenimiento.examderivados.index') }}"><i class="fa fa-file"> </i> Mantenimiento Examenes Derivados</a></li>
     @endif
 
 
@@ -981,7 +967,7 @@ $id_auth = Auth::user()->id;
         <li><a href="{{ route('orden.index_supervision') }}">Supervisión</a></li>
         <li><a href="{{ route('examen.index') }}">Exámenes</a></li>
         <li><a href="{{ route('examen_costo.index') }}">Exámenes Costos</a></li>
-        <li><a href="{{ route('protocolo.index') }}">Protocolos</a></li> 
+        <li><a href="{{ route('protocolo.index') }}">Protocolos</a></li>
         <li><a href="{{ url('exa_agrupadores') }}">Agrupadores</a></li>
         <li><a href="{{ url('agendalabs/agenda') }}">Agenda</a></li>
         <li><a href="{{ route('factura_agrupada.index_factura_agrupada') }}">Factura Agrupada</a></li>
@@ -989,7 +975,7 @@ $id_auth = Auth::user()->id;
         <li><a href="{{ route('documento.excel_index') }}"><i class="fa fa-file-archive-o"> </i> Mantenimiento de Examenes</a></li>
         <li><a href="{{ route('tipo_tubo.index') }}"><i class="fa fa-wrench"> </i> Mantenimiento Tubos</a></li>
         <li><a href="{{ route('mantenimientoexcel.index') }}"><i class="fa fa-plus-square"> </i> Administración de Tubos</a></li>
-        <li><a href="{{ route('plantillacontrollabs.index') }}"><i class="fa fa-file-archive-o"> </i> Plantillas Laboratorio </a></li>
+        <li><a href="{{ route('mantenimiento.examderivados.index') }}"><i class="fa fa-file"> </i> Mantenimiento Examenes Derivados</a></li>
       </ul>
     </li>
     @endif
@@ -1238,13 +1224,10 @@ $id_auth = Auth::user()->id;
     <li><a href="{{route('index_control')}}"><i class="fa fa-user-md"></i><span>Control de sintomas</span></a></li>
     @endif
 
-    @if(in_array($rolUsuario, array(1, 5, 20)) == true)
+    @if(in_array($rolUsuario, array(1)) == true)
     <li>
 
       <!--Facturacion Electronica-->
-      <?php
-      if ($id_auth == '0921605895') {
-      ?>
     <li class="treeview">
       <a href="#"><i class="fa fa-link"></i> <span>Facturación Electrónica</span>
         <span class="pull-right-container">
@@ -1278,9 +1261,7 @@ $id_auth = Auth::user()->id;
       @if(in_array($rolUsuario, array(1)) == true)
       @endif
     </li>
-  <?php
-      }
-  ?>
+
   <li>
     <a href="{{ route('muestrabiopsias.index') }}">
       <i class="fa fa-calendar-minus-o"></i><span> Revision Ordenes Biopsia </span>

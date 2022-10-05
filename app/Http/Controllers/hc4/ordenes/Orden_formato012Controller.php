@@ -26,6 +26,10 @@ use Sis_medico\Procedimiento;
 use Sis_medico\Orden;
 use Sis_medico\Seguro;
 use Sis_medico\User;
+use Sis_medico\Pais;
+use Sis_medico\Formulario_053;
+use Sis_medico\Formulario_053_Cie10;
+
 
 class Orden_formato012Controller extends Controller
 {
@@ -1670,6 +1674,43 @@ class Orden_formato012Controller extends Controller
           $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
           $pdf->setPaper('A4', 'portrait');
           return $pdf->stream('resultado_cir-'.$id.'.pdf');
+        
+    }
+    public function formato_053($id_paciente)
+    {
+        $form_053  = Formulario_053::all();
+        $fecha = date('Y-m-d H:i:s');
+        $agenda =  DB::table('agenda as a')
+        ->whereBetween('a.fechaini', [$fecha . ' 00:00:00', $fecha . ' 23:59:59'])
+        ->where('a.id_paciente', $id_paciente)
+        ->where('a.estado_cita', 4)
+        ->where('a.estado', 1)
+        ->first();
+
+        $agenda2 = DB::table('agenda as a')
+        ->where('a.id_paciente', $id_paciente)
+        ->where('a.estado_cita', 4)
+        ->where('a.estado', 1)
+        ->last();
+
+
+        $form_053_cie10 = Formulario_053_Cie10::all();
+        return view ('hc4.ordenes.formulario053.formato_053', ['form_053' => $form_053, 'form_053_cie10'=> $form_053_cie10, 'fecha'=>$fecha, 'agenda'=>$agenda, 'agenda2'=>$agenda2]);
+    }
+    public function pdf_053 (Request $request, $id_paciente){
+          
+          $paciente = Paciente::find($id_paciente);
+          //dd($paciente);
+          $edad = Carbon::parse($paciente->fecha_nacimiento)->age; 
+          $pais = Pais::where('id', $paciente->id_pais)->first();
+          //dd($pais);
+          $vistaurl="hc4.ordenes.formulario053.pdf_053";
+          $view =  \View::make($vistaurl, compact('orden_proc_endoscopico','paciente','edad','doctor_solicitante','firma', 'pais'))->render();
+          $pdf = \App::make('dompdf.wrapper');
+          $pdf->loadHTML($view);
+          $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
+          $pdf->setPaper('A4', 'portrait');
+          return $pdf->stream('formulario_053.pdf');
         
     }
 }

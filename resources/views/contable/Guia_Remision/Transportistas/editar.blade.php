@@ -156,7 +156,6 @@
                 data: $('#editar_plantilla').serialize(),
                 dataType: 'json',
                 success: function(json) {
-                    dd(json);
                     if (json.result == 'ok') {
                         Swal.fire({
                             icon: 'success',

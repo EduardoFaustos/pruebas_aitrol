@@ -23,7 +23,7 @@ $logo = '<img src="' . base_path() . $logo . '" style="width:200px;" />';
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laravel 8 PDF</title>
+    <title><?= $xmlComprobamte->infoTributaria->claveAcceso; ?></title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
@@ -31,7 +31,7 @@ $logo = '<img src="' . base_path() . $logo . '" style="width:200px;" />';
             margin: 0;
             margin-left: -20px;
             padding: 0;
-            background-color: #FAFAFA;
+            background-color: white;
             font: 10pt "Tahoma";
             font-size: 10px;
         }
@@ -78,9 +78,9 @@ $logo = '<img src="' . base_path() . $logo . '" style="width:200px;" />';
 <body>
     <div class="container">
         <div class="col-md-12">
-            <table>
+            <table style="width: 100%;">
                 <tr>
-                    <td>&nbsp;<br/><br/></td>
+                    <td>&nbsp;<br /><br /></td>
                 </tr>
                 <tr>
                     <td style="width:50%;">
@@ -95,18 +95,18 @@ $logo = '<img src="' . base_path() . $logo . '" style="width:200px;" />';
                                 <td align="center"><b><?= $xmlComprobamte->infoTributaria->razonSocial; ?></b></td>
                             </tr>
                             <tr>
-                                <td><b style="font-size: 10;">R.U.C.:</b> <?= $xmlComprobamte->infoTributaria->ruc; ?></td>
+                                <td><b style="font-size: 10;">R.U.C.:</b> <span style="font-size: 12px;"><?= $xmlComprobamte->infoTributaria->ruc; ?></span></td>
                             </tr>
                             <tr>
-                                <td><b style="font-size: 10;">Dir Matriz:</b> <?= $xmlComprobamte->infoTributaria->dirMatriz; ?></td>
+                                <td><b style="font-size: 10;">Dir Matriz:</b> <span style="font-size: 12px;"><?= $xmlComprobamte->infoTributaria->dirMatriz; ?></span></td>
                             </tr>
                             <tr>
-                                <td><b style="font-size: 10;">Obligado a llevar contabilidad:</b> <?= $xmlComprobamte->infoGuiaRemision->obligadoContabilidad; ?></td>
+                                <td><b style="font-size: 10;">Obligado a llevar contabilidad:</b> <span style="font-size: 12px;"><?= $xmlComprobamte->infoGuiaRemision->obligadoContabilidad; ?></span></td>
                             </tr>
                             <tr>
                                 <?php
-                                if (isset($xmlComprobamte->infoFactura->contribuyenteEspecial)) {
-                                    echo '<td><b style="font-size: 10;">Contribuyente especial:</b>  ' . $xmlComprobamte->infoFactura->contribuyenteEspecial . '</td>';
+                                if (isset($xmlComprobamte->infoGuiaRemision->contribuyenteEspecial)) {
+                                    echo '<td><b style="font-size: 10;">Contribuyente especial:</b> <span style="font-size: 12px;">' . $xmlComprobamte->infoGuiaRemision->contribuyenteEspecial . '</span></td>';
                                 } else {
                                     echo '<td></td>';
                                 }
@@ -114,7 +114,7 @@ $logo = '<img src="' . base_path() . $logo . '" style="width:200px;" />';
                             </tr>
                             <?php
                             if ($deEmpresa->agente_retencion == 1) {
-                                echo '<tr><td><b style="font-size: 10;">Agente de Retención:</b> Resolución Nro. NAC-DNCRASC20-00000001</td></tr>';
+                                echo '<tr><td><b style="font-size: 10;">Agente de Retención:</b> <span style="font-size: 12px;">Resolución Nro. NAC-DNCRASC20-00000001</span></td></tr>';
                             }
                             ?>
                         </table>
@@ -138,16 +138,16 @@ $logo = '<img src="' . base_path() . $logo . '" style="width:200px;" />';
                                         </tr>
                                         <tr>
                                             <td style="font-size: 10;"><b>Fecha y Hora:</b></td>
-                                            <td><?= date('d/m/Y H:i:s', strtotime($xml->autorizaciones->autorizacion->fechaAutorizacion)); ?></td>
+                                            <td><span style="font-size: 12px;"> <?= date('d/m/Y H:i:s', strtotime($xml->autorizaciones->autorizacion->fechaAutorizacion)); ?></span></td>
                                             <td>&nbsp;</td>
                                         </tr>
                                         <tr>
                                             <td style="font-size: 10;"><b>Ambiente:</b></td>
-                                            <td colspan="2"><?= $xml->autorizaciones->autorizacion->ambiente; ?></td>
+                                            <td colspan="2"><span style="font-size: 12px;"><?= $xml->autorizaciones->autorizacion->ambiente; ?></span></td>
                                         </tr>
                                         <tr>
                                             <td style="font-size: 10;"><b>Emisión:</b></td>
-                                            <td colspan="2">NORMAL</td>
+                                            <td colspan="2"><span style="font-size: 12px;">NORMAL</span></td>
                                         </tr>
                                         <tr>
                                             <td colspan="3" style="font-size: 10;"><b>Clave de Acceso:</b></td>

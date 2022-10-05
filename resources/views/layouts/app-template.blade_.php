@@ -10,7 +10,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>SM | Sistema Medico</title>
   <!-- Tell the browser to be responsive to screen width -->
-
+  <base href="{{ url('./') }}" />
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <!-- Bootstrap 3.3.6 -->
@@ -25,10 +25,8 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <link href="{{ asset("/bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap.css")}}" rel="stylesheet" type="text/css" />
-
   <link rel="stylesheet" type="text/css" href="{{ asset('/bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap4.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('/bower_components/AdminLTE/plugins/datatables/responsive.dataTables.min.css') }}">
-
   <link href="{{ asset("/bower_components/select2/dist/css/select2.min.css")}}" rel="stylesheet" type="text/css" />
   <!-- Bootstrap time Picker -->
   <link href="{{ asset("/plugins/timepicker/bootstrap-timepicker.min.css")}}" rel="stylesheet" type="text/css" />
@@ -45,6 +43,14 @@
   <link href="{{ asset("/bower_components/AdminLTE/dist/css/skins/_all-skins.min.css")}}" rel="stylesheet" type="text/css" />
   <link href="{{ asset('css/app-template.css') }}" rel="stylesheet">
   <link rel="stylesheet" href="{{ asset('/css/dropzone.css')}}">
+
+  <!------------------START FUENTE ROBOTO------------->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <!------------------END FUENTE ROBOTO------------->
+
+
 
 
   <style type="text/css">
@@ -90,10 +96,6 @@ Full screen Modal
       padding: 15px;
       width: auto;
     }
-
-    .content-wrapper {
-      min-height: 2650px !important;
-    }
   </style>
 
   <script src="{{ asset ("/bower_components/jquery/dist/jquery.min.js")}}"></script>
@@ -115,8 +117,8 @@ Full screen Modal
   <script src="{{ asset ("/js/tinymce/tinymce.min.js") }}"></script>
   <script src="{{ asset ("/js/dropzone.js") }}"></script>
   <script src="{{ asset ("/js/lupa.js") }}"></script>
+  <script src="{{ asset ("/plugins/sweet_alert/sweetalert.min.js") }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
 
   <!-- Select2 -->
 
@@ -145,7 +147,11 @@ document.onmousedown=click
     }
 
     .size_text {
-      font-size: 10px !important;
+      font-size: 12px !important;
+    }
+
+    .content-wrapper {
+      min-height: 2304px !important;
     }
   </style>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -213,8 +219,9 @@ document.onmousedown=click
   <!--Sistema-->
   <?php
   if (config('data.controlador') != null) {
+    $njs = config('data.controlador');
   ?>
-    <script src="../../bower_components/AdminLTE/sistema/function_<?= config('data.controlador'); ?>.js"></script>
+    <script src="{{asset('/bower_components/AdminLTE/sistema/function_'.$njs.'.js')}}"></script>
   <?php
   }
   ?>

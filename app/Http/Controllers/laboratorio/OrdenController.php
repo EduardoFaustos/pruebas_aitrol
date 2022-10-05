@@ -1810,7 +1810,7 @@ class OrdenController extends Controller
         $nofacturados = [];
         if($fecha != null && $fecha_hasta != null){
             $nofacturados = $this->recupera_ordenes()->where('eo.estado',1)->whereNull('comprobante')->groupBy('eo.id_seguro')->select('eo.id_seguro',DB::raw('count(*) as cantidad'));//dd($nofacturados);
-        }
+        }    
         /*]$ordenes = DB::table('examen_orden as eo')->join('paciente as p','p.id','eo.id_paciente')->join('seguros as s','s.id','eo.id_seguro')->leftjoin('empresa as em','em.id','eo.id_empresa')->leftjoin('nivel as n','n.id','eo.id_nivel')->leftjoin('users as d','d.id','eo.id_doctor_ieced')->select('eo.*','p.nombre1 as pnombre1','p.nombre2 as pnombre2','p.apellido2 as papellido2','p.apellido1 as papellido1','d.nombre1 as dnombre1','d.apellido1 as dapellido1','s.nombre as snombre','n.nombre as nnombre','em.nombrecomercial');*/
 
         //buscadorxpaciente
@@ -2783,7 +2783,7 @@ class OrdenController extends Controller
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
-        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
+        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true, 'chroot'  => base_path('/')]);
         $pdf->setPaper('A4', 'portrait');
 
         //return $view;
@@ -2880,24 +2880,15 @@ class OrdenController extends Controller
     }
 
     public function reporte(Request $request) //COMISIONES DETALLE
-
     {
-        //dd($request->all());
-
         $fecha       = $request['fecha'];
         $fecha_hasta = $request['fecha_hasta'];
         $nombres     = $request['nombres'];
         $seguro      = $request['seguro'];
-
         $ordenes = Examen_Orden::whereBetween('examen_orden.fecha_orden', [$fecha . ' 00:00', $fecha_hasta . ' 23:59'])->join('paciente as p', 'p.id', 'examen_orden.id_paciente')->join('seguros as s', 's.id', 'examen_orden.id_seguro')->leftjoin('users as d', 'd.id', 'examen_orden.id_doctor_ieced')->leftjoin('forma_de_pago as fp', 'fp.id', 'examen_orden.id_forma_de_pago')->leftjoin('nivel as nv', 'nv.id', 'examen_orden.id_nivel')->select('examen_orden.*', 'p.nombre1 as pnombre1', 'p.nombre2 as pnombre2', 'p.apellido2 as papellido2', 'p.apellido1 as papellido1', 'd.nombre1 as dnombre1', 'd.apellido1 as dapellido1', 'd.apellido2 as dapellido2', 's.nombre as snombre', 'fp.nombre as fpnombre', 's.tipo', 'p.origen', 'p.origen2','nv.nombre as nv_nombre')->where('examen_orden.realizado', '1')->where('examen_orden.estado', '1');
-
-        //dd($ordenes);
-
         if ($nombres != null) {
-
             $nombres2 = explode(" ", $nombres);
             $cantidad = count($nombres2);
-
             if ($cantidad == '2' || $cantidad == '3') {
                 $ordenes = $ordenes->where(function ($jq1) use ($nombres) {
                     $jq1->orwhereraw('CONCAT(p.nombre1," ",p.nombre2," ",p.apellido1," ",p.apellido2) LIKE ?', ['%' . $nombres . '%'])
@@ -2905,31 +2896,21 @@ class OrdenController extends Controller
                 });
 
             } else {
-
                 $ordenes = $ordenes->whereraw('CONCAT(p.nombre1," ",p.nombre2," ",p.apellido1," ",p.apellido2) LIKE ?', ['%' . $nombres . '%']);
             }
-
         }
         if ($seguro != null) {
-
             $ordenes = $ordenes->where('examen_orden.id_seguro', $seguro);
         }
-
         $ordenes = $ordenes->get();
-
         $ex_det = [];
-
         $i = 0;
-
         $fecha_d = date('Y/m/d');
-
         Excel::create('Examenes-' . $fecha_d, function ($excel) use ($ordenes, $ex_det) {
-
             $excel->sheet('Examenes', function ($sheet) use ($ordenes, $ex_det) {
                 $empresa_labs    = Empresa::where('prioridad_labs', '1')->first();
                 $fecha_d = date('Y/m/d');
-                $i       = 4;
-
+                $i = 4;
                 $mes = substr($fecha_d, 5, 2);
                 if ($mes == 01) {$mes_letra = "ENERO";}
                 if ($mes == 02) {$mes_letra = "FEBRERO";}
@@ -2944,7 +2925,6 @@ class OrdenController extends Controller
                 if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
                 if ($mes == '12') {$mes_letra = "DICIEMBRE";}
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
-
                 $sheet->cells('A1:AR3', function ($cells) {
                     // manipulate the range of cells
                     $cells->setAlignment('center');
@@ -2959,7 +2939,6 @@ class OrdenController extends Controller
                     $cell->setValue('LISTADO DE ORDENES DE LABORATORIO');
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });
-
                 $sheet->cell('A3', function ($cell) {
                     // manipulate the cel
                     $cell->setValue('NRO.');
@@ -2997,7 +2976,6 @@ class OrdenController extends Controller
                 });
                 $sheet->cell('H3', function ($cell) {
                     // manipulate the cel
-
                     $cell->setValue('DOCTOR');
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });
@@ -3171,8 +3149,6 @@ class OrdenController extends Controller
                     $cell->setFontWeight('bold');
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });
-
-
                 $cant = 1; $total = 0; $sub_total = 0; $dcto = 0; $recargo = 0; $recargo_cre = 0; $recargo_deb = 0;
                 foreach ($ordenes as $value) {
                     $txtcolor = '#000000';
@@ -3297,7 +3273,9 @@ class OrdenController extends Controller
                             $acum_ex = 0;
                         }
 
-                        $val_hl = $labs; $val_10 = $acum_hl; $val_ex = round($acum_ex, 2);
+                        $val_hl = $labs;
+                        $val_10 = $acum_hl;
+                        $val_ex = round($acum_ex, 2);
                         $val_il = round($value->valor - $val_hl, 2);
                     } else {
                         $examen_orden = DB::table('examen_detalle as ed')->where('ed.id_examen_orden', $value->id)->join('examen as e', 'e.id', 'ed.id_examen')
@@ -3307,7 +3285,8 @@ class OrdenController extends Controller
                         $val_il = 0;
                         $val_10 = 0;
                         $val_ex = 0;
-                        $val_2  = 0; $val_1  = 0;
+                        $val_2  = 0;
+                        $val_1  = 0;
                         $per_hl = 0.08;
                         //$per_il = 0.02;
                         //$per_pb = 0.01;
@@ -3961,7 +3940,6 @@ class OrdenController extends Controller
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                     $cell->setFontWeight('bold');
                 });
-
             });
             $excel->getActiveSheet()->getColumnDimension("H")->setWidth(22)->setAutosize(false);
             $excel->getActiveSheet()->getColumnDimension("I")->setWidth(12)->setAutosize(false);
@@ -4033,7 +4011,6 @@ class OrdenController extends Controller
                 if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
                 if ($mes == '12') {$mes_letra = "DICIEMBRE";}
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
-
                 $sheet->cell('A1:M2', function ($cell) {
                     // manipulate the range of cells
                     $cell->setFontWeight('bold');
@@ -4319,7 +4296,6 @@ class OrdenController extends Controller
             // $excel->getActiveSheet()->getColumnDimension("AL")->setWidth(19)->setAutosize(false);
         })->export('xlsx');
     }
-
     public function reporte_cotizaciones(Request $request) //COMISIONES DETALLE
 
     {
@@ -4378,18 +4354,42 @@ class OrdenController extends Controller
                 $i       = 4;
 
                 $mes = substr($fecha_d, 5, 2);
-                if ($mes == 01) {$mes_letra = "ENERO";}
-                if ($mes == 02) {$mes_letra = "FEBRERO";}
-                if ($mes == 03) {$mes_letra = "MARZO";}
-                if ($mes == 04) {$mes_letra = "ABRIL";}
-                if ($mes == 05) {$mes_letra = "MAYO";}
-                if ($mes == 06) {$mes_letra = "JUNIO";}
-                if ($mes == 07) {$mes_letra = "JULIO";}
-                if ($mes == '08') {$mes_letra = "AGOSTO";}
-                if ($mes == '09') {$mes_letra = "SEPTIEMBRE";}
-                if ($mes == '10') {$mes_letra = "OCTUBRE";}
-                if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
-                if ($mes == '12') {$mes_letra = "DICIEMBRE";}
+                if ($mes == 01) {
+                    $mes_letra = "ENERO";
+                }
+                if ($mes == 02) {
+                    $mes_letra = "FEBRERO";
+                }
+                if ($mes == 03) {
+                    $mes_letra = "MARZO";
+                }
+                if ($mes == 04) {
+                    $mes_letra = "ABRIL";
+                }
+                if ($mes == 05) {
+                    $mes_letra = "MAYO";
+                }
+                if ($mes == 06) {
+                    $mes_letra = "JUNIO";
+                }
+                if ($mes == 07) {
+                    $mes_letra = "JULIO";
+                }
+                if ($mes == '08') {
+                    $mes_letra = "AGOSTO";
+                }
+                if ($mes == '09') {
+                    $mes_letra = "SEPTIEMBRE";
+                }
+                if ($mes == '10') {
+                    $mes_letra = "OCTUBRE";
+                }
+                if ($mes == '11') {
+                    $mes_letra = "NOVIEMBRE";
+                }
+                if ($mes == '12') {
+                    $mes_letra = "DICIEMBRE";
+                }
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
 
                 $sheet->cells('A1:AR3', function ($cells) {
@@ -4721,18 +4721,42 @@ class OrdenController extends Controller
                 $i       = 4;
 
                 $mes = substr($fecha_d, 5, 2);
-                if ($mes == 01) {$mes_letra = "ENERO";}
-                if ($mes == 02) {$mes_letra = "FEBRERO";}
-                if ($mes == 03) {$mes_letra = "MARZO";}
-                if ($mes == 04) {$mes_letra = "ABRIL";}
-                if ($mes == 05) {$mes_letra = "MAYO";}
-                if ($mes == 06) {$mes_letra = "JUNIO";}
-                if ($mes == 07) {$mes_letra = "JULIO";}
-                if ($mes == '08') {$mes_letra = "AGOSTO";}
-                if ($mes == '09') {$mes_letra = "SEPTIEMBRE";}
-                if ($mes == '10') {$mes_letra = "OCTUBRE";}
-                if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
-                if ($mes == '12') {$mes_letra = "DICIEMBRE";}
+                if ($mes == 01) {
+                    $mes_letra = "ENERO";
+                }
+                if ($mes == 02) {
+                    $mes_letra = "FEBRERO";
+                }
+                if ($mes == 03) {
+                    $mes_letra = "MARZO";
+                }
+                if ($mes == 04) {
+                    $mes_letra = "ABRIL";
+                }
+                if ($mes == 05) {
+                    $mes_letra = "MAYO";
+                }
+                if ($mes == 06) {
+                    $mes_letra = "JUNIO";
+                }
+                if ($mes == 07) {
+                    $mes_letra = "JULIO";
+                }
+                if ($mes == '08') {
+                    $mes_letra = "AGOSTO";
+                }
+                if ($mes == '09') {
+                    $mes_letra = "SEPTIEMBRE";
+                }
+                if ($mes == '10') {
+                    $mes_letra = "OCTUBRE";
+                }
+                if ($mes == '11') {
+                    $mes_letra = "NOVIEMBRE";
+                }
+                if ($mes == '12') {
+                    $mes_letra = "DICIEMBRE";
+                }
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
 
                 $sheet->cells('A1:AR3', function ($cells) {
@@ -4864,7 +4888,13 @@ class OrdenController extends Controller
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });
 
-                $cant = 1; $total = 0; $sub_total = 0; $dcto = 0; $recargo = 0; $recargo_cre = 0; $recargo_deb = 0;
+                $cant = 1;
+                $total = 0;
+                $sub_total = 0;
+                $dcto = 0;
+                $recargo = 0;
+                $recargo_cre = 0;
+                $recargo_deb = 0;
                 foreach ($ordenes as $value) {
                     if ($value->tipo == 1 || $value->tipo == 2) {
                         $contador++;
@@ -4945,7 +4975,12 @@ class OrdenController extends Controller
 
                         if (($value->anio <= '2019') || ($value->anio == '2020' && $value->mes < '11')) {
 
-                            $acum_hl = 0; $acum_ex = 0; $val_il = 0; $val_2 = 0; $val_1 = 0; $labs = 0;
+                            $acum_hl = 0;
+                            $acum_ex = 0;
+                            $val_il = 0;
+                            $val_2 = 0;
+                            $val_1 = 0;
+                            $labs = 0;
                             if ($value->tipo != '0') {
 
                                 $detalles = $value->detalles;
@@ -4983,7 +5018,9 @@ class OrdenController extends Controller
                                 $acum_ex = 0;
                             }
 
-                            $val_hl = $labs; $val_10 = $acum_hl; $val_ex = round($acum_ex, 2);
+                            $val_hl = $labs;
+                            $val_10 = $acum_hl;
+                            $val_ex = round($acum_ex, 2);
                             $val_il = round($value->valor - $val_hl, 2);
                         } else {
                             $examen_orden = DB::table('examen_detalle as ed')->where('ed.id_examen_orden', $value->id)->join('examen as e', 'e.id', 'ed.id_examen')
@@ -4993,7 +5030,8 @@ class OrdenController extends Controller
                             $val_il = 0;
                             $val_10 = 0;
                             $val_ex = 0;
-                            $val_2  = 0; $val_1  = 0;
+                            $val_2  = 0;
+                            $val_1  = 0;
                             $per_hl = 0.08;
                             //$per_il = 0.02;
                             //$per_pb = 0.01;
@@ -5559,7 +5597,12 @@ class OrdenController extends Controller
 
                         if (($value->anio <= '2019') || ($value->anio == '2020' && $value->mes < '11')) {
 
-                            $acum_hl = 0; $acum_ex = 0; $val_il = 0; $val_2 = 0; $val_1 = 0; $labs = 0;
+                            $acum_hl = 0;
+                            $acum_ex = 0;
+                            $val_il = 0;
+                            $val_2 = 0;
+                            $val_1 = 0;
+                            $labs = 0;
                             if ($value->tipo != '0') {
 
                                 $detalles = $value->detalles;
@@ -5597,7 +5640,9 @@ class OrdenController extends Controller
                                 $acum_ex = 0;
                             }
 
-                            $val_hl = $labs; $val_10 = $acum_hl; $val_ex = round($acum_ex, 2);
+                            $val_hl = $labs;
+                            $val_10 = $acum_hl;
+                            $val_ex = round($acum_ex, 2);
                             $val_il = round($value->valor - $val_hl, 2);
                         } else {
                             $examen_orden = DB::table('examen_detalle as ed')->where('ed.id_examen_orden', $value->id)->join('examen as e', 'e.id', 'ed.id_examen')
@@ -5607,7 +5652,8 @@ class OrdenController extends Controller
                             $val_il = 0;
                             $val_10 = 0;
                             $val_ex = 0;
-                            $val_2  = 0; $val_1  = 0;
+                            $val_2  = 0;
+                            $val_1  = 0;
                             $per_hl = 0.08;
                             //$per_il = 0.02;
                             //$per_pb = 0.01;
@@ -5885,18 +5931,42 @@ class OrdenController extends Controller
                 $sheet->mergeCells('A3:G3');
 
                 $mes = substr($fecha_d, 5, 2);
-                if ($mes == 01) {$mes_letra = "ENERO";}
-                if ($mes == 02) {$mes_letra = "FEBRERO";}
-                if ($mes == 03) {$mes_letra = "MARZO";}
-                if ($mes == 04) {$mes_letra = "ABRIL";}
-                if ($mes == 05) {$mes_letra = "MAYO";}
-                if ($mes == 06) {$mes_letra = "JUNIO";}
-                if ($mes == 07) {$mes_letra = "JULIO";}
-                if ($mes == '08') {$mes_letra = "AGOSTO";}
-                if ($mes == '09') {$mes_letra = "SEPTIEMBRE";}
-                if ($mes == '10') {$mes_letra = "OCTUBRE";}
-                if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
-                if ($mes == '12') {$mes_letra = "DICIEMBRE";}
+                if ($mes == 01) {
+                    $mes_letra = "ENERO";
+                }
+                if ($mes == 02) {
+                    $mes_letra = "FEBRERO";
+                }
+                if ($mes == 03) {
+                    $mes_letra = "MARZO";
+                }
+                if ($mes == 04) {
+                    $mes_letra = "ABRIL";
+                }
+                if ($mes == 05) {
+                    $mes_letra = "MAYO";
+                }
+                if ($mes == 06) {
+                    $mes_letra = "JUNIO";
+                }
+                if ($mes == 07) {
+                    $mes_letra = "JULIO";
+                }
+                if ($mes == '08') {
+                    $mes_letra = "AGOSTO";
+                }
+                if ($mes == '09') {
+                    $mes_letra = "SEPTIEMBRE";
+                }
+                if ($mes == '10') {
+                    $mes_letra = "OCTUBRE";
+                }
+                if ($mes == '11') {
+                    $mes_letra = "NOVIEMBRE";
+                }
+                if ($mes == '12') {
+                    $mes_letra = "DICIEMBRE";
+                }
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
 
                 $sheet->cells('A1:P3', function ($cells) {
@@ -5976,7 +6046,9 @@ class OrdenController extends Controller
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });
 
-                $cant = 1; $total = 0; $sub_total = 0;
+                $cant = 1;
+                $total = 0;
+                $sub_total = 0;
                 foreach ($ordenes as $value) {
                     $txtcolor = '#000000';
 
@@ -6335,18 +6407,42 @@ class OrdenController extends Controller
                 $sheet->mergeCells('A3:G3');
 
                 $mes = substr($fecha_d, 5, 2);
-                if ($mes == 01) {$mes_letra = "ENERO";}
-                if ($mes == 02) {$mes_letra = "FEBRERO";}
-                if ($mes == 03) {$mes_letra = "MARZO";}
-                if ($mes == 04) {$mes_letra = "ABRIL";}
-                if ($mes == 05) {$mes_letra = "MAYO";}
-                if ($mes == 06) {$mes_letra = "JUNIO";}
-                if ($mes == 07) {$mes_letra = "JULIO";}
-                if ($mes == '08') {$mes_letra = "AGOSTO";}
-                if ($mes == '09') {$mes_letra = "SEPTIEMBRE";}
-                if ($mes == '10') {$mes_letra = "OCTUBRE";}
-                if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
-                if ($mes == '12') {$mes_letra = "DICIEMBRE";}
+                if ($mes == 01) {
+                    $mes_letra = "ENERO";
+                }
+                if ($mes == 02) {
+                    $mes_letra = "FEBRERO";
+                }
+                if ($mes == 03) {
+                    $mes_letra = "MARZO";
+                }
+                if ($mes == 04) {
+                    $mes_letra = "ABRIL";
+                }
+                if ($mes == 05) {
+                    $mes_letra = "MAYO";
+                }
+                if ($mes == 06) {
+                    $mes_letra = "JUNIO";
+                }
+                if ($mes == 07) {
+                    $mes_letra = "JULIO";
+                }
+                if ($mes == '08') {
+                    $mes_letra = "AGOSTO";
+                }
+                if ($mes == '09') {
+                    $mes_letra = "SEPTIEMBRE";
+                }
+                if ($mes == '10') {
+                    $mes_letra = "OCTUBRE";
+                }
+                if ($mes == '11') {
+                    $mes_letra = "NOVIEMBRE";
+                }
+                if ($mes == '12') {
+                    $mes_letra = "DICIEMBRE";
+                }
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
 
                 $sheet->cells('A1:G3', function ($cells) {
@@ -6444,7 +6540,8 @@ class OrdenController extends Controller
                 $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });*/
 
-                $cant = 1; $total = 0;
+                $cant = 1;
+                $total = 0;
                 foreach ($ordenes as $value) {
 
                     $sheet->cell('A' . $i, function ($cell) use ($value, $cant) {
@@ -6711,18 +6808,42 @@ class OrdenController extends Controller
                 $sheet->mergeCells('A3:G3');
 
                 $mes = substr($fecha_d, 5, 2);
-                if ($mes == 01) {$mes_letra = "ENERO";}
-                if ($mes == 02) {$mes_letra = "FEBRERO";}
-                if ($mes == 03) {$mes_letra = "MARZO";}
-                if ($mes == 04) {$mes_letra = "ABRIL";}
-                if ($mes == 05) {$mes_letra = "MAYO";}
-                if ($mes == 06) {$mes_letra = "JUNIO";}
-                if ($mes == 07) {$mes_letra = "JULIO";}
-                if ($mes == '08') {$mes_letra = "AGOSTO";}
-                if ($mes == '09') {$mes_letra = "SEPTIEMBRE";}
-                if ($mes == '10') {$mes_letra = "OCTUBRE";}
-                if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
-                if ($mes == '12') {$mes_letra = "DICIEMBRE";}
+                if ($mes == 01) {
+                    $mes_letra = "ENERO";
+                }
+                if ($mes == 02) {
+                    $mes_letra = "FEBRERO";
+                }
+                if ($mes == 03) {
+                    $mes_letra = "MARZO";
+                }
+                if ($mes == 04) {
+                    $mes_letra = "ABRIL";
+                }
+                if ($mes == 05) {
+                    $mes_letra = "MAYO";
+                }
+                if ($mes == 06) {
+                    $mes_letra = "JUNIO";
+                }
+                if ($mes == 07) {
+                    $mes_letra = "JULIO";
+                }
+                if ($mes == '08') {
+                    $mes_letra = "AGOSTO";
+                }
+                if ($mes == '09') {
+                    $mes_letra = "SEPTIEMBRE";
+                }
+                if ($mes == '10') {
+                    $mes_letra = "OCTUBRE";
+                }
+                if ($mes == '11') {
+                    $mes_letra = "NOVIEMBRE";
+                }
+                if ($mes == '12') {
+                    $mes_letra = "DICIEMBRE";
+                }
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
 
                 $sheet->cells('A1:G3', function ($cells) {
@@ -6812,7 +6933,9 @@ class OrdenController extends Controller
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });
 
-                $cant = 0; $total = 0; $id_temp = 0;
+                $cant = 0;
+                $total = 0;
+                $id_temp = 0;
 
                 foreach ($resultados as $value) {
                     if ($id_temp != $value->id_orden) {
@@ -7021,7 +7144,7 @@ class OrdenController extends Controller
 
     public function descargar($id)
     {
-
+        
         $usuarios = User::where('id_tipo_usuario', '3')->where('estado', '1')->get();
         //$examenes = Examen::where('estado','1')->orderBy('id_agrupador')->get();
         $examenes      = Examen::where('publico_privado', '0')->orderBy('id_agrupador')->get();
@@ -7029,9 +7152,9 @@ class OrdenController extends Controller
         $orden         = DB::table('examen_orden as eo')->where('eo.id', $id)->join('paciente as p', 'p.id', 'eo.id_paciente')->leftjoin('users as d', 'd.id', 'eo.id_doctor_ieced')->select('eo.*', 'p.nombre1 as pnombre1', 'p.nombre2 as pnombre2', 'p.apellido2 as papellido2', 'p.apellido1 as papellido1', 'p.fecha_nacimiento as pfecha_nacimiento', 'd.nombre1 as dnombre1', 'd.apellido1 as dapellido1')->first();
         $detalles      = Examen_Detalle::where('id_examen_orden', $id)->where('estado', '1')->get();
         $seleccionados = [];
-
+       
         foreach ($detalles as $detalle) {
-
+           
             $seleccionados[] = $detalle->id_examen;
         }
 
@@ -7061,31 +7184,33 @@ class OrdenController extends Controller
         }
 
         $arrayTotal = [
-            ['PRUEBA ALERGIA CLARA','PRUEBA ALERGIA ESPECIFICA','PRUEBA ALERGIA FRESA O FRUTILLA',
+            [
+                'PRUEBA ALERGIA CLARA', 'PRUEBA ALERGIA ESPECIFICA', 'PRUEBA ALERGIA FRESA O FRUTILLA',
             'PRUEBA ALERGIA LECHE','PRUEBA ALERGIA MANI','PRUEBA ALERGIA NARANJA','PRUEBA ALERGIA YEMA',
-            'TEST DE UREA EN ALIENTO, C-14 (ISOTÓPICO), ADQUISICIÓN PARA ANÁLISIS', 'TEST DE UREA EN ALIENTO, C-14 (ISOTÓPICO), ANÁLISIS'],
+                'TEST DE UREA EN ALIENTO, C-14 (ISOTÓPICO), ADQUISICIÓN PARA ANÁLISIS', 'TEST DE UREA EN ALIENTO, C-14 (ISOTÓPICO), ANÁLISIS'
+            ],
             [ 'ADQUISICIÓN PARA ANÁLISIS', 'ANÁLISIS','HELICOBACTER PYL.IGG'],
             ['CURVA DE LACTOSA','PRUEBA ALERGIA LECHE'],
             ['FRUCTOSAMINA','PRUEBA ALERGIA NARANJA'],
-
+          
           ];
 
         //dd(count($arreglo[3]));
-
+        
         if (!is_null($orden)) {
             $tipo_usuario = Auth::user()->id_tipo_usuario;
             //return $tipo_usuario;
-
+            
             $vistaurl = "laboratorio.orden.orden_recepcion";
             if($tipo_usuario=='1'){
-                $vistaurl = "laboratorio.orden.orden";
+                $vistaurl = "laboratorio.orden.orden";   
             }
 
             $view     = \View::make($vistaurl, compact('arrayTotal','orden', 'usuarios', 'examenes', 'agrupadores', 'detalles', 'empresa', 'seguro', 'protocolos', 'arreglo', 'seleccionados', 'tipo_usuario'))->render();
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->loadHTML($view);
-            $pdf->setOptions(['dpi' => 150]);
+            $pdf->setOptions(['dpi' => 150, 'chroot'  => base_path('/')]);
             return $pdf->stream('orden-de-laboratorio-' . $id . '.pdf');
             //return view('laboratorio/orden/orden', ['orden' => $orden,'usuarios' => $usuarios, 'examenes' => $examenes, 'agrupadores' => $agrupadores, 'detalles' => $detalles, 'seguro' => $seguro, 'protocolos' => $protocolos, 'empresa' => $empresa]);
 
@@ -7404,18 +7529,42 @@ class OrdenController extends Controller
 
                 $sheet->mergeCells('A3:P3');
 
-                if ($mes == 01) {$mes_letra = "ENERO";}
-                if ($mes == 02) {$mes_letra = "FEBRERO";}
-                if ($mes == 03) {$mes_letra = "MARZO";}
-                if ($mes == 04) {$mes_letra = "ABRIL";}
-                if ($mes == 05) {$mes_letra = "MAYO";}
-                if ($mes == 06) {$mes_letra = "JUNIO";}
-                if ($mes == 07) {$mes_letra = "JULIO";}
-                if ($mes == '08') {$mes_letra = "AGOSTO";}
-                if ($mes == '09') {$mes_letra = "SEPTIEMBRE";}
-                if ($mes == '10') {$mes_letra = "OCTUBRE";}
-                if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
-                if ($mes == '12') {$mes_letra = "DICIEMBRE";}
+                if ($mes == 01) {
+                    $mes_letra = "ENERO";
+                }
+                if ($mes == 02) {
+                    $mes_letra = "FEBRERO";
+                }
+                if ($mes == 03) {
+                    $mes_letra = "MARZO";
+                }
+                if ($mes == 04) {
+                    $mes_letra = "ABRIL";
+                }
+                if ($mes == 05) {
+                    $mes_letra = "MAYO";
+                }
+                if ($mes == 06) {
+                    $mes_letra = "JUNIO";
+                }
+                if ($mes == 07) {
+                    $mes_letra = "JULIO";
+                }
+                if ($mes == '08') {
+                    $mes_letra = "AGOSTO";
+                }
+                if ($mes == '09') {
+                    $mes_letra = "SEPTIEMBRE";
+                }
+                if ($mes == '10') {
+                    $mes_letra = "OCTUBRE";
+                }
+                if ($mes == '11') {
+                    $mes_letra = "NOVIEMBRE";
+                }
+                if ($mes == '12') {
+                    $mes_letra = "DICIEMBRE";
+                }
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
 
                 $sheet->cells('A1:P5', function ($cells) {
@@ -7647,7 +7796,7 @@ class OrdenController extends Controller
 
         $pdf->loadHTML($view);
 
-        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
+        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true, 'chroot'  => base_path('/')]);
         $pdf->setPaper('A4', 'portrait');
 
         //dd($pdf);
@@ -7678,7 +7827,7 @@ class OrdenController extends Controller
 
         $pdf->loadHTML($view);
 
-        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
+        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true, 'chroot'  => base_path('/')]);
         $pdf->setPaper('A4', 'portrait');
 
         //dd($pdf);
@@ -8445,7 +8594,6 @@ class OrdenController extends Controller
         if ($orden->asesor_venta != $request->idasesor) {
             $cambio_orden = true;
         }
-
         if ($cambio_paciente) {
 
             $input_log = [
@@ -8523,8 +8671,8 @@ class OrdenController extends Controller
 
                 }
                 if ($ex_nivel->valor2 != null) {
-                    $valor_2 = $ex_nivel->valor2;
-                }
+                    $valor_2 = $ex_nivel->valor2;    
+                }    
             }
 
             /*if ($orden->total_valor >= 80) {
@@ -8656,15 +8804,11 @@ class OrdenController extends Controller
 
         $res_motivo = ''; $res_porcentaje = '';
         $resultado_mem = $this->recalcular_membresia($orden->id);
-
-        if($resultado_mem['estado'] == 'OK'){
+        if ($resultado_mem['estado'] == 'OK') {
             $res_motivo     = $resultado_mem['motivo'];
             $res_porcentaje = $resultado_mem['descuento_pct'];
         }
-
         $orden = Examen_Orden::find($cotizacion);
-
-
         return ['cantidad' => $orden->cantidad, 'valor' => $orden->valor, 'descuento_valor' => $orden->descuento_valor, 'recargo_valor' => $orden->recargo_valor, 'total_valor' => $orden->total_valor, 'tiene_domicilio' => $tiene_domicilio, 'tiene_covid' => $tiene_covid, 'valor_covid' => $valor_covid, 'motivo' => $res_motivo, 'descuento_p' => $res_porcentaje];
 
     }
@@ -8786,16 +8930,14 @@ class OrdenController extends Controller
 
         $res_motivo = ''; $res_porcentaje = '';
         $resultado_mem = $this->recalcular_membresia($orden->id);
-
-        if($resultado_mem['estado'] == 'OK'){
+        if ($resultado_mem['estado'] == 'OK') {
             $res_motivo     = $resultado_mem['motivo'];
             $res_porcentaje = $resultado_mem['descuento_pct'];
         }
-
         $orden = Examen_Orden::find($cotizacion);
-
         //dd($ptotal_valor);
         return ['cantidad' => $orden->cantidad, 'valor' => $pvalor, 'descuento_valor' => $orden->descuento_valor, 'recargo_valor' => $orden->recargo_valor, 'total_valor' => $ptotal_valor, 'tiene_domicilio' => $tiene_domicilio, 'tiene_covid' => $tiene_covid, 'valor_covid' => $valor_covid, 'motivo' => $res_motivo, 'descuento_p' => $res_porcentaje];
+
     }
 
     public function crear_cabecera(Request $request)
@@ -9077,12 +9219,11 @@ class OrdenController extends Controller
 
         $membresia_controller = new MembresiasLabsController;
         $res = $membresia_controller->buscar_membresia($orden->id_paciente);
-
         $view = \View::make('laboratorio.orden.cotizacion_pdf', compact('orden', 'detalles', 'age', 'forma_pago', 'res'))->render();
         $pdf  = \App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view);
-        //$pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
+        $pdf->setOptions(['isPhpEnabled' => true, 'chroot'  => base_path('/')]);
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('cotizador-' . $id . '.pdf');
@@ -9108,7 +9249,7 @@ class OrdenController extends Controller
         $pdf  = \App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view);
-        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
+        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true, 'chroot'  => base_path('/')]);
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('tiempos-' . $id . '.pdf');
@@ -9125,7 +9266,7 @@ class OrdenController extends Controller
         $pdf  = \App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view);
-        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
+        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true, 'chroot'  => base_path('/')]);
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('cotizador-' . $id . '.pdf');
@@ -9133,7 +9274,7 @@ class OrdenController extends Controller
 
     public function cotizador_orden_imprimir($id)
     {
-
+        
 
         $orden = Examen_Orden::find($id);
 
@@ -9204,7 +9345,7 @@ class OrdenController extends Controller
         $pdf  = \App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view);
-        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true]);
+        $pdf->setOptions(['dpi' => 150, 'isPhpEnabled' => true, 'chroot'  => base_path('/')]);
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('cotizador-' . $id . '.pdf');
@@ -9248,21 +9389,15 @@ class OrdenController extends Controller
 
         ///////////
         foreach($detalles as $detalle){
-
             $id_examen = $detalle->id_examen;
             $agrupador = Examen_Agrupador_Sabana::where('examen_agrupador_sabana.id_examen',$id_examen)->join('examen_agrupador_labs as eal','eal.id','examen_agrupador_sabana.id_examen_agrupador_labs')->select('examen_agrupador_sabana.*','eal.nombre')->first();
             if( $agrupador->nombre == 'MEMBRESIAS' ){
                 //$membresia = Membresia::where('empresa_id',$empresa->id)->where('nombre',$detalle->examen->nombre)->where('estado','1')->first();
                 if($detalle->examen->nombre == 'PREMIUM'){
-
                     if($res['estado'] != 'ok'){
-
                         if($orden->paciente->id != $orden->paciente->id_usuario){
-
                             return redirect()->route('cotizador.editar', ['id' => $id])->withInput(['mensaje' => 'Paciente no es Principal, para crear la membresia']);
-
                         }
-
                         $arr_mem = [
                             'user_id'           => $orden->paciente->id,
                             'membresia_id'      => '2',
@@ -9276,9 +9411,8 @@ class OrdenController extends Controller
                             'ip_modificacion'   => $ip_cliente,
                             'estado'            => 1,
                             'referido'          => $orden->asesor_venta,
-                            'id_orden'          => $orden->id,
+                            'id_orden'          => $orden->id,    
                         ];
-
                         $membresia_controller->crear_membresia_labs($arr_mem);
                         /*UserMembresia::create([
                             'user_id'           => $orden->paciente->id,
@@ -9293,32 +9427,19 @@ class OrdenController extends Controller
                             'ip_modificacion'   => $ip_cliente,
                             'estado'            => 1,
                         ]);*/
-
-
                         $input_ex_2 = [
-
                             'motivo_descuento' => 'COMPRA DE MEMBRESIA',
-
-
+                            
                         ];
                         $orden->update($input_ex_2);
-
                         break;
-
-                    }else{
-
+                    }else{    
                         return redirect()->route('cotizador.editar', ['id' => $id])->withInput(['mensaje' => 'Ya se encuentra activa la membresia']);
-
                     }
-
                 }
-
             }
-
         }
         ///////////
-
-
         //ACTUALIZAR ORDEN
         $input_ex = [
             'estado'          => '1',
@@ -9366,27 +9487,18 @@ class OrdenController extends Controller
                 'id_usuariomod'   => $idusuario,
             ]);
         }
-
         if($res['estado']== 'ok'){
-
             if($orden->total_valor > 50){
-
                 $puntos = intdiv($orden->total_valor , 25);
                 if($puntos > 0){
-
                     $puntos = $res['puntos'] + $puntos;
                     $data['id'] = $res['id_user_mem'];
                     $data['puntos'] = $puntos;
                     $data['motivo'] = 'EMPRESA: '.$empresa->id.'-'.$empresa->establecimiento.'-'.$empresa->punto_emision.'+ ORDEN:'.$orden->id;
                     $res = $membresia_controller->actualizar_puntos($data);
-
-                }
-
+                }    
             }
-
         }
-
-
 
         return redirect()->route('orden.index');
     }
@@ -9503,11 +9615,13 @@ class OrdenController extends Controller
         if ($fecha != null) {
 
             $ordenes = $ordenes->whereBetween('eo.fecha_orden', [$fecha . ' 00:00', $fecha_hasta . ' 23:59']);
+
         }
 
         if ($seguro != null) {
 
             $ordenes = $ordenes->where('eo.id_seguro', $seguro);
+
         }
 
         if ($nombres != null) {
@@ -9607,18 +9721,42 @@ class OrdenController extends Controller
                 $sheet->mergeCells('A3:G3');
 
                 $mes = substr($fecha_d, 5, 2);
-                if ($mes == 01) {$mes_letra = "ENERO";}
-                if ($mes == 02) {$mes_letra = "FEBRERO";}
-                if ($mes == 03) {$mes_letra = "MARZO";}
-                if ($mes == 04) {$mes_letra = "ABRIL";}
-                if ($mes == 05) {$mes_letra = "MAYO";}
-                if ($mes == 06) {$mes_letra = "JUNIO";}
-                if ($mes == 07) {$mes_letra = "JULIO";}
-                if ($mes == '08') {$mes_letra = "AGOSTO";}
-                if ($mes == '09') {$mes_letra = "SEPTIEMBRE";}
-                if ($mes == '10') {$mes_letra = "OCTUBRE";}
-                if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
-                if ($mes == '12') {$mes_letra = "DICIEMBRE";}
+                if ($mes == 01) {
+                    $mes_letra = "ENERO";
+                }
+                if ($mes == 02) {
+                    $mes_letra = "FEBRERO";
+                }
+                if ($mes == 03) {
+                    $mes_letra = "MARZO";
+                }
+                if ($mes == 04) {
+                    $mes_letra = "ABRIL";
+                }
+                if ($mes == 05) {
+                    $mes_letra = "MAYO";
+                }
+                if ($mes == 06) {
+                    $mes_letra = "JUNIO";
+                }
+                if ($mes == 07) {
+                    $mes_letra = "JULIO";
+                }
+                if ($mes == '08') {
+                    $mes_letra = "AGOSTO";
+                }
+                if ($mes == '09') {
+                    $mes_letra = "SEPTIEMBRE";
+                }
+                if ($mes == '10') {
+                    $mes_letra = "OCTUBRE";
+                }
+                if ($mes == '11') {
+                    $mes_letra = "NOVIEMBRE";
+                }
+                if ($mes == '12') {
+                    $mes_letra = "DICIEMBRE";
+                }
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
 
                 $sheet->cells('A1:M3', function ($cells) {
@@ -9710,7 +9848,8 @@ class OrdenController extends Controller
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });
 
-                $cant = 1; $total = 0;
+                $cant = 1;
+                $total = 0;
                 foreach ($ordenes as $value) {
                     $txtcolor = '#000000';
 
@@ -10021,18 +10160,42 @@ class OrdenController extends Controller
                 $sheet->mergeCells('A3:G3');
 
                 $mes = substr($fecha_d, 5, 2);
-                if ($mes == 01) {$mes_letra = "ENERO";}
-                if ($mes == 02) {$mes_letra = "FEBRERO";}
-                if ($mes == 03) {$mes_letra = "MARZO";}
-                if ($mes == 04) {$mes_letra = "ABRIL";}
-                if ($mes == 05) {$mes_letra = "MAYO";}
-                if ($mes == 06) {$mes_letra = "JUNIO";}
-                if ($mes == 07) {$mes_letra = "JULIO";}
-                if ($mes == '08') {$mes_letra = "AGOSTO";}
-                if ($mes == '09') {$mes_letra = "SEPTIEMBRE";}
-                if ($mes == '10') {$mes_letra = "OCTUBRE";}
-                if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
-                if ($mes == '12') {$mes_letra = "DICIEMBRE";}
+                if ($mes == 01) {
+                    $mes_letra = "ENERO";
+                }
+                if ($mes == 02) {
+                    $mes_letra = "FEBRERO";
+                }
+                if ($mes == 03) {
+                    $mes_letra = "MARZO";
+                }
+                if ($mes == 04) {
+                    $mes_letra = "ABRIL";
+                }
+                if ($mes == 05) {
+                    $mes_letra = "MAYO";
+                }
+                if ($mes == 06) {
+                    $mes_letra = "JUNIO";
+                }
+                if ($mes == 07) {
+                    $mes_letra = "JULIO";
+                }
+                if ($mes == '08') {
+                    $mes_letra = "AGOSTO";
+                }
+                if ($mes == '09') {
+                    $mes_letra = "SEPTIEMBRE";
+                }
+                if ($mes == '10') {
+                    $mes_letra = "OCTUBRE";
+                }
+                if ($mes == '11') {
+                    $mes_letra = "NOVIEMBRE";
+                }
+                if ($mes == '12') {
+                    $mes_letra = "DICIEMBRE";
+                }
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
 
                 $sheet->cells('A1:G3', function ($cells) {
@@ -10094,7 +10257,8 @@ class OrdenController extends Controller
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });
 
-                $cant = 1; $total = 0;
+                $cant = 1;
+                $total = 0;
                 foreach ($ordenes as $value) {
 
                     $sheet->cell('A' . $i, function ($cell) use ($value, $cant) {
@@ -11665,27 +11829,19 @@ class OrdenController extends Controller
             'mes'         => date('m', strtotime($request->fecha_orden)),
         ];
         $orden->update($arr);
-
         $membresia_controller = new MembresiasLabsController;
         $res = $membresia_controller->buscar_membresia($orden->id_paciente);
-
         if($res['estado']== 'ok'){
-
             if($orden->total_valor > 50){
-
                 $puntos = intdiv($orden->total_valor , 25);
                 if($puntos > 0){
-
                     $puntos = $res['puntos'] + $puntos;
                     $data['id'] = $res['id_user_mem'];
                     $data['puntos'] = $puntos;
                     $data['motivo'] = 'EMPRESA: '.$empresa->id.'-'.$empresa->establecimiento.'-'.$empresa->punto_emision.'+ ORDEN:'.$orden->id;
                     $res = $membresia_controller->actualizar_puntos($data);
-
-                }
-
+                }    
             }
-
         }
 
         Log_usuario::create([
@@ -12210,18 +12366,42 @@ class OrdenController extends Controller
                 $sheet->mergeCells('A3:G3');
 
                 $mes = substr($fecha_d, 5, 2);
-                if ($mes == 01) {$mes_letra = "ENERO";}
-                if ($mes == 02) {$mes_letra = "FEBRERO";}
-                if ($mes == 03) {$mes_letra = "MARZO";}
-                if ($mes == 04) {$mes_letra = "ABRIL";}
-                if ($mes == 05) {$mes_letra = "MAYO";}
-                if ($mes == 06) {$mes_letra = "JUNIO";}
-                if ($mes == 07) {$mes_letra = "JULIO";}
-                if ($mes == '08') {$mes_letra = "AGOSTO";}
-                if ($mes == '09') {$mes_letra = "SEPTIEMBRE";}
-                if ($mes == '10') {$mes_letra = "OCTUBRE";}
-                if ($mes == '11') {$mes_letra = "NOVIEMBRE";}
-                if ($mes == '12') {$mes_letra = "DICIEMBRE";}
+                if ($mes == 01) {
+                    $mes_letra = "ENERO";
+                }
+                if ($mes == 02) {
+                    $mes_letra = "FEBRERO";
+                }
+                if ($mes == 03) {
+                    $mes_letra = "MARZO";
+                }
+                if ($mes == 04) {
+                    $mes_letra = "ABRIL";
+                }
+                if ($mes == 05) {
+                    $mes_letra = "MAYO";
+                }
+                if ($mes == 06) {
+                    $mes_letra = "JUNIO";
+                }
+                if ($mes == 07) {
+                    $mes_letra = "JULIO";
+                }
+                if ($mes == '08') {
+                    $mes_letra = "AGOSTO";
+                }
+                if ($mes == '09') {
+                    $mes_letra = "SEPTIEMBRE";
+                }
+                if ($mes == '10') {
+                    $mes_letra = "OCTUBRE";
+                }
+                if ($mes == '11') {
+                    $mes_letra = "NOVIEMBRE";
+                }
+                if ($mes == '12') {
+                    $mes_letra = "DICIEMBRE";
+                }
                 $fecha2 = 'FECHA: ' . substr($fecha_d, 8, 2) . ' de ' . $mes_letra . ' DEL ' . substr($fecha_d, 0, 4);
 
                 $sheet->cells('A1:G3', function ($cells) {
@@ -12274,7 +12454,8 @@ class OrdenController extends Controller
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });
 
-                $cant = 1; $total = 0;
+                $cant = 1;
+                $total = 0;
                 foreach ($ordenes as $orden) {
 
                     $sheet->cell('A' . $i, function ($cell) use ($orden) {
@@ -12313,7 +12494,8 @@ class OrdenController extends Controller
                         $cell->setValue($orden->seguro->nombre);
                         $cell->setBorder('thin', 'thin', 'thin', 'thin');
                     });
-                    $comprobante        = $orden->comprobante; $nombre_factura        = $orden->nombre_factura;
+                    $comprobante        = $orden->comprobante;
+                    $nombre_factura        = $orden->nombre_factura;
                     $grc_orden_agrupada = Labs_Factura_Agrupada_Orden::where('id_examen_orden', $orden->id)->first();
                     if (!is_null($grc_orden_agrupada)) {
                         $grc_detalle_agrupada = Labs_Factura_Agrupada_Detalle::find($grc_orden_agrupada->id_agrup_det);
@@ -12372,7 +12554,8 @@ class OrdenController extends Controller
 
         $ip_cliente = $_SERVER["REMOTE_ADDR"];
         $idusuario  = Auth::user()->id;
-
+        $empresa = DB::table('empresa as e')->where('e.estado', '1')->where('e.prioridad', '1')->first();
+        
         $orden          = Examen_Orden::find($id_orden);
         $paciente       = $orden->paciente;
         $agenda_orden   = Examen_Orden_Agenda::where('id_orden', $id_orden)->first();
@@ -12385,7 +12568,7 @@ class OrdenController extends Controller
         $espid          = '10';
         $tipo_cita      = 1;
         $id_seguro      = $orden->id_seguro;
-        $id_empresa     = '0992704152001';
+        $id_empresa     = $empresa->id;
         if (is_null($agenda_orden)) {
             //AGREGAR NUEVA AGENDA
 
@@ -12547,7 +12730,8 @@ class OrdenController extends Controller
         return view('laboratorio.orden.modal_muestras', ['muestras' => $muestras, 'orden' => $orden]);
     }
 
-    public function cambio_resultado(Request $request){
+    public function cambio_resultado(Request $request)
+    {
         //dd($request->all());
         $ip_cliente = $_SERVER["REMOTE_ADDR"];
         $idusuario  = Auth::user()->id;
@@ -12556,7 +12740,7 @@ class OrdenController extends Controller
         $fecha_resultado = $request->fecha_resultado;
 
         $orden    = Examen_Orden::find($id_orden);
-
+        
 
         Log_usuario::create([
             'id_usuario'  => $idusuario,
@@ -12596,17 +12780,18 @@ class OrdenController extends Controller
         return "0";
     }
 
-    public function subir_5pct_abril_2022(){
+    public function subir_5pct_abril_2022()
+    {
 
         $ip_cliente = $_SERVER["REMOTE_ADDR"];
         $usuario   = Auth::user()->id;
 
         $examenes = Examen::all();
-
+        
         foreach ($examenes as $examen) {
-
+            
             $valor_ant = $examen->valor;
-
+            
             $valor_new = $valor_ant + $valor_ant * 0.05;
             $valor_new = round($valor_new, 2);
 
@@ -12627,10 +12812,8 @@ class OrdenController extends Controller
     {
         return view('laboratorio/orden/modal_pendiente_pago');
     }
-
     public function agregar_valor(Request $request)
     {
-
         $lista_abono = Examen_Comprobante_Ingreso::where('id_examen_detalle_pago', $request['id'])->get();
         $id_examen_orden = Examen_Detalle_Forma_Pago::where('id', $request['id'])->first();
         $metodo_de_pago =  Ct_Tipo_Pago::where('estado', '1')->whereNotIn('id', [7])->orderby('nombre', 'asc')->get();
@@ -12645,14 +12828,13 @@ class OrdenController extends Controller
         $tipo_tarjeta = Ct_Tipo_Tarjeta::where('estado', 1)->get();
         return view('laboratorio/orden/vista_agregar_valor', ['lista_abono' => $lista_abono, 'lista_banco' => $lista_banco, 'tipo_tarjeta' => $tipo_tarjeta, 'id_examen_orden' => $id_examen_orden, 'metodo_de_pago' => $metodo_de_pago, 'valor_restante' => $valor_restante]);
     }
-
     public function guardarvalor(Request $request)
     {
         $usuario   = Auth::user()->id;
         $igualdad = Examen_Detalle_Forma_Pago::where('id', $request['id_examen_orden'])->first();
         $examen_Comprobante_ingreso = new Examen_Comprobante_Ingreso();
         try {
-            //save
+            //save  
             $valor = $request['abonar'] + $igualdad->valor_adelanto;
             $igualdad->valor_adelanto =  $valor;
             $igualdad->save();
@@ -12680,10 +12862,8 @@ class OrdenController extends Controller
         } catch (\Exception $e) {
             return ['status' => 'error', 'msj' => "Porfavor contacte sistemas"];
         }
-
         return ['status' => 'ok', 'msj' => "Guardado Correctamente"];
     }
-
     public function modal_buscar(Request $request)
     {
         $nombres = $request['nombres'];
@@ -12693,10 +12873,7 @@ class OrdenController extends Controller
             ->where('efp.aplicado', null)
             ->where('examen_orden.comprobante', '<>', null)
             ->where('efp.id_tipo_pago', '7');
-
-
         if (!is_null($request['cedula'])) {
-
             $query = $query->where('pac.id', $request['cedula']);
         }
         if (!is_null($request['nombres'])) {
@@ -12707,15 +12884,12 @@ class OrdenController extends Controller
                     ->orWhereRaw('CONCAT(pac.apellido1,pac.apellido2,pac.nombre1) LIKE ?', '%' . $nombres . '%');
             });
         }
-
         $query = $query->select('examen_orden.comprobante', 'efp.valor_adelanto', 'pac.id as cedula', 'efp.id', 'efp.valor', 'efp.fecha', DB::raw("CONCAT(pac.nombre1,' ',pac.apellido1,' ',pac.apellido2) AS nombre"))->get();
         //dd($query);
         return view('laboratorio/orden/tabla_pendiente', ['query' => $query]);
     }
-
     public function nuevo_combrobante()
     {
-
         $examen_comprobante_ingreso = DB::table('examen_comprobante_ingreso')
             ->join('examen_detalle_forma_pago', 'examen_comprobante_ingreso.id_examen_detalle_pago', 'examen_detalle_forma_pago.id')
             ->join('examen_orden', 'examen_detalle_forma_pago.id_examen_orden', 'examen_orden.id')
@@ -12723,16 +12897,11 @@ class OrdenController extends Controller
             ->where('examen_comprobante_ingreso.comprobante_ingreso', 0)
             ->select("examen_comprobante_ingreso.*", "ct_ventas.id", "examen_orden.id_paciente", "examen_comprobante_ingreso.id as nuevo_id")
             ->get();
-
         $count = $examen_comprobante_ingreso->count();
-
         return view('laboratorio/orden/modal_comprobante', ['examen_comprobante_ingreso' => $examen_comprobante_ingreso, 'count' => $count]);
     }
-
     public function llenar_campos(Request $request)
     {
-
-
         $query = DB::table('examen_comprobante_ingreso as ec')
             ->join('examen_detalle_forma_pago as ef', 'ec.id_examen_detalle_pago', 'ef.id')
             ->join('examen_orden as eo', 'ef.id_examen_orden', 'eo.id')
@@ -12741,51 +12910,39 @@ class OrdenController extends Controller
             ->select('ef.valor', 'ec.fecha', 'eo.id_paciente', "ct_ventas.id")
             ->get();
         $tot = Examen_Comprobante_Ingreso::where('id', $request['id'])->get();
-
-
         return json_encode(['query' => $query, 'tot' => $tot]);
     }
-
-
     private function recalcular_membresia($id_orden)
     {
 
         $ip_cliente = $_SERVER["REMOTE_ADDR"];
         $idusuario  = Auth::user()->id;
-
         $orden = Examen_Orden::find($id_orden);
-
         if( !is_null($orden)){
             if($orden->seguro->tipo == '2'){
                 $membresia_controller = new MembresiasLabsController;
                 $res = $membresia_controller->buscar_membresia($orden->id_paciente);
                 //$res = MembresiasLabsController::buscar_membresia($orden->id_paciente);
-
                 $total = $orden->valor;
                 $estado = $res['estado'];
-
+                
                 $detalle_final = null;
-
                 if ($estado == 'ok') {
                     $id_plan = $res['id'];
                     $nomble_plan = $res['nombre'];
                     if( count($res['detalles']) == 2){
-
                         $detalles_membresia = $res['detalles'];
                         $detalle_1 = $detalles_membresia[1];
                         if($detalle_1['minimo_requerido'] < $total){
-                            $detalle_final = $detalle_1;
+                            $detalle_final = $detalle_1;     
                         }else{
                             $detalle_0 = $detalles_membresia[0];
                             if($detalle_0['minimo_requerido'] < $total){
-                                $detalle_final = $detalle_0;
-                            }
-
+                                $detalle_final = $detalle_0;     
+                            }  
                         }
-                        //dd($detalle_final);
+                        //dd($detalle_final);    
                     }
-
-
                     /*$membresia = Membresia::find($id_plan);
                     $detalle_membresia   = $membresia->detalles()->where('minimo_requerido', '<', $total)->orderBy('minimo_requerido', 'desc')->first();*/
                     if (!is_null($detalle_final)) {
@@ -12798,11 +12955,8 @@ class OrdenController extends Controller
                             $examen   = Examen::find($detalle->id_examen);
                             $valor    = $examen->valor;
                             $cubre    = 'NO';
-
                             $valor_descuento = $descuento_p * $valor / 100;
                             $valor_descuento = round($valor_descuento, 2);
-
-
                             $input_det = [
                                 'valor'           => $valor,
                                 'cubre'           => $cubre,
@@ -12812,26 +12966,18 @@ class OrdenController extends Controller
                                 'p_descuento'     => $descuento_p,
                                 'cobrar_pac_pct'  => 100,
                                 'valor_con_oda'   => 0,
-
                             ];
-
                             $detalle->update($input_det);
                         }
-
                         $total           = $orden->detalles->sum('valor');
                         $cantidad        = $orden->detalles->count();
                         $total           = round($total, 2);
                         $descuento_total = $orden->detalles->sum('valor_descuento');
-
                         $valor_con_oda = 0;
                         $total_con_oda = 0;
-
-
                         $subtotal_pagar = $total - $descuento_total;
-
                         $recargo_p      = 0;
                         $recargo_valor = 0;
-
                         $valor_total = $subtotal_pagar + $recargo_valor;
                         $valor_total = round($valor_total, 2);
                         //ACTUALIZAR ORDEN
@@ -12843,8 +12989,6 @@ class OrdenController extends Controller
                             'recargo_valor'    => $recargo_valor,
                             'total_valor'      => $valor_total,
                             'id_seguro'        => '1',
-
-
                             'cantidad'         => $cantidad,
                             'valor'            => $total,
                             'ip_modificacion'  => $ip_cliente,
@@ -12855,31 +12999,22 @@ class OrdenController extends Controller
                             'membresia_id'          => $detalle_final['membresia_id'],
                             'membresia_detalle_id'  => $detalle_final['id'],
                         ];
-
                         $orden->update($input_ex);
                         /////////////////////////
-
                         return ['estado' => 'OK', 'motivo' => 'MEMBRESIA ACTIVA: ' . $nomble_plan . ' ' . $detalle_final['nombre'], 'descuento_pct' => $descuento_p];
                     }
                 }
-
                 return ['estado' => 'NO', 'motivo' => '', 'descuento_pct' => ''];
             }
         }
     }
-
-
     public function query_examenes($id)
      {
-
          $orden = Examen_Orden::find($id);
          $imprimir = $this->imprimirCod($orden->id);
          return view('laboratorio/orden/modal_query',['orden'=>$orden->id,'arrayU'=>$imprimir['arrayU'],'arrayG'=>$imprimir['arrayG']]);
      }
-
-
      public function imprimirCod($id_examen_orden) {
-
        $detalle = Examen_Detalle::where('id_examen_orden', $id_examen_orden)->get();
        $examenOrden = Examen_Orden::where('id',$id_examen_orden)->first();
        $arrayU = [];
@@ -12889,9 +13024,7 @@ class OrdenController extends Controller
        $ip_cliente = $_SERVER["REMOTE_ADDR"];
        $idusuario  = Auth::user()->id;
        foreach ($detalle as $keyl=>&$value) {
-
          if($value->id_examen == '1225' && $examenOrden->seguro->tipo == 0){
-
          }else{
            if (!is_null($value->examen->id_labs_tubo)) {
                $nombre = Labs_Tipo_Tubo::where('id', $value->examen->id_labs_tubo)->first();
@@ -12919,7 +13052,6 @@ class OrdenController extends Controller
                             }
                          }
                        }
-
                      $arrayG[$nombre->nombre] = [
                         'id_examen_orden' => $id_examen_orden,
                         'tipo' => 'G',
@@ -12930,13 +13062,9 @@ class OrdenController extends Controller
                         'cedula'=> $examenOrden->paciente->id,
                      ];
                   }
-
            }
-
          }
-
        }
-
        Examen_Orden_Toma_Muestra::create([
           'id_examen_orden' => $id_examen_orden,
           'toma_muestra' =>date('Y-m-d h:m:s'),
@@ -12946,14 +13074,8 @@ class OrdenController extends Controller
           'id_usuariocrea'  => $idusuario,
           'id_usuariomod'   => $idusuario,
        ]);
-
-
-
-
       return ['arrayU'=>$arrayU,'arrayG'=>$arrayG,'arrayUnico'=>$arrayUnico];
      }
-
-
 
     /*public function update_estado_email_paciente(Request $request)
 {
@@ -13092,10 +13214,4 @@ $msj->bcc('torbi10@hotmail.com');
 return "okay";
 
 }*/
-
-    public function presentacion_2022(){
-
-        return view('laboratorio/orden/presentacion_2022');
-
-    }
 }

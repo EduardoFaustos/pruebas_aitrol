@@ -10,7 +10,7 @@
     left: 0px;
     float: left;
     display: block;
-    min-width: 160px;
+    min-width: 160px;   
     padding: 4px 0;
     margin: 0 0 10px 25px;
     list-style: none;
@@ -27,7 +27,7 @@
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding;
-    background-clip: padding-box;
+    background-clip: padding-box; 
   }
   .ui-autocomplete {
     z-index: 5000;
@@ -47,13 +47,13 @@
 <link rel="stylesheet" href="{{ asset("/css/icheck/all.css")}}">
 <link rel="stylesheet" href="{{ asset("/css/bootstrap-datetimepicker.css")}}">
 
-<script type="text/javascript">
+<script type="text/javascript">  
 
-$(function () {
+$(function () {    
     $(".clickable-row").click(function() {
         window.location = $(this).data("href");
     });
-});
+});    
 </script>
 <div class="content">
     <nav aria-label="breadcrumb">
@@ -91,9 +91,9 @@ $(function () {
             </div>
             <div class="form-group col-md-3 col-xs-10 container-4">
               <input class="form-control" type="text" id="id" name="id" value="@if(isset($searchingVals)){{$searchingVals['id']}}@endif" placeholder="Ingrese Id..." />
-
+     
             </div>
-
+            
             <div class="form-group col-md-1 col-xs-2">
               <label class="texto" for="acreedor">{{trans('contableM.concepto')}}: </label>
             </div>
@@ -112,7 +112,7 @@ $(function () {
             <div class="form-group col-md-3 col-xs-10 container-4">
               <input class="form-control" type="text" id="cheque" name="cheque" value="@if(isset($searchingVals)){{$searchingVals['no_cheque']}}@endif" placeholder="Ingrese número de cheque..." />
             </div>
-
+            
             <div class="form-group col-md-1 col-xs-2">
               <label class="texto" for="acreedor">{{trans('contableM.asiento')}}: </label>
             </div>
@@ -142,9 +142,9 @@ $(function () {
             <div class="col-md-12 cabecera">
                 <label class="color_texto">{{trans('contableM.LISTADODECOMPROBANTES')}}</label>
             </div>
-        </div>
+        </div> 
         <div class="box-body dobra">
-
+                  
                       <div class="row">
                         <div class="table-responsive col-md-12" >
                           <table id="example2" class="table table-hover dataTable" role="grid" aria-describedby="example2_info">
@@ -164,7 +164,7 @@ $(function () {
                               </tr>
                             </thead>
                             <tbody>
-
+                            
                             @foreach ($comprobante_egreso_m as $value)
                                 <tr  class="well">
                                   <td >{{$value->id}}</td>
@@ -184,8 +184,7 @@ $(function () {
                                    @endif
                                    <a class="btn btn-success btn-gray" href="{{route('comp_egreso_masivo.edit',['id'=>$value->id])}}"><i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i></a>
                                    <a class="btn btn-success btn-gray" href="{{route('reporte_datos.compegresom',['id'=>$value->id, 'tipo'=>1])}}"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
-                                   <a class="btn btn-success btn-gray" href="{{route('reporte_datos.compegresom',['id'=>$value->id, 'tipo'=>1])}}"><i class="fa fa-envelope" aria-hidden="true"></i></a>
-                                  </td>
+                                  </td>  
                                 </tr>
                               @endforeach
                             </tbody>
@@ -196,16 +195,16 @@ $(function () {
                       </div>
                       <div class="row">
                         <div class="col-sm-5">
-
+                         
                         </div>
                         <div class="col-sm-7">
                           <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
-
+                            
                           </div>
                         </div>
                       </div>
 
-
+              
         </div>
     </div>
 </div>
@@ -293,7 +292,7 @@ $(function () {
           error: function(data){
             console.log(data);
           }
-        });
+        }); 
     }else{
       compras.verificar_anulacion
        location.href ="{{route('compras_index')}}";
@@ -329,17 +328,17 @@ $(function () {
         //           console.log("entra aqui"+id);
         //           test(id);
         //       }
-
-
+              
+            
         //   },
         //   error: function(data){
         //     console.log(data);
         //   }
-        // });
+        // }); 
 
       }
   })
-
+       
 
   }
   async function test(id) {
@@ -354,7 +353,7 @@ $(function () {
       })
 
       if (text) {
-        $.ajax({
+        $.ajax({ 
           type: 'get',
           url:"{{ url('contable/acreedores/documentos/cuentas/egreso/masivo/anular/')}}/"+id,
           datatype: 'json',
@@ -366,10 +365,10 @@ $(function () {
           error: function(data){
             console.log(data);
           }
-        });
+        }); 
 
       }
-
+                  
     } catch(err) {
       console.log(err);
     }

@@ -314,3 +314,11 @@ Route::post('pagos_de_roles/nuevos_asientos', 'contable\Nuevo_RolController@pago
 Route::post('roles_aportes_patronales/nuevos_asientos', 'contable\Nuevo_RolController@aportes_patronales')->name('nuevo_rol.aportes_patronales');
 Route::post('roles_aportes_patronales/pago_aportes', 'contable\Nuevo_RolController@pago_aportes_patronales')->name('nuevo_rol.pago_aportes_patronales');
 
+Route::post('nomina_beneficios_iess', 'contable\Nuevo_RolController@asientos_beneficios_sociales')->name('nuevo_rol.asientos_beneficios_sociales');
+
+
+//MASIVO DE SUCURSALES EN NOMINA
+Route::get('proceso_masivo/sucursales_nomina', 'contable\NominaController@masivo_sucursales_nomina')->name('nomina.masivo_sucursales_nomina');
+
+
+

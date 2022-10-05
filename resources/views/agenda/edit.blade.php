@@ -1014,6 +1014,12 @@
                                 </div>
                             </div>
 
+                            <div class="form-group col-md-12" style="padding: 0;">
+                                <label for="cie10" class="col-md-12 control-label">Cie10</label>
+                                <div class="col-md-12">
+                                    <textarea id="cie10" class="form-control input-sm" name="cie10" onblur="guardarCie10('{{$agenda->id}}')">{{$agenda->cie10}}</textarea>
+                                </div>
+                            </div>
 
                             <!--Adelantado-->
                             @if($agenda->id_doctor1!='4444444444')
@@ -1610,6 +1616,27 @@
 
 
     });
+
+    function guardarCie10(id){
+        $.ajax({
+            type: 'post',
+            url: "{{route('agenda.guardarCie10')}}",
+            headers: {
+                'X-CSRF-TOKEN': $('input[name=_token]').val()
+            },
+            datatype: 'json',
+            data: {
+                'idAgenda': id,
+                'cie10': $('#cie10').val(),
+            },
+            success: function(data) {
+                console.log(data)
+            },
+            error: function(data) {
+                
+            }
+        });
+    }
 
     function generarRC(id_proforma){
         

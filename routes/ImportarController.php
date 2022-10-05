@@ -28,9 +28,6 @@ use Sis_medico\PrecioProducto;
 use Sis_medico\Principio_Activo;
 use Sis_medico\SCI_Pacientes;
 use Sis_medico\User;
-use Sis_medico\Insumo_Plantilla_Control;
-use Sis_medico\Insumo_Plantilla_Item_Control;
-use Sis_medico\InvProcesosController;
 use Sis_medico\ApProcedimiento;
 use Sis_medico\Seguro;
 use Sis_medico\Nivel;
@@ -447,62 +444,66 @@ class ImportarController extends Controller
 
     public function importar_examenes_abril()
     {
-        //dd('Hola');
+         //dd('Hola');
         Excel::filter('chunk')->load('tarifario.xlsx')->chunk(250, function ($reader) {
 
             foreach ($reader as $value) {
                 //dd($value->valores);
 
-                $examen = Examen_Nivel::where('id_examen', $value->id)
-                    ->where('nivel', '12')
-                    ->first();
-                //dd($examen);
-                if (is_null($examen)) {
-                    Examen_Nivel::create([
-                        'nivel' => '12',
-                        'id_examen' => $value->id,
-                        'valor1' => $value->valores,
-                        'estado' => 1,
-                        'id_usuariocrea'  => '0957258056',
-                        'id_usuariomod'  => '0957258056',
-                        'ip_creacion' => 'actuths2120',
-                        'ip_modificacion' => 'actuths2120'
-                    ]);
-                } else {
-                    $updates = [
-                        'valor1' => $value->valores,
-                        'id_usuariomod'  => '0957258056',
-                        'ip_creacion' => 'actuths2120',
-                        'ip_modificacion' => 'actuths2120'
-                    ];
-                    $examen->update($updates);
-                }
+                    $examen = Examen_Nivel::where('id_examen', $value->id)
+                                            ->where('nivel', '12')
+                                            ->first();
+                    //dd($examen);
+                    if(is_null($examen)){
+                        Examen_Nivel::create([
+                                'nivel' => '12',
+                                'id_examen' => $value->id,
+                                'valor1' => $value->valores,
+                                'estado' => 1,
+                                'id_usuariocrea'  => '0957258056',
+                                'id_usuariomod'  => '0957258056',
+                                'ip_creacion' =>'actuths2120',
+                                'ip_modificacion' =>'actuths2120'
+                        ]);
+                    }else{
+                        $updates= [
+                            'valor1' => $value->valores,
+                            'id_usuariomod'  => '0957258056',
+                            'ip_creacion' =>'actuths2120',
+                            'ip_modificacion' =>'actuths2120'
+                        ];
+                        $examen->update($updates);
+                    }
 
-                $examen13 = Examen_Nivel::where('id_examen', $value->id)
-                    ->where('nivel', '13')
-                    ->first();
-                //dd($examen);
-                //aquiesta
-                if (is_null($examen13)) {
-                    Examen_Nivel::create([
-                        'nivel' => '13',
-                        'id_examen' => $value->id,
-                        'valor1' => $value->valores,
-                        'estado' => 1,
-                        'id_usuariocrea'  => '0957258056',
-                        'id_usuariomod'  => '0957258056',
-                        'ip_creacion' => 'actuths2120',
-                        'ip_modificacion' => 'actuths2120'
-                    ]);
-                } else {
-                    $updates13 = [
-                        'valor1' => $value->valores,
-                        'id_usuariomod'  => '0957258056',
-                        'ip_creacion' => 'actuths2120',
-                        'ip_modificacion' => 'actuths2120'
-                    ];
-                    $examen13->update($updates13);
-                }
+                    $examen13 = Examen_Nivel::where('id_examen', $value->id)
+                                            ->where('nivel', '13')
+                                            ->first();
+                      //dd($examen);
+                      //aquiesta
+                      if(is_null($examen13)){
+                        Examen_Nivel::create([
+                                'nivel' => '13',
+                                'id_examen' => $value->id,
+                                'valor1' => $value->valores,
+                                'estado' => 1,
+                                'id_usuariocrea'  => '0957258056',
+                                'id_usuariomod'  => '0957258056',
+                                'ip_creacion' =>'actuths2120',
+                                'ip_modificacion' =>'actuths2120'
+                        ]);
+                    }else{
+                        $updates13= [
+                            'valor1' => $value->valores,
+                            'id_usuariomod'  => '0957258056',
+                            'ip_creacion' =>'actuths2120',
+                            'ip_modificacion' =>'actuths2120'
+                        ];
+                        $examen13->update($updates13);
+                    }
+
+
+
+
             }
         });
 
@@ -1892,9 +1893,11 @@ class ImportarController extends Controller
                     $nombre = $nombre . ' ' . $usuario->nombre2;
                 }
                 $cabecera->update(['nombres' => $nombre]);
+
             }
         }
         return "ok";
+
     }
     public function comisiones_labs()
     {
@@ -1918,7 +1921,9 @@ class ImportarController extends Controller
             foreach ($detalles as $detalle) {
 
                 $detalle->update(['p_comision' => null]);
+
             }
+
         }
         return "gracias amigo, att manzanita voladora";
     }
@@ -1940,9 +1945,11 @@ class ImportarController extends Controller
                 $detalle->update(['valor_nivel2' => $valor_nivel2]);
             }
             $value->update(['total_nivel2' => $total_nivel2]);
+
         }
 
         return "disculpa ya termine";
+
     }
 
     public function ventas($nombre)
@@ -1989,6 +1996,7 @@ class ImportarController extends Controller
                         $data['cliente']             = $cliente;
 
                         if (!is_null($value['no_orden'])) {
+
                         }
                         //busco los productos labs
                         $ordenes     = explode('-', $value['no_orden']);
@@ -2109,6 +2117,7 @@ class ImportarController extends Controller
                                 $valor_pagar = $value['valor'];
                             } else {
                                 $valor_pagar = $valor_total;
+
                             }
 
                             $tipos_pago['fecha']              = $value['fecha'];
@@ -2121,6 +2130,7 @@ class ImportarController extends Controller
                             $tipos_pago['valor_base']         = $valor_pagar;
                             $pagos[0]                         = $tipos_pago;
                             $pago_factura                     = $pago_factura - $valor_pagar;
+
                         } elseif (!is_null($value['banco_2'])) {
                             $tipos_pago['id_tipo'] = 2;
                             $banco                 = Ct_Bancos::where('nombre', 'like', '%' . $value['banco_2'] . '%')->first();
@@ -2134,6 +2144,7 @@ class ImportarController extends Controller
                                 $valor_pagar = $value['valor'];
                             } else {
                                 $valor_pagar = $valor_total;
+
                             }
 
                             $tipos_pago['fecha']              = $value['fecha'];
@@ -2158,6 +2169,7 @@ class ImportarController extends Controller
                                 $valor_pagar = $value['valor'];
                             } else {
                                 $valor_pagar = $valor_total;
+
                             }
 
                             $tipos_pago['fecha']              = $value['fecha'];
@@ -2175,6 +2187,7 @@ class ImportarController extends Controller
                                 $valor_pagar = $value['valor'];
                             } else {
                                 $valor_pagar = $valor_total;
+
                             }
                             $tipos_pago['id_tipo']            = 1;
                             $tipos_pago['fecha']              = $value['fecha'];
@@ -2477,9 +2490,10 @@ class ImportarController extends Controller
 
             foreach ($reader as $book) {
                 $insumo = ApProcedimiento::find($book->id);
-                if (!is_null($insumo)) {
-                    $insumo->update(['valor' => $book->valor, 'ip_creacion' => 'VAL21']);
+                if(!is_null($insumo)){
+                        $insumo->update(['valor' => $book->valor, 'ip_creacion' => 'VAL21']);
                 }
+                
             }
         });
 
@@ -2489,59 +2503,60 @@ class ImportarController extends Controller
     public function covid_marzo()
     {
         $arr = [
-            27409,
+            27409,    
         ];
         //dd($arr);
 
         foreach ($arr as $xor) {
-
-            $orden = Examen_Orden::find($xor);
-            $ordenf = Examen_Orden::find($xor);
-            $covid = $ordenf->detalles->where('id_examen', '1191');
-            if ($covid->count() > 0) {
+            
+            $orden = Examen_Orden::find($xor); 
+            $ordenf = Examen_Orden::find($xor); 
+            $covid = $ordenf->detalles->where('id_examen','1191');
+            if($covid->count() > 0){
                 $nivel = $orden->id_nivel;
                 $detalles = $orden->detalles;
                 foreach ($detalles as $value) {
-                    if ($value->id_examen == '1191') {
+                    if($value->id_examen=='1191'){
                         $ex_nivel = Examen_Nivel::where('id_examen', '1191')->where('nivel', $nivel)->first();
                         $input_det = [
                             'id_examen' => '1225',
                             'valor'     => $ex_nivel->valor1,
                         ];
                         $value->update($input_det);
-                        $parametros = Examen_parametro::where('id_examen', '1191')->get();
+                        $parametros = Examen_parametro::where('id_examen','1191')->get();
                         foreach ($parametros as $par) {
-                            $resultado = Examen_Resultado::where('id_orden', $ordenf->id)->where('id_parametro', $par->id)->where('certificado', '1')->first();
-                            //dd($resultado);
-                            if (!is_null($resultado)) {
-                                if ($resultado->id_parametro == '584') {
-                                    if ($resultado->valor == 'NEGATIVO') {
-                                        $a_resul = ['valor' => rand(10, 90) / 100, 'id_parametro' => '785', 'id_examen' => '1225'];
+                           $resultado = Examen_Resultado::where('id_orden',$ordenf->id)->where('id_parametro',$par->id)->where('certificado','1')->first();
+                           //dd($resultado);
+                           if(!is_null($resultado)){
+                                if($resultado->id_parametro=='584'){
+                                    if($resultado->valor == 'NEGATIVO'){
+                                        $a_resul = [ 'valor' => rand(10, 90)/100, 'id_parametro' => '785', 'id_examen' => '1225' ];
                                         $resultado->update($a_resul);
                                         //dd(rand(10, 90)/100);
                                     }
-                                    if ($resultado->valor == 'POSITIVO') {
-                                        $a_resul = ['valor' => rand(110, 130) / 100, 'id_parametro' => '785', 'id_examen' => '1225'];
+                                    if($resultado->valor == 'POSITIVO'){
+                                        $a_resul = [ 'valor' => rand(110, 130)/100, 'id_parametro' => '785', 'id_examen' => '1225' ];
                                         $resultado->update($a_resul);
                                         //dd(rand(110, 130)/100);
                                     }
                                 }
-                                if ($resultado->id_parametro == '585') {
-                                    if ($resultado->valor == 'NEGATIVO') {
-                                        $a_resul = ['valor' => rand(200, 900) / 100, 'id_parametro' => '784', 'id_examen' => '1225'];
+                                if($resultado->id_parametro=='585'){
+                                    if($resultado->valor == 'NEGATIVO'){
+                                        $a_resul = [ 'valor' => rand(200, 900)/100, 'id_parametro' => '784', 'id_examen' => '1225' ];
                                         $resultado->update($a_resul);
                                         //dd(rand(200, 900)/100);
                                     }
-                                    if ($resultado->valor == 'POSITIVO') {
-                                        $a_resul = ['valor' => rand(1100, 1300) / 100, 'id_parametro' => '784', 'id_examen' => '1225'];
+                                    if($resultado->valor == 'POSITIVO'){
+                                        $a_resul = [ 'valor' => rand(1100, 1300)/100, 'id_parametro' => '784', 'id_examen' => '1225' ];
                                         $resultado->update($a_resul);
                                         //dd(rand(1100, 1300)/100);
                                     }
                                 }
-                            }
-                        }
+                           }
+                        }  
                         //dd("no entro"); 
                     }
+                    
                 }
 
                 $orden2 = Examen_Orden::find($orden->id);
@@ -2551,11 +2566,12 @@ class ImportarController extends Controller
                     'valor'           => $valor2,
                 ];
                 $orden2->update($input_ex);
-
-                $arr[$orden->id] =  $nivel . '-' . $covid->first()->valor . '-' . $orden->total_valor;
+                
+                $arr[$orden->id] =  $nivel.'-'.$covid->first()->valor.'-'.$orden->total_valor; 
                 //$i++;
             }
-        }
+            
+        }    
 
         /*
         $anio = '2021'; $mes = '03';
@@ -2631,57 +2647,57 @@ class ImportarController extends Controller
         }
         dd($arr);
         */
+
     }
 
     /********Nueva funcion*********/
-    public function masivo_carga_excel()
-    {
+    public function masivo_carga_excel(){
 
-        ini_set('max_execution_time', 100);
+          ini_set('max_execution_time', 100);
 
         $contador = 0;
 
         Excel::filter('chunk')->load('TARIFARIO_PROC.xlsx')->chunk(250, function ($reader) use ($contador) {
 
             foreach ($reader as $book) {
-                $ap_proc = ApProcedimiento::where('codigo', $book->codigo)
-                    ->get();
+                $ap_proc = ApProcedimiento::where('codigo',$book->codigo)
+                ->get();
 
                 foreach ($ap_proc as $value) {
                     $proc = [
                         'tipo_procedimiento' => $book->tipo,
-                        'procedimiento' => $book->procedimiento,
-                    ];
-                    //dd($ap_proc);
+                        'procedimiento'=> $book->procedimiento,
+                   ];
+                   //dd($ap_proc);
                     $value->update($proc);
-                    // $contador++;
+                   // $contador++;
                 }
                 //dd($ap_proc);
-
+                  
             }
         });
         return 'ok';
+
     }
 
-    public function nuevo_seguro_convenio()
-    {
+    public function nuevo_seguro_convenio(){
 
         /*  NIVELES DE SALUD
         5   SALUD 3
         6   SALUD 4
-        7   SALUD 5 */
-        Excel::filter('chunk')->load('subirsalud.xlsx')->chunk(600, function ($reader) {
+        7   SALUD 5 */   
+        Excel::filter('chunk')->load('subirsalud.xlsx')->chunk(600, function ($reader)  {
             foreach ($reader as $book) {
                 //dd($book);
                 $examen = Examen::find($book->id);
-
+                
                 //dd($examen);
-                if (!is_null($examen)) {
+                if(!is_null($examen)){
                     $examen->update(['codigo_salud' => $book->codigo_salud]);
-                    $examen_nivel5 = Examen_Nivel::where('nivel', 5)->where('id_examen', $examen->id)->first();
-                    $examen_nivel6 = Examen_Nivel::where('nivel', 6)->where('id_examen', $examen->id)->first();
-                    $examen_nivel7 = Examen_Nivel::where('nivel', 7)->where('id_examen', $examen->id)->first();
-                    if (!is_null($examen_nivel5)) {
+                    $examen_nivel5 = Examen_Nivel::where('nivel',5)->where('id_examen',$examen->id)->first();
+                    $examen_nivel6 = Examen_Nivel::where('nivel',6)->where('id_examen',$examen->id)->first();
+                    $examen_nivel7 = Examen_Nivel::where('nivel',7)->where('id_examen',$examen->id)->first();
+                    if(!is_null($examen_nivel5)){
 
                         $examen_nivel5->update([
                             'valor1'    => round($book->valor_salud, 2),
@@ -2689,7 +2705,9 @@ class ImportarController extends Controller
                             'id_usuariomod'    => '0922290697',
                             'ip_modificacion'  => 'SALUD2007'
                         ]);
-                    } else {
+
+
+                    }else{
 
                         Examen_Nivel::create([
                             'nivel'     => '5',
@@ -2701,8 +2719,9 @@ class ImportarController extends Controller
                             'ip_creacion'      => 'SALUD2007',
                             'ip_modificacion'  => 'SALUD2007'
                         ]);
+
                     }
-                    if (!is_null($examen_nivel6)) {
+                    if(!is_null($examen_nivel6)){
 
                         $examen_nivel6->update([
                             'valor1'    => round($book->valor_salud, 2),
@@ -2710,7 +2729,8 @@ class ImportarController extends Controller
                             'id_usuariomod'    => '0922290697',
                             'ip_modificacion'  => 'SALUD2007'
                         ]);
-                    } else {
+
+                    }else{
 
                         Examen_Nivel::create([
                             'nivel'     => '6',
@@ -2722,8 +2742,9 @@ class ImportarController extends Controller
                             'ip_creacion'      => 'SALUD2007',
                             'ip_modificacion'  => 'SALUD2007'
                         ]);
+                        
                     }
-                    if (!is_null($examen_nivel7)) {
+                    if(!is_null($examen_nivel7)){
 
                         $examen_nivel7->update([
                             'valor1'    => round($book->nuevo_valor_n5, 2),
@@ -2731,7 +2752,8 @@ class ImportarController extends Controller
                             'id_usuariomod'    => '0922290697',
                             'ip_modificacion'  => 'SALUD2007'
                         ]);
-                    } else {
+
+                    }else{
 
                         Examen_Nivel::create([
                             'nivel'     => '7',
@@ -2743,106 +2765,78 @@ class ImportarController extends Controller
                             'ip_creacion'      => 'SALUD2007',
                             'ip_modificacion'  => 'SALUD2007'
                         ]);
+                        
                     }
+
+
                 }
+                        
+                
             }
         });
         dd("ok");
     }
 
-    public function masivo_inv($nombre, $id_empresa)
-    {
-        $x     = 1;
+    public function masivo_inv($nombre){
+        $x=1;
         $serie = 0;
+        Excel::filter('chunk')->load($nombre.'.xlsx')->chunk(600, function ($reader) use($x, $serie)  {
+            foreach ($reader as $book) {
+                
+               //dd($book);
+            
+                $unix_date = ($book->fecha_exp - 25569) * 86400;
+                $excel_date = 25569 + ($unix_date / 86400);
+                $unix_date = ($excel_date - 25569) * 86400;
+                $fecha_exp = gmdate("Y-m-d", $unix_date);
 
-        $cab  = Insumo_Plantilla_Control::where('id', 24)->first();
-        $item = Insumo_Plantilla_Item_Control::where('id_plantilla', 24)->get();
+               
 
-        Excel::filter('chunk')->load($nombre . '.xlsx')->chunk(600, function ($reader) use ($x, $serie, $id_empresa) {
-            // dd($reader);]
-            DB::table('inv_carga_inventario')->truncate();
-            foreach ($reader as $key => $book) {
-                //dd($book);
-                $fecha_exp = $book->fecha_exp;
-
-                $tipo = $book->tipo;
-
-                if ($book->fecha != "" || !is_null($book->fecha_exp) || strtotime($fecha_exp) == false) {
-                    $unix_date  = ($book->fecha_exp - 25569) * 86400;
-                    $excel_date = 25569 + ($unix_date / 86400);
-                    $unix_date  = ($excel_date - 25569) * 86400;
-                    $fecha_exp  = gmdate("Y-m-d", intval($unix_date));
-                } else if ($book->fecha == "" || is_null($book->fecha) || $book->fecha == ' ' || is_null($book->fecha)) {
-                    $fecha_exp = "2023-12-31";
-                }
-
-                //dd($fecha_exp);
-                if (is_null($book->serie) || $book->serie == "" || $book->serie == "0" || $book->serie == 0 || trim($book->serie) == '0') {
+                if(is_null($book->serie) || $book->serie == ""){
                     $serie = $this->generar_serie($x);
-                } else {
-                    if (substr($book->serie, -1, 1) == '-') {
-                        $serie = substr($book->serie, 0, -1);
-                    } else {
-                        $serie = $book->serie;
-                    }
+                }else{
+                    $serie = $book->serie;
                 }
-                $bodega = "";
-                if ($book->bodega == 1) {
-                    $bodega = "PENTAX";
-                } else if ($book->bodega == 2) {
-                    $bodega = "COMPRAS";
-                } else {
-                    $bodega = $book->bodega;
-                }
-
-                if (substr($book->referencia, -1, 1) == '-') {
-                    $referencia = substr($book->referencia, 0, -1);
-                } else {
-                    $referencia = $book->referencia;
-                }
-                // if($book->tipo == 'CONSIGNA'){
                 DB::table('inv_carga_inventario')->insert([
-                    'marca'        => $book->marca, //marca
-                    'descripcion'  => $book->detalle, //detalle
-                    'descripcion1' => $book->descripcion2, //detalle
-                    'codigo'       => $referencia, //referencia
-                    'lote'         => $book->lote,
-                    'cantidad'     => $book->cantidad,
-                    'fecha_exp'    => $fecha_exp, //fecha vencimiento
-                    'serie'        => $serie, //codigo de barras
-                    'estado'       => $book->estado,
-                    'pedido'       => $book->pedido, //numero pedido
-                    'tipo'         => $book->tipo, //facturado o consignado
-                    'caducado'     => $book->caducado, //NO SE
-                    'precio'       => round(floatval($book->precio), 2), //NO SE
-                    'lugar'        => $bodega,
-                    'bodega'       => $book->bodega,
-                    'creado'       => 'REVISAR',
-                    'id_empresa'   => $id_empresa,
+                    'marca'=> $book->marca,//marca
+                    'descripcion'=>$book->detalle,//detalle
+                    'descripcion1'=> $book->detalle,//detalle
+                    'codigo'=>$book->referencia,//referencia
+                    'lote'=>$book->lote,
+                    'cantidad'=>$book->cantidad,
+                    'fecha_exp'=> $fecha_exp,//fecha vencimiento
+                    'serie'=>$serie,//codigo de barras 
+                    'estado'=> 'A',
+                    'pedido'=>$book->pedido,//numero pedido
+                    'tipo'=> $book->tipo,//facturado o consignado
+                    'caducado'=> 'USO',//NO SE
+                    'precio' => '0',//NO SE
+                    'lugar'=>'PENTAX',
+
+                    // 'fecha_ingreso_compras'=> $book->fecha_ingreso_compras,
+                    // 'fecha_salida_pentax'=> $book->fecha_salida_pentax,
+                   
+
+                    'creado'=>'TURSI - acelity'
                 ]);
                 $x++;
-                // }
             }
         });
-
-        echo ".:: CARGA A INVENTARIO ::. <BR>";
-        InvProcesosController::carga_inicial();
-        // dd("ok");
+        dd("ok");
     }
+    public function generar_serie($id){
+        $serie=null;
+        if($id!=null){
 
-    public function generar_serie($id)
-    {
-        $serie = null;
-        if ($id != null) {
-
-            $serie = date('YmdHis') . $id;
-        } else {
-            $serie = date('YmdHis') . $id;
+            $serie= date('YmdHis').$id;
+        }else{
+            $serie= date('YmdHis').$id;
         }
         return $serie;
+        
     }
 
-    //hola tursi 
-
+//hola tursi 
+   
 
 }
