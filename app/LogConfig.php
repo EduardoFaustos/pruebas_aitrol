@@ -18,12 +18,8 @@ class LogConfig
     public static function busqueda($cuenta, $modulo = "")
     {
         $id_empresa = Session::get('id_empresa');
-
         $empresa = Empresa::find($id_empresa);
-
         //$id_plan = $cuenta;
-
-
         $nuevo = 0;
         $endoscopy = 0;
         // if (Auth::user()->id == "0957258056" or Auth::user()->id == "0953905999" and $endoscopy == 0 or Auth::user()->id == "0954127262") {
@@ -42,7 +38,6 @@ class LogConfig
                 }
             }
         }
-
         return $id_plan;
     }
 
