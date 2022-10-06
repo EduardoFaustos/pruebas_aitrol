@@ -27,4 +27,9 @@ class Ct_Orden_Venta_Detalle extends Model
     {
         return $this->belongsTo('Sis_medico\Ct_productos', 'id_producto');
     }
+
+    public function producto_insumo()
+    {
+        return $this->hasMany('Sis_medico\Ct_productos_insumos', 'id_producto', 'id_producto');
+    }
 }

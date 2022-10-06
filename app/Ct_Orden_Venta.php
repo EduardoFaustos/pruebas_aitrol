@@ -34,6 +34,7 @@ class Ct_Orden_Venta extends Model
 
     public function seguro()
     {
+
         return $this->belongsTo('Sis_medico\Seguro', 'id_seguro');
     }
     public function cliente()
@@ -59,5 +60,17 @@ class Ct_Orden_Venta extends Model
     }
     public function venta(){
         return $this->belongsTo('Sis_medico\Ct_ventas','id', 'orden_venta');
+    }
+    public function user_referido()
+    {
+        return $this->belongsTo('Sis_medico\User','asesor_venta');
+    }
+    public function logs()
+    {
+        return $this->hasMany('Sis_medico\LogReciboDeCobro', 'id_ct_orden_venta');
+    }
+    public function proforma()
+    {
+        return $this->belongsTo('Sis_medico\Proforma_Cabecera','id_proforma');
     }
 }

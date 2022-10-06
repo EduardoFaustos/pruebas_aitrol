@@ -179,4 +179,11 @@ class Ct_ventas extends Model
         Ct_ventas::where('id', $idG)
             ->update($arrayDoc);
     }
+
+    public function nota_credito()
+    {
+        return $this->hasMany('Sis_medico\Ct_Nota_Credito_Clientes', 'id_factura');
+    }
+
+
 }
