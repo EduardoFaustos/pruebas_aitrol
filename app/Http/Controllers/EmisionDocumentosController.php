@@ -1169,6 +1169,7 @@ class EmisionDocumentosController extends Controller
                         $informacion_adicional[0] = $campoAdicional;
                         $infoAdicional['campoAdicional'] = $informacion_adicional;
                         $data['infoAdicional'] = $informacion_adicional;
+                        echo '<pre>';print_r($data);DB::rollBack(); exit;
                         $errores = $this->validarData($data);
                         if (count($errores) > 0) {
                             $arrayDocElec = [
