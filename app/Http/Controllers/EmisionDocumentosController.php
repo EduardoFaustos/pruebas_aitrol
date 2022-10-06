@@ -5403,10 +5403,6 @@ class EmisionDocumentosController extends Controller
     }
     private  function getInfoAdicional($xmlDocument, $campos)
     {
-        echo '<pre>';
-        print_r($campos);
-        DB::rollBack();
-        exit;
         $detalles = array();
         $valor = '';
         $cantidadInfoAdicional = 0;
@@ -5419,7 +5415,10 @@ class EmisionDocumentosController extends Controller
                 $nombre = $informacionAdicional[$i]['nombre'];
             if (isset($informacionAdicional[$i]['valor']))
                 $valor = $informacionAdicional[$i]['valor'];
-            array_push($detalles, array("nombre" => $nombre, "valor" => str_replace(' ', '', str_replace('(', '', str_replace(')', '', str_replace('-', '', $valor))))));
+            if ($campos['infoTributaria']['codDoc'] == '06')
+                array_push($detalles, array("nombre" => $nombre, "valor" => str_replace(' ', '', str_replace('(', '', str_replace(')', '', str_replace('-', '', $valor))))));
+            else
+                array_push($detalles, array("nombre" => $nombre, "valor" => $valor));
             $nodoDetalle = $xmlDocument->createElement('infoAdicional');
         }
         foreach ($detalles as $item) {
