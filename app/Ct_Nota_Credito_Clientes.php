@@ -32,25 +32,33 @@ class Ct_Nota_Credito_Clientes extends Model
         return $this->belongsTo('Sis_medico\Ct_ventas', 'id_factura');
     }
 
-    public static function getRetenciones(){
+    public static function getNotaCredito(){
         return Ct_Nota_Credito_Clientes::join('de_empresa as em', 'ct_nota_credito_clientes.id_empresa', '=', 'em.id_empresa')
         ->where('ct_nota_credito_clientes.electronica', 1)
         ->where('ct_nota_credito_clientes.doc_electronico', 0)->get([
             'ct_nota_credito_clientes.id',
             'ct_nota_credito_clientes.id_empresa',
             'ct_nota_credito_clientes.created_at',
+            'ct_nota_credito_clientes.numero_factura',
             'sucursal',
             'punto_emision',
             'secuencia',
-            'valor_fuente',
-            'valor_iva',
-            'total',
+            'subtotal',
+            'impuesto',
+            'sub_sin_imp',
+            'total_credito',
+            'total_deudas',
+            'total_abonos',
+            'total_nuevo_saldo',
+            'subtotal0',
+            'subtotal12',
             'nro_autorizacion',
             'nro_comprobante',
             'numero_factura',
-            'fecha_envio',
-            'id_compra',
-            
+            'fecha',
+            'id_factura',
+            'id_cliente',
+            'observacion',
         ]);
     }
     public static function updateSinGenerarXML($id)

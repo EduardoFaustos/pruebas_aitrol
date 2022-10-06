@@ -92,7 +92,7 @@
     table th {
       text-align: left;
       color: #3d7ba8;
-      font-size: 1em;
+      font-size: 14px;
     }
 
     .datos_cliente {
@@ -199,104 +199,102 @@
       padding: 3px;
       margin-bottom: 5px;
     }
+    th{
+      text-transform: uppercase;
+    }
+    .bordes td {
+      border: 1px solid black;
+    }
   </style>
 
 </head>
 
 <body>
-  <div id="page_pdf">
-    <table id="factura_head">
-      <tr>
-        <td class="info_empresa">
-          <div style="text-align: center">
-            <img src="{{base_path().'/storage/app/logo/iec_logo1391707460001.png'}}" style="width:250px;height: 100px">
-          </div>
-          <div style="text-align: center; font-size:0.8em">
-            R.U.C.: {{$fact_venta->empresa->id}}<br />
-            Nombre Comercial: {{$fact_venta->empresa->nombrecomercial}}<br />
-            Teléfono: {{$fact_venta->empresa->telefono1}}<br />
-            Dir.Matriz: {{$fact_venta->empresa->direccion}}<br />
-            <br />
-          </div>
-        </td>
-        <td class="info_factura">
-          <div class="round">
-            <span class="h3" style="padding:20px">{{trans('contableM.DETALLEDEPAQUETE')}}</span>
-            <p style="padding-left: 10px;font-size: 20px;">
-              Paciente :<strong> @if(!is_null($fact_venta)){{$fact_venta->paciente->nombre1}} {{$fact_venta->paciente->apellido1}}@endif</strong><br />
-              Seguro:<strong> @if(isset($fact_venta->seguro)){{$fact_venta->seguro->nombre}}@endif</strong><br />
-              {{--<!--Nivel:<strong> @if(!is_null($orden->id_nivel)){{$orden->id_nivel}}@endif</strong><br />-->--}}
-              Detalle de Factura No.:<strong> @if(!is_null($fact_venta)){{$fact_venta->nro_comprobante}}@endif</strong><br />
-              Procedimiento:@if(!is_null($fact_venta)){{$fact_venta->procedimientos}}@endif<br />
-              Fecha:@if(!is_null($fact_venta)){{$fact_venta->fecha}}@endif<br />
-            </p>
-          </div>
-        </td>
-      </tr>
-    </table>
-    <div class="modal-content">
+<div id="page_pdf">
+  <table id="factura_head">
+    <tr>
+      <td class="info_empresa">
+        <div style="text-align: center">
+          <img src="{{base_path().'/storage/app/logo/iec_logo1391707460001.png'}}"  style="width:250px;height: 100px">
+        </div>
+        <div style="text-align: center; font-size:0.8em">
+          R.U.C.: {{$fact_venta->empresa->id}}<br/>
+          Nombre Comercial: {{$fact_venta->empresa->nombrecomercial}}<br/>
+          Teléfono: {{$fact_venta->empresa->telefono1}}<br/>
+          Dir.Matriz: {{$fact_venta->empresa->direccion}}<br/>
+          <br/>
+        </div>
+      </td>
+      <td class="info_factura">
+        <div class="round">
+          <span class="h3" style="padding:20px">{{trans('contableM.DETALLEDEPAQUETE')}}</span>
+          <p style="padding-left: 10px;font-size: 20px;">
+            Paciente :<strong> @if(!is_null($fact_venta)){{$fact_venta->paciente->nombre1}} {{$fact_venta->paciente->apellido1}}@endif</strong><br />
+            Seguro:<strong> @if(!is_null($orden)){{$orden->seguro->nombre}}@endif</strong><br />
+            <!--Nivel:<strong> @if(!is_null($orden->id_nivel)){{$orden->id_nivel}}@endif</strong><br />-->
+            Detalle de Factura No.:<strong> @if(!is_null($fact_venta)){{$fact_venta->nro_comprobante}}@endif</strong><br />
+            Procedimiento:@if(!is_null($fact_venta)){{$fact_venta->procedimientos}}@endif<br />
+            Fecha:@if(!is_null($fact_venta)){{$fact_venta->fecha}}@endif<br />
+          </p>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div style="margin-top:50px;" class="modal-content">
+    @for ($i = 0; $i < count($mergue) ; $i++)
 
-      <div class="table-responsive col-md-12">
-        <table style="border: 1px solid; width: 100%;font-size: 18px;">
-         
-          <thead>
-            <tr>
-              <th style="text-align:center;" width="25%" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">{{trans('contableM.grupo')}}</th>
-              <th style="text-align:center;" width="25%" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">{{trans('contableM.detalle')}}</th>
-              <th style="text-align:center;" width="25%" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">{{trans('contableM.cantidad')}}</th>
-              <th style="text-align:center;" width="25%" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">{{trans('contableM.valor')}}</th>
-              <th style="text-align:center;" width="25%" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">{{trans('contableM.iva')}}</th>
-              <th style="text-align:center;" width="25%" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">{{trans('contableM.descuento')}}</th>
-              <th style="text-align:center;" width="25%" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Codigo: activate to sort column ascending">{{trans('contableM.total')}}</th>
-            </tr>
+      @foreach($mergue[$i] as $value)
+        <table style="margin-top:20px;">
+          <thead class="bordes">
+          <tr>
+            <th colspan="8" style="text-align:center; padding:10px; background-color: #3d7ba8; color:white;font-size:20px;" >
+              {{$value["title"]}}
+            </th>
+          </tr>
+          <tr>
+            <th style="border: 1px solid black;">codigo</th>
+            <th style="border: 1px solid black;">descripcion</th>
+            <th style="border: 1px solid black;">cantidad</th>
+            <th style="border: 1px solid black;">precio</th>
+            <th style="border: 1px solid black;">Desc</th>
+            <th style="border: 1px solid black;">iva</th>
+            <th style="border: 1px solid black;">valor iva</th>
+            <th style="border: 1px solid black;">total</th>
+          </tr>
           </thead>
-          @foreach ($detalles as $value)
-
-          @if(!is_null($value->id_ct_productos))
-
-          <tbody>
-            @php
-            $valor_iva= ($value->precio) * ($value->porcentaje);
-            $total_valor = 0;
-            $total_iva = 0; 
-            $total_general = 0;
-            $total_descuento =0;
-            $total_valor += $value->precio;
-            $total_iva += $valor_iva;
-            $total_descuento +=$value->descuento;
-            $total_general += ($value->precio)+($valor_iva);
-           @endphp
-
+          <tbody class="bordes">
+          @if(count($value["details"]) > 0)
+            @php $total = 0; @endphp
+            @foreach($value["details"] as $det)
+              <tr>
+                <td style="font-size: 15px;">{{$det["codigo"]}}</td>
+                <td style="font-size: 15px;">{{$det["descripcion"]}}</td>
+                <td style="font-size: 15px;">{{$det["cantidad"]}}</td>
+                <td style="font-size: 15px;">{{number_format($det["precio"], 2)}}</td>
+                <td style="font-size: 15px;">{{number_format($det["descuento"], 2)}}</td>
+                <td style="font-size: 15px;">{{number_format($det["iva"], 2)}}</td>
+                <td style="font-size: 15px;">{{number_format($det["valor_iva"], 2)}}</td>
+                <td style="font-size: 15px;">{{number_format($det["total"], 2)}}</td>
+              </tr>
+              @php $total += $det["total"] ; @endphp
+            @endforeach
             <tr>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">@if(!is_null($value)){{$value->id_ct_productos}}@endif</td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">@if(!is_null($value)){{$value->nombre}}@endif</td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">@if(!is_null($value)){{$value->cantidad}}@endif</td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">@if(!is_null($value)){{$value->precio}}@endif</td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">@if(!is_null($value)){{$valor_iva}}@endif</td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">@if(!is_null($value)){{$value->descuento}}@endif</td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">@if(!is_null($value)){{$value->extendido+$valor_iva}}@endif</td>
+              <td style="text-transform: uppercase; font-size: 16px;font-weight: bold; text-align: end;" colspan="7">Total {{$value["title"]}}: </td>
+              <td style="font-size: 16px;font-weight: bold;" >$ {{number_format($total, 2)}}</td>
             </tr>
-
+          @else
+            <tr>
+              <td style="text-transform: uppercase; font-size: 16px;font-weight: bold; text-align: end;" colspan="7">Total {{$value["title"]}}: </td>
+              <td style="font-size: 16px;font-weight: bold;" >$ 0.00</td>
+            </tr>
+          @endif
           </tbody>
-          <tfoot>
-            <tr>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;"></td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;"></td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">SUMAN</td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">{{$total_valor}}</td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">{{$total_iva}}</td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">{{$total_descuento}}</td>
-              <td style="border-right: 1px solid;border-top: 1px solid;font-size: 19px;">{{$total_general}}</td>
-            </tr>
-          </tfoot>
         </table>
-      </div>
-      @endif
-
       @endforeach
-    </div>
-    <div class="separator"></div>
+    @endfor
   </div>
+  <div class="separator" ></div>
+</div>
 </body>
 
 </html>

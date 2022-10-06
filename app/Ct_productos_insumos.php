@@ -24,4 +24,8 @@ class Ct_productos_insumos extends Model
     public function ct_producto(){
         return $this->belongsTo('Sis_medico\Ct_productos', 'id_producto');
     }
+
+    public function producto_compra(){
+        return $this->belongsTo('Sis_medico\Producto', 'id_insumo');
+    }
 }

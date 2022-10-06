@@ -20,5 +20,8 @@ class Ct_Detalle_Rubro_Credito extends Model
      */
     protected $guarded = [];
 
-    
+    public static function getDetalles($id)
+    {
+        return Ct_Detalle_Rubro_Credito::where('id_nt_cred_client', $id)->get();
+    }
 }
