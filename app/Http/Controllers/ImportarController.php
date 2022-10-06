@@ -3794,6 +3794,7 @@ class ImportarController extends Controller
     {
         $plan_cuentas = Plan_Cuentas::all();
         $empresa = Empresa::all();
+        
         $idusuario  = Auth::user()->id;
         $ip_cliente = $_SERVER["REMOTE_ADDR"];
         foreach ($plan_cuentas as $p) {
@@ -3813,5 +3814,36 @@ class ImportarController extends Controller
         }
 
         dd("ok");
+    }
+
+    public function cuentas_configuraciones($nombre_excel){
+        Excel::filter('chunk')->load($nombre_excel . '.xlsx')->chunk(600, function ($reader) {
+            $ip_cliente = $_SERVER["REMOTE_ADDR"];
+            $idusuario  = Auth::user()->id;
+            $id_empresa = '0922729587001';
+            
+            foreach ($reader as $book) {
+                
+                $arrc=[
+                    'id_plan' => $book->id_plan,
+                    'nombre' => $book->nombre,
+                    'iva' => $book->iva,
+                    'ice' => $book->ice,
+                    'id_usuariocrea' => $idusuario,
+                    'id_usuariomod' => $idusuario,
+                    'ip_creacion' => $idusuario,
+                    'ip_modificacion' => $ip_cliente,
+                    'id_empresa' => $id_empresa,
+                    'tipo' => $book->tipo,
+                    'cuenta_ant' => $book->cuenta_ant,
+                    'modulo' => $book->modulo,
+                ];
+                
+            }
+
+            Ct_Configuraciones::create($arrc);
+
+            return "ok";
+        });
     }
 }
