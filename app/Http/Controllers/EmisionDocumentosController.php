@@ -1114,10 +1114,9 @@ class EmisionDocumentosController extends Controller
                             ->where('id_ct_ventas', $venta->id)->get([
                                 't.codigo'
                             ]);
-                            echo '<pre>';print_r($dinfo);DB::rollBack();exit;
                         if (count($formasPagos) > 0) {
                             foreach ($formasPagos as $formaPago) {
-                                $pago['formaPago'] = str_pad($formaPago->codigo, 2, 0, STR_PAD_LEFT);
+                                $pago['formaPago'] = str_pad($dinfo['pago']['forma_pago'], 2, 0, STR_PAD_LEFT);
                                 $pago['total'] = $venta->total_final;
                                 $pago['plazo'] = $venta->dias_plazo;
                                 $pago['unidadTiempo'] = 'dias';
@@ -1172,7 +1171,7 @@ class EmisionDocumentosController extends Controller
                         $data['infoAdicional'] = $informacion_adicional;
                         $errores = $this->validarData($data);
                         echo '<pre>';
-                        print_r($errores);
+                        print_r($data);
                         DB::rollBack();
                         exit;
                         if (count($errores) > 0) {
