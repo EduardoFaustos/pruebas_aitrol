@@ -1521,7 +1521,7 @@ class VentasController extends Controller
             if ($val_tol > 0) {
                 $id_plan = LogConfig::busqueda('1.01.02.05.01');
                 $plan_cuentas = Plan_Cuentas::where('id', $id_plan)->first();
-                echo '<pre>';print_r($id_plan);DB::rollBack();exit;
+                echo '<pre>';print_r($plan_cuentas);DB::rollBack();exit;
                 Ct_Asientos_Detalle::create([
                     'id_asiento_cabecera' => $id_asiento_cabecera,
                     //'id_plan_cuenta'      => '1.01.02.05.01',
