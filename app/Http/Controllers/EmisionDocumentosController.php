@@ -1165,7 +1165,7 @@ class EmisionDocumentosController extends Controller
                         }
                         $data['detalles'] = $detalles;
                         $campoAdicional['nombre'] = "detalle";
-                        $campoAdicional['valor']  = $venta->nota_electronica!=''?$venta->nota_electronica:'No necesita datos adicionales';
+                        $campoAdicional['valor']  = $venta->nota_electronica != '' ? $venta->nota_electronica : 'No necesita datos adicionales';
                         $informacion_adicional[0] = $campoAdicional;
                         $infoAdicional['campoAdicional'] = $informacion_adicional;
                         $data['infoAdicional'] = $informacion_adicional;
@@ -2817,11 +2817,7 @@ class EmisionDocumentosController extends Controller
                         $informacion_adicional[0] = $campoAdicional;
                         $infoAdicional['campoAdicional'] = $informacion_adicional;
                         $data['infoAdicional'] = $informacion_adicional;
-                        echo '<pre>';
-                        print_r($data);
-                        exit;
                         $errores = $this->validarData($data);
-
                         //Creacion XML
                         $arrayLogError = [
                             'id_de_pasos' => 1,
@@ -5407,6 +5403,10 @@ class EmisionDocumentosController extends Controller
     }
     private  function getInfoAdicional($xmlDocument, $campos)
     {
+        echo '<pre>';
+        print_r($campos);
+        DB::rollBack();
+        exit;
         $detalles = array();
         $valor = '';
         $cantidadInfoAdicional = 0;
