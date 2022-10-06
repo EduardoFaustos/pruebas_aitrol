@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'mail.mdconsgroup.com'),
+    'host' => env('MAIL_HOST', 'mail.aitrol.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME', 'no-reply@mdconsgroup.com'),
+    'username' => env('MAIL_USERNAME', 'no-reply@aitrol.com'),
 
-    'password' => env('MAIL_PASSWORD', 'u_S2Az69j9vZ'),
+    'password' => env('MAIL_PASSWORD', 'MWrpBQ!iimtQ.'),
 
     /*
     |--------------------------------------------------------------------------
