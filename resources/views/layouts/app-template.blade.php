@@ -98,8 +98,8 @@ Full screen Modal
 
   <script src="{{ asset ("/bower_components/jquery/dist/jquery.min.js")}}"></script>
 
-  <!--<script src="{{ asset ("/bower_components/datatables.net/js/jquery.dataTables.min.js") }}"></script>-->
-  <!--<script src="{{ asset ("/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js") }}"></script>-->
+  <script src="{{ asset ("/bower_components/datatables.net/js/jquery.dataTables.min.js") }}"></script>
+  <script src="{{ asset ("/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js") }}"></script>
 
   <!-- bootstrap time picker -->
   <script src="{{ asset ("/plugins/timepicker/bootstrap-timepicker.min.js") }}"></script>
@@ -119,9 +119,11 @@ Full screen Modal
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
   <!-- Select2 -->
-  <!-- AdminLTE App -->
-  <script src="{{ asset ("/bower_components/AdminLTE/dist/js/app.min.js") }}" type="text/javascript"></script>
-  <script src="{{ asset ("/bower_components/AdminLTE/dist/js/demo.js") }}" type="text/javascript"></script>
+
+
+
+
+
   <script type="text/javascript"></script>
   <!--
 <script language="JavaScript">
@@ -223,6 +225,10 @@ document.onmousedown=click
   <?php
   }
   ?>
+
+  <!-- AdminLTE App -->
+  <script src="{{ asset ("/bower_components/AdminLTE/dist/js/app.min.js") }}" type="text/javascript"></script>
+  <script src="{{ asset ("/bower_components/AdminLTE/dist/js/demo.js") }}" type="text/javascript"></script>
   <!-- Optionally, you can add Slimscroll and FastClick plugins.
       Both of these plugins are recommended to enhance the
       user experience. Slimscroll is required when using the
