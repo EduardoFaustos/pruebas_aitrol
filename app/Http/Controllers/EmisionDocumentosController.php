@@ -1110,11 +1110,11 @@ class EmisionDocumentosController extends Controller
                         $pagos = [];
                         $pago = [];
                         $conPagos = 0;
-                        echo '<pre>';print_r($venta);DB::rollBack();exit;
                         $formasPagos = Ct_Forma_Pago::join('ct_tipo_pago as t', 'ct_forma_pago.tipo', '=', 't.id')
                             ->where('id_ct_ventas', $venta->id)->get([
                                 't.codigo'
                             ]);
+                            echo '<pre>';print_r($formasPagos);DB::rollBack();exit;
                         if (count($formasPagos) > 0) {
                             foreach ($formasPagos as $formaPago) {
                                 $pago['formaPago'] = str_pad($formaPago->codigo, 2, 0, STR_PAD_LEFT);
