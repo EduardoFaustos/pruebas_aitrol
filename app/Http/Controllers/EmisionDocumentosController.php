@@ -1171,7 +1171,7 @@ class EmisionDocumentosController extends Controller
                         $data['infoAdicional'] = $informacion_adicional;
                         $errores = $this->validarData($data);
                         echo '<pre>';
-                        print_r($errores);
+                        print_r($data);
                         DB::rollBack();
                         exit;
                         if (count($errores) > 0) {
