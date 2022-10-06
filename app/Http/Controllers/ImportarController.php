@@ -3833,15 +3833,15 @@ class ImportarController extends Controller
                     'id_usuariomod' => $idusuario,
                     'ip_creacion' => $idusuario,
                     'ip_modificacion' => $ip_cliente,
-                    'id_empresa' => $id_empresa,
+                    'id_empresa' => '0922729587001',
                     'tipo' => $book->tipo,
                     'cuenta_ant' => $book->cuenta_ant,
                     'modulo' => $book->modulo,
                 ];
-                
+                Ct_Configuraciones::create($arrc);
             }
 
-            Ct_Configuraciones::create($arrc);
+            
 
             return "ok";
         });
