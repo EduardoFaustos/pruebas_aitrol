@@ -1233,10 +1233,6 @@ class EmisionDocumentosController extends Controller
                             if (is_numeric($id_doc)) {
                                 $idInsertados .= $id_doc . ',';
                                 $comprobante = $this->generarDocElectronicoXml($data);
-                                echo '<pre>';
-                                print_r($comprobante);
-                                DB::rollBack();
-                                exit;
                                 Ct_ventas::updateGenerarXML($venta->id, $data['infoTributaria']['claveAcceso']);
                                 if (!empty($comprobante)) {
                                     $docAnte = simplexml_load_string($comprobante);
