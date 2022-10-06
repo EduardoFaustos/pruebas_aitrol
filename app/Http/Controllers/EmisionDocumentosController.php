@@ -1170,7 +1170,10 @@ class EmisionDocumentosController extends Controller
                         $infoAdicional['campoAdicional'] = $informacion_adicional;
                         $data['infoAdicional'] = $informacion_adicional;
                         $errores = $this->validarData($data);
-                        echo '<pre>';print_r($errores);DB::rollBack(); exit;
+                        echo '<pre>';
+                        print_r($errores);
+                        DB::rollBack();
+                        exit;
                         if (count($errores) > 0) {
                             $arrayDocElec = [
                                 'id_de_pasos' => 7,
@@ -1289,7 +1292,7 @@ class EmisionDocumentosController extends Controller
                                                 ];
                                                 $this->enviar_correo($param);
                                                 $arrayVentaAct = [
-                                                    'numero'=>$data['infoTributaria']['secuencial']
+                                                    'numero' => $data['infoTributaria']['secuencial']
                                                 ];
                                                 Ct_ventas::where('id', $venta->id)->update($arrayVentaAct);
                                             } else {
@@ -2303,7 +2306,7 @@ class EmisionDocumentosController extends Controller
                                 $details       = Ct_Detalle_Credito_Clientes::where('id_not_cred', $row->id)->first();
                                 $venta_detalle = Ct_detalle_venta::where('id_ct_ventas', $row->id_factura)->get();
                                 $cliente = Ct_Clientes::getCliente($row->id_cliente);
-                                
+
                                 if ($cliente != '') {
                                     $email = $cliente->email_representante;
                                     $telefonoCliente = $cliente->telefono1;
@@ -2326,7 +2329,7 @@ class EmisionDocumentosController extends Controller
                                     $infoNotaCredito['rise'] = $datosFirma->rise; //Opcional
 
                                 $infoNotaCredito['codDocModificado'] = '01';
-                                
+
                                 $idFactura = $row->id_factura;
                                 $factura = Ct_ventas::find($idFactura)->first();
                                 if (!is_null($factura)) {
@@ -2334,15 +2337,14 @@ class EmisionDocumentosController extends Controller
                                 }
 
                                 $factura = null;
-                                if(!is_null($idFactura)){
+                                if (!is_null($idFactura)) {
                                     $factura = Ct_ventas::find($idFactura)->first();
                                 }
-                                
+
                                 if (!is_null($factura)) {
                                     $infoNotaCredito['numDocModificado']  = $factura->nro_comprobante;
                                     $infoNotaCredito['fechaEmisionDocSustento'] = $factura->fecha;
-                                }
-                                else{
+                                } else {
                                     $infoNotaCredito['numDocModificado']  = $row->numero_factura;
                                     $infoNotaCredito['fechaEmisionDocSustento'] = $row->fecha;
                                 }
@@ -2363,18 +2365,17 @@ class EmisionDocumentosController extends Controller
                                         // else
                                         //     $codigoImpuesto = De_Codigo_Impuestos::where('id', 2)->first();
 
-                                        $totalConImpuesto['codigo'] = '2';//IVA
+                                        $totalConImpuesto['codigo'] = '2'; //IVA
                                         if ($detail->check_iva == 1) {
                                             $totalConImpuesto['codigoPorcentaje'] = '12';
                                             $totalConImpuesto['valor'] = $this->getDecimal(($detail->precio * $detail->cantidad) * $detail->porcentaje);
-                                        }
-                                        else{
+                                        } else {
                                             $totalConImpuesto['codigoPorcentaje'] = '0';
                                             $totalConImpuesto['valor'] = $this->getDecimal(0);
                                         }
                                         $totalConImpuesto['descuentoAdicional'] = $detail->descuento;
-                                        $totalConImpuesto['baseImponible'] = ($detail->cantidad * $detail->precio) - $detail->descuento;  
-                                        
+                                        $totalConImpuesto['baseImponible'] = ($detail->cantidad * $detail->precio) - $detail->descuento;
+
                                         $totalConImpuestos[$conImpuesto] = $totalConImpuesto;
                                         $conImpuesto++;
                                     }
@@ -2384,7 +2385,7 @@ class EmisionDocumentosController extends Controller
                                 $infoNotaCredito['moneda'] = 'Dolar'; //Ct_Divisas::getMoneda();
 
                                 $data['infoNotaCredito'] = $infoNotaCredito;
-                                
+
                                 //detalles
                                 $detalle = [];
                                 $detalles = [];
@@ -2441,7 +2442,6 @@ class EmisionDocumentosController extends Controller
                                 $campoAdicional['nombre'] = "telefono";
                                 if (isset($row->telefono_cliente) && $row->telefono_cliente != '') {
                                     $campoAdicional['valor'] =  $row->telefono_cliente;
-                                    
                                 } elseif (isset($row->direccion_cliente) && $row->direccion_cliente != '') {
                                     $campoAdicional['nombre'] = "direccion";
                                     $campoAdicional['valor'] =  $row->direccion_cliente;
