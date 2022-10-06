@@ -1114,7 +1114,7 @@ class EmisionDocumentosController extends Controller
                             ->where('id_ct_ventas', $venta->id)->get([
                                 't.codigo'
                             ]);
-                            echo '<pre>';print_r($formasPagos);DB::rollBack();exit;
+                            echo '<pre>';print_r($dinfo);DB::rollBack();exit;
                         if (count($formasPagos) > 0) {
                             foreach ($formasPagos as $formaPago) {
                                 $pago['formaPago'] = str_pad($formaPago->codigo, 2, 0, STR_PAD_LEFT);
