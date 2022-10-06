@@ -1165,7 +1165,7 @@ class EmisionDocumentosController extends Controller
                         }
                         $data['detalles'] = $detalles;
                         $campoAdicional['nombre'] = "detalle";
-                        $campoAdicional['valor']  = $venta->nota_electronica;
+                        $campoAdicional['valor']  = $venta->nota_electronica!=''?$venta->nota_electronica:'No necesita datos adicionales';
                         $informacion_adicional[0] = $campoAdicional;
                         $infoAdicional['campoAdicional'] = $informacion_adicional;
                         $data['infoAdicional'] = $informacion_adicional;
