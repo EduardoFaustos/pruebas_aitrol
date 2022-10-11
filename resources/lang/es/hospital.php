@@ -42,8 +42,30 @@ return [
     'No' => 'NO',
     'Si' => 'SI',
     'Regresar'=>'Regresar',
-
-
-
+    'Recepcion'        => 'Recepcion',
+    'lunes' => 'Lunes',
+    'martes' => 'Martes',
+    'miercoles' => 'Miercoles',
+    'jueves' => 'Jueves',
+    'viernes' => 'Viernes',
+    'enero'   =>  'Enero',
+    'febrero' => 'Febrero',
+    'marzo' => 'Marzo',
+    'abril' => 'Abril',
+    'mayo'   =>  'Mayo',
+    'junio' => 'Junio',
+    'julio' => 'Julio',
+    'agosto' => 'Agosto',
+    'septiembre' =>  'Septiembre',
+    'octubre' => 'Octubre',
+    'noviembre'  =>  'Noviembre',
+    'diciembre' => 'Diciembre',
+    'Laboratorio' => 'Laboratorio',
+    'Farmacia'        =>'Farmacia',
+    'Hospitalizacion'        => 'Hospitalizacion',
+    'Imagenes'        => 'Imagenes',
+    'UCIN'        => 'UCIN',
+    'Cirugia'        => 'Cirugia',
+    'UCI'        => 'UCI',
 
 ];
