@@ -208,7 +208,8 @@
               @endforeach
             </select>
           </div>
-          <div class="col-md-12"><br></div>
+          <div class="col-12">&nbsp;</div>
+          <div class="col-12">&nbsp;</div>
           <div class="col-md-12">
             <div style="background-color: #004AC1; color: white">
               <label style="font-family: 'Helvetica general';" for="id_procedimiento" class="col-md-12 control-label">{{trans('boxesh.COLONOSCOPIAPROCTOLOGIA')}}
@@ -255,7 +256,8 @@
               @endforeach
             </select>
           </div>
-          <div class="col-md-12"><br></div>
+          <div class="col-12">&nbsp;</div>
+          <div class="col-12">&nbsp;</div>
           <div class="col-md-12">
             <div style="background-color: #004AC1; color: white">
               <label style="font-family: 'Helvetica general';" for="id_procedimiento" class="col-md-12 control-label">{{trans('boxesh.INTESTINODELGADO')}}
@@ -302,7 +304,8 @@
               @endforeach
             </select>
           </div>
-          <div class="col-md-12"><br></div>
+          <div class="col-12">&nbsp;</div>
+          <div class="col-12">&nbsp;</div>
           <div class="col-md-12">
             <div style="background-color: #004AC1; color: white">
               <label style="font-family: 'Helvetica general';" for="id_procedimiento" class="col-md-12 control-label">{{trans('boxesh.ECOENDOSCOPIAS')}}
@@ -349,7 +352,8 @@
               @endforeach
             </select>
           </div>
-          <div class="col-md-12"><br></div>
+          <div class="col-12">&nbsp;</div> 
+          <div class="col-12">&nbsp;</div>
           <div class="col-md-12">
             <div style="background-color: #004AC1; color: white">
               <label style="font-family: 'Helvetica general';" for="id_procedimiento" class="col-md-12 control-label">CPRE
@@ -396,7 +400,9 @@
               @endforeach
             </select>
           </div>
-          <div class="col-md-12"><br></div>
+
+          <div class="col-12">&nbsp;</div>
+          <div class="col-12">&nbsp;</div>
           <div class="col-md-12">
             <div style="background-color: #004AC1; color: white">
               <label style="font-family: 'Helvetica general';" for="id_procedimiento" class="col-md-12 control-label">{{trans('boxesh.BRONCOSCOPIA')}}
@@ -445,6 +451,8 @@
           </div>
         @elseif($orden->tipo_procedimiento=='3')
           @php $co_aceptacion  = 0;@endphp
+          <div class="col-12">&nbsp;</div>
+          <div class="col-12">&nbsp;</div>
           <div class="col-md-12">
             <div style="background-color: #004AC1; color: white">
               <label style="font-family: 'Helvetica general';" for="id_procedimiento" class="col-md-12 control-label">{{trans('boxesh.PROCEDIMIENTOSQUIRURGICOS')}}  
@@ -493,6 +501,8 @@
           </div>
         @elseif($orden->tipo_procedimiento=='2')
           @php $co_aceptacion  = 0;$aceptacion = 0;@endphp
+          <div class="col-12">&nbsp;</div>
+          <div class="col-12">&nbsp;</div>
           <div class="col-md-12">
             <div style="background-color: #004AC1; color: white">
               <label style="font-family: 'Helvetica general';" for="id_procedimiento" class="col-md-12 control-label">{{trans('boxesh.IMAGENES')}} 
