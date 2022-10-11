@@ -56,6 +56,10 @@
     color: white;
   }
 
+  .plantilla {
+    padding-top: 14px;
+  }
+
   @media all and (max-width: 420px) {
 
     h5,
@@ -223,35 +227,170 @@
       </div>
     </div>
   </div>
-
   <div class="card card-solid">
-    <div class="row">
-      <div class="col-md-12">
-
-        <div class="col-md-4">
-          <div class="col-md-12">
-            
+    <div id="navbar" class="row" style="z-index: 99999">
+      <div class="col-lg-12 col-md-12" >
+        <div class="row row_datos">
+          <div class="col-lg-4 col-sm-12 col-12">
+            <div class="row">
+              <div class="col-12" style="padding: 5px 2px; padding-left: 30px; height: 240px;">
+                <a onclick="" class="boton calendario" style="color: #124574; height: 230px">
+                  <div class="row">
+                    <div class="col-12" style="height: 42px; text-align: left;color: #124574;">
+                      <img src="{{asset('/')}}hc4/img/bt_ca2.png" style="background-color: none;height: 46px;">
+                      <span></span>
+                    </div>
+                    <hr style="background-color: #124574;">
+                    <div class="col-12">
+                      <div class="row">
+                        <div class="col-md-6 col-12" style="padding: 5px;color:#124574;">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="row">
+                                <div class="col-1">&nbsp;</div>
+                                <div class="col-12" style="text-align: left;">
+                                  <span style="color: #124574; font-size: 14px;"><b>@lang('hospital.Recepcion')</b></span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-12" style="height: 4px; ">
+                            </div>
+                            <div class="col-12">
+                              <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-4">
+                                  <p class="align-middle" style='text-align: center;margin:0;line-height: 1;color: #124574;'><span><b style="font-size: 30px;">{{date('d')}}</b></span><br><span style="line-height: 1; font-size: 16px; text-align: center"> @if(date('N') == 1) @lang('hospital.lunes') @elseif(date('N') == 2) @lang('hospital.martes') @elseif(date('N') == 3) @lang('hospital.miercoles') @elseif(date('N') == 4) @lang('hospital.jueves') @elseif(date('N') == 5) @lang('hospital.viernes') @elseif(date('N') == 6) @lang('hospital.sabado') @elseif(date('N') == 7) @lang('hospital.domingo') @endif</span></p>
+                                </div>
+                                <div class="col-6" style="text-align: left;">
+                                  <div style="height: 8px;"></div>
+                                  <span style="font-size:14px; text-align: left; color:#124574;">@if(date('m') == 1) @lang('hospital.enero') @elseif(date('m') == 2) @lang('hospital.febrero') @elseif(date('m') == 3) @lang('hospital.marzo') @elseif(date('m') == 4) @lang('hospital.abril') @elseif(date('m') == 5) @lang('hospital.mayo') @elseif(date('m') == 6) @lang('hospital.junio') @elseif(date('m') == 7) @lang('hospital.julio') @elseif(date('m') == 8) @lang('hospital.agosto') @elseif(date('m') == 9) @lang('hospital.septiembre') @elseif(date('m') == 10) @lang('hospital.octubre') @elseif(date('m') == 11) @lang('hospital.noviembre') @elseif(date('m') == 12) @lang('hospital.diciembre') @endif {{date('Y')}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <hr style="height: 0px;">
+                            <div class="col-12">
+                              <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-12">
+                                  <p style="font-size: 12px; text-align: left;"> </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-8 cambiar" style="line-height: 1;">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
+          <div class="col-lg-8 col-sm-12 col-12">
+            <div class="row">
+              <div class="col-sm-3 col-6" style="padding: 5px 2px;">
+                <a onclick="" class="boton" style="  height: 110px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                  <div class="row" style="text-align: center;">
+                    <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
+                      <img class="image_baner" src="{{asset('/')}}hc4/img/lab2.png" style="width: 95px;">
+                    </div>
+                    <div class="col-md-7 col-xs-6" style="width: 100%;color: #124574;padding-left: 0;">
+                      <p class="text_2" style="font-size: 15px"><b>@lang('hospital.Cirugia')</b></p>
+                      <!-- <p class="text_2" style="font-size: 15px"><b></b> @lang('hc4.ordenes')</p> -->
+                    </div>
+                  </div>
+                </a>
+                <a onclick="" class="boton" style="margin-top: 5px;  height: 112px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                  <div class="row plantilla" style="text-align: center;">
+                    <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
+                      <img class="image_baner" src="{{asset('/')}}hc4/img/exams_favoritos.png" style="width: 75px;">
+                    </div>
+                    <div class="col-md-7 col-xs-6" style="width: 100%; color: #124574;padding-left: 0;">
+                      <p style="font-size: 13px" class="text_2"><b>@lang('hospital.UCI')</b></p>
+                    </div>
+                  </div>
+                </a>
+              </div>
 
-        <div class="col-md-4">
-          <div class="col-md-12">
-            <label class="">PROCEDIMIENTOS</label>
+              <div class="col-sm-3 col-6" style="padding: 5px 2px;">
+                <a onclick="" class="boton" style="  height: 110px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                  <div class="row" style="text-align: center;">
+                    <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
+                      <img class="image_baner" src="{{asset('/')}}hc4/img/lab2.png" style="width: 95px;">
+                    </div>
+                    <div class="col-md-7 col-xs-6" style="width: 100%;color: #124574;padding-left: 0;">
+                      <p class="text_2" style="font-size: 15px"><b>@lang('hospital.Imagenes')</b></p>
+                      <!-- <p class="text_2" style="font-size: 15px"><b></b> @lang('hc4.ordenes')</p> -->
+                    </div>
+                  </div>
+                </a>
+                <a onclick="" class="boton" style="margin-top: 5px;  height: 112px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                  <div class="row plantilla" style="text-align: center;">
+                    <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
+                      <img class="image_baner" src="{{asset('/')}}hc4/img/exams_favoritos.png" style="width: 75px;">
+                    </div>
+                    <div class="col-md-7 col-xs-6" style="width: 100%; color: #124574;padding-left: 0;">
+                      <p style="font-size: 13px" class="text_2"><b>@lang('hospital.UCIN')</b></p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-sm-3 col-6" style="padding: 5px 2px;">
+                <a onclick="" class="boton" style="  height: 110px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                  <div class="row" style="text-align: center;">
+                    <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
+                      <img class="image_baner" src="{{asset('/')}}hc4/img/lab2.png" style="width: 95px;">
+                    </div>
+                    <div class="col-md-7 col-xs-6" style="width: 100%;color: #124574;padding-left: 0;">
+                      <p class="text_2" style="font-size: 15px"><b>@lang('hospital.Laboratorio')</b></p>
+                      <!-- <p class="text_2" style="font-size: 15px"><b></b> @lang('hc4.ordenes')</p> -->
+                    </div>
+                  </div>
+                </a>
+                <a onclick="" class="boton" style="margin-top: 5px;  height: 112px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                  <div class="row plantilla" style="text-align: center;">
+                    <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
+                      <img class="image_baner" src="{{asset('/')}}hc4/img/exams_favoritos.png" style="width: 75px;">
+                    </div>
+                    <div class="col-md-7 col-xs-6" style="width: 100%; color: #124574;padding-left: 0;">
+                      <p style="font-size: 13px" class="text_2"><b>@lang('hospital.Farmacia')</b></p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <div class="col-sm-3 col-6" style="padding: 5px 2px;">
+                <a onclick="" class="boton" style="  height: 110px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                  <div class="row" style="text-align: center;">
+                    <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
+                      <img class="image_baner" src="{{asset('/')}}hc4/img/lab2.png" style="width: 95px;">
+                    </div>
+                    <div class="col-md-7 col-xs-6" style="width: 100%;color: #124574;padding-left: 0;">
+                      <p class="text_2" style="font-size: 15px"><b>@lang('hospital.Emergencia')</b></p>
+                      <!-- <p class="text_2" style="font-size: 15px"><b></b> @lang('hc4.ordenes')</p> -->
+                    </div>
+                  </div>
+                </a>
+                <a onclick="" class="boton" style="margin-top: 5px;  height: 112px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                  <div class="row plantilla" style="text-align: center;">
+                    <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
+                      <img class="image_baner" src="{{asset('/')}}hc4/img/exams_favoritos.png" style="width: 75px;">
+                    </div>
+                    <div class="col-md-7 col-xs-6" style="width: 100%; color: #124574;padding-left: 0;">
+                      <p style="font-size: 13px" class="text_2"><b>@lang('hospital.Hospitalizacion')</b></p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="col-md-12">
-          <div class="col-md-6"></div>
-            <div class="col-md-6"></div>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-
         </div>
       </div>
     </div>
+
+
   </div>
-
-
   </div>
   </div>
 </section>
