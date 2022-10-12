@@ -120,6 +120,16 @@ class De_Documentos_Electronicos extends Model
         De_Documentos_Electronicos::where('clave_acceso', $docAnte->infoTributaria->claveAcceso)
             ->update($arrayDoc);
     }
+    public static function updateXmlNoAutorizacion($comp, $resp)
+    {
+        $docAnte = simplexml_load_string($comp);
+        $arrayDoc = [
+            'id_de_pasos' => 10,
+            'respuestaSriAutorizacion' => json_encode($resp)
+        ];
+        De_Documentos_Electronicos::where('clave_acceso', $docAnte->infoTributaria->claveAcceso)
+            ->update($arrayDoc);
+    }
     private static function to_xml(SimpleXMLElement $object, array $data)
     {
         foreach ($data as $key => $value) {
@@ -131,7 +141,6 @@ class De_Documentos_Electronicos extends Model
                 if ($key != 0 && $key == (int) $key) {
                     $key = "key_$key";
                 }
-
                 $object->addChild($key, $value);
             }
         }
