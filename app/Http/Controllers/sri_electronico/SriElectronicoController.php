@@ -35,7 +35,8 @@ class SriElectronicoController extends Controller
     }
     public function errorGeneral(Request $req)
     {
-        return De_Log_Error::where('id_documento', $req->id)->orderBy('id', 'desc')->first();
+        $error = De_Log_Error::where('id_documento', $req->id)->orderBy('id', 'desc')->first();
+        return $error;
     }
     public function traererrorTributario(Request $r)
     {

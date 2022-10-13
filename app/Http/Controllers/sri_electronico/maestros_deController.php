@@ -57,10 +57,8 @@ class maestros_deController extends Controller
         $idusuario = Auth::user()->id;
         date_default_timezone_set('America/Guayaquil');
         $config = array('firmar' => true, 'pass' =>  $request->clave_firma, 'file' => base_path() . '/storage/app/facturaelectronica/p12/' . $request->texfirma);
-
-
         //$firmar = new FirmaElectronica($config);
-
+        //echo '<pre>';print_r($request->input());exit;
         $deempresas = De_empresa::find($request['id']);
         $deempresas->id_empresa = $request->id_empresa;
         $deempresas->agente_retencion = $request->agente_retencion;
