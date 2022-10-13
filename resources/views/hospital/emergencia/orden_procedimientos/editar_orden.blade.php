@@ -499,6 +499,58 @@
               @endforeach
             </select>
           </div>
+        
+        @elseif($orden->tipo_procedimiento=='1')
+          @php $co_aceptacion  = 0; $aceptacion = 0;@endphp
+          <div class="col-12">&nbsp;</div>
+          <div class="col-12">&nbsp;</div>
+          <div class="col-md-12">
+            <div style="background-color: #004AC1; color: white">
+              <label style="font-family: 'Helvetica general';" for="id_procedimiento" class="col-md-12 control-label"> Procedimiento Funcional 
+              </label>
+            </div>
+          </div> 
+          <div class="col-md-12">
+            <select id="id_procedimiento_x" class="form-control input-sm select2_proc" name="x_procedimiento_func[]" multiple="multiple" data-placeholder="Seleccione" style="width: 100%;" autocomplete="off">
+              @php
+               $aceptacion = 0;
+               $validacion = null;
+              @endphp
+              @if(!is_null($x_orden_tipo_funcional))
+                @php
+                  $proc_quir = \Sis_medico\Orden_Procedimiento::where('id_orden_tipo',$x_orden_tipo_funcional->id)->get();
+                @endphp
+                @foreach($proc_quir as $value)
+                  @php
+                    $clase = 'c';
+                    if(!is_null($value->procedimiento->grupo_procedimiento)){
+                      $clase = $clase.$value->procedimiento->id_grupo_procedimiento;
+                    }
+                    $aceptacion++;
+                  @endphp
+                  <option disabled="disabled" class="{{$clase}}" selected value="{{$value->procedimiento->id}}">{{$value->procedimiento->nombre}}</option>
+                @endforeach
+              @endif
+              @foreach($px as $value)
+                @php
+                  $clase = 'c';
+                  if(!is_null($value->grupo_procedimiento)){
+                    $clase = $clase.$value->id_grupo_procedimiento;
+                  }
+                  if(!is_null($x_orden_tipo_funcional)){
+                    $validacion = \Sis_medico\Orden_Procedimiento::where('id_procedimiento', $value->id) ->where('id_orden_tipo',$x_orden_tipo_funcional->id)->first();
+                    if(!is_null($validacion)){
+                      $aceptacion++;
+                    }
+                  }
+                @endphp
+                @if(is_null($validacion))
+                  <option disabled="disabled" class="{{$clase}}" value="{{$value->id}}">{{$value->nombre}}</option>
+                @endif
+              @endforeach
+            </select>
+          </div>
+
         @elseif($orden->tipo_procedimiento=='2')
           @php $co_aceptacion  = 0;$aceptacion = 0;@endphp
           <div class="col-12">&nbsp;</div>
@@ -670,9 +722,11 @@
                 if(datahtml==1){
                   $("#req_val").fadeIn(1000);
                   $("#req_val").fadeOut(3000);
+                  //return Swal.fire(`{{trans('proforma.GuardadoCorrectamente')}}`);
                 }else{
                   $("#alerta_guardado{{$orden->id}}").fadeIn(1000);
                   $("#alerta_guardado{{$orden->id}}").fadeOut(3000);  
+                 // return Swal.fire(`{{trans('proforma.GuardadoCorrectamente')}}`);
                 }
               },
               error: function(){
@@ -694,9 +748,9 @@
               datatype: "html",
               data: $("#edit_orden{{$orden->id}}").serialize(),
               success: function(datahtml){
-
                 $("#alerta_guardado{{$orden->id}}").fadeIn(1000);
                 $("#alerta_guardado{{$orden->id}}").fadeOut(3000);
+                //return Swal.fire(`{{trans('proforma.GuardadoCorrectamente')}}`);
 
               },
               error:  function(){
@@ -708,6 +762,7 @@
         }else {
           $("#select_proc{{$orden->id}}").fadeIn(1000);
           $("#select_proc{{$orden->id}}").fadeOut(3000);
+          //return Swal.fire(`{{trans('proforma.GuardadoCorrectamente')}}`);
         }
       @endif 
     }   

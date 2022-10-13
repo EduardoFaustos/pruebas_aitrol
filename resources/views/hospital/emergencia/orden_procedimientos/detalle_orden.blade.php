@@ -7,7 +7,7 @@
       	   <span style="margin-right: 5px;border-radius: 2px;" class="badge badge-primary">{{trans('boxesh.DetalledeOrden')}}  @if(!is_null($txtprocedimientos)) {{$txtprocedimientos}} @endif</span>
         </div>
         <div class="col-md-2" style="text-align: right;padding-top: 6px">
-           <a class="btn btn-success" onclick="descargar_orden_imagenes({{$orden->id}});"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>{{trans('boxesh.Descargar')}} </a>
+        <a style="font-size: 15px; margin-bottom: 15px; height: 80%; width: 100%"  type="button" class="btn btn-success btn_ordenes" href="{{route('decimopaso.imprimir_orden_funcional_hospital', ['id' => $orden->id])}}" target="_blank"><span class="glyphicon glyphicon-download-alt" ></span>{{trans('boxesh.Descargar')}} </a>
         </div>
 	</div>
 
@@ -155,8 +155,8 @@
   		                <div class="col-md_12" >
 				        <center>
 				            <div class="col-md-5" style="padding-top: 15px;text-align: center;">
-				                <button style="font-size: 15px; margin-bottom: 15px; height: 80%; width: 100%"  type="button" class="btn btn-info btn_ordenes" onclick="descargar_orden_imagenes({{$orden->id}});"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp; {{trans('boxesh.DescargarOrden')}}
-				                </button>
+				                <a style="font-size: 15px; margin-bottom: 15px; height: 80%; width: 100%"  type="button" class="btn btn-info btn_ordenes" href="{{route('decimopaso.imprimir_orden_funcional_hospital', ['id' => $orden->id])}}" target="_blank"><span class="glyphicon glyphicon-download-alt" ></span>&nbsp;&nbsp; {{trans('boxesh.DescargarOrden')}}
+                                </a>
 				            </div>
 				        </center>
                     </div>
