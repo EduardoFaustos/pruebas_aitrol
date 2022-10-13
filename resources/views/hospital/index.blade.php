@@ -229,7 +229,7 @@
   </div>
   <div class="card card-solid">
     <div id="navbar" class="row" style="z-index: 99999">
-      <div class="col-lg-12 col-md-12" >
+      <div class="col-lg-12 col-md-12">
         <div class="row row_datos">
           <div class="col-lg-4 col-sm-12 col-12">
             <div class="row">
@@ -301,7 +301,7 @@
                     </div>
                   </div>
                 </a>
-                <a onclick="" class="boton" style="margin-top: 5px;  height: 112px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                <a href="{{route('uci.index')}}" class="boton" style="margin-top: 5px;  height: 112px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
                   <div class="row plantilla" style="text-align: center;">
                     <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
                       <img class="image_baner" src="{{asset('/')}}hc4/img/exams_favoritos.png" style="width: 75px;">
@@ -447,5 +447,7 @@
     }(jQuery));
 
   });
+
+ 
 </script>
 @endsection
