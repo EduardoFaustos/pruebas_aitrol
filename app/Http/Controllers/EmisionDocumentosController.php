@@ -6,7 +6,6 @@ use DOMDocument;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Sis_medico\Barcode;
 use Sis_medico\Ct_Caja;
 use Sis_medico\Ct_Guia_Remision_Cabecera;
@@ -56,16 +55,16 @@ class EmisionDocumentosController extends Controller
         if ($req->opcion == '') {
             if (isset($req->idUsuario)) {
                 $this->getGuiaRemision(null, $req->idUsuario);
-                $this->getNotaCredito(null, $req->idUsuario);
+                //$this->getNotaCredito(null, $req->idUsuario);
                 //$this->getFactura(null, $req->idUsuario);
                 $this->getRetencion(null, $req->idUsuario);
                 // $this->getNotaDebito(null, $req->idUsuario);
                 // $this->getLiquidacion(null, $req->idUsuario);
             } else {
                 $this->getGuiaRemision(null);
-                $this->getNotaCredito();
+                //$this->getNotaCredito();
                 //$this->getFactura(null);
-                $this->getRetencion(null);
+                //$this->getRetencion(null);
                 // $this->getNotaDebito();
                 // $this->getLiquidacion();
             }
@@ -203,7 +202,7 @@ class EmisionDocumentosController extends Controller
             ', 'guiaRemision', 'firma.p12', '3duard0faustos');
         }
     }
-    public function getGuiaRemision($dinfo = null, $idUsuario = '0921605895')
+    public function getGuiaRemision($dinfo = null, $idUsuario = 'FACELECTRO')
     {
         $data = [];
         $id_doc = 0;
@@ -215,6 +214,7 @@ class EmisionDocumentosController extends Controller
                 $guiaCabecera = Ct_Guia_Remision_Cabecera::getGuiaCabecera();
 
                 if (count($guiaCabecera) > 0) {
+                    $dds = !$this->consultarEstadoSRI($guiaCabecera[0]->id_empresa);
                     if (!$this->consultarEstadoSRI($guiaCabecera[0]->id_empresa)) {
                         $arrayLog = [
                             'id_de_documentos_electronicos' => $id_doc,
@@ -493,22 +493,37 @@ class EmisionDocumentosController extends Controller
                                                     De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
                                                     //autorzacion sri
                                                     $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
-                                                    $this->generarXmlAutorizacion($respuestaAutorizacion);
-                                                    De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
-                                                    Ct_Guia_Remision_Cabecera::updateXmlAutorizacion($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id, $docAnte->infoTributaria->claveAcceso, $secuancialDocumento);
-                                                    $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
-                                                    $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
-                                                    $param = [
-                                                        'email' => $row->email_traslado_destinatario,
-                                                        'nombre' => $row->razon_social_destinatario,
-                                                        'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
-                                                        'estab' => $data['infoTributaria']['estab'],
-                                                        'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
-                                                        'secuencial' =>  $data['infoTributaria']['secuencial'],
-                                                        'tipoDoc' => $data['infoTributaria']['codDoc'],
-                                                        'fechaEmision' => $data['infoTributaria']['fecha_emision'],
-                                                    ];
-                                                    $this->enviar_correo($param);
+                                                    $estadoAutorizacion = $this->generarXmlAutorizacion($respuestaAutorizacion);
+                                                    if ($estadoAutorizacion == 'AUTORIZADO') {
+                                                        De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
+                                                        Ct_Guia_Remision_Cabecera::updateXmlAutorizacion($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id, $docAnte->infoTributaria->claveAcceso, $secuancialDocumento);
+                                                        $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
+                                                        $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
+                                                        $param = [
+                                                            'email' => $row->email_traslado_destinatario,
+                                                            'nombre' => $row->razon_social_destinatario,
+                                                            'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
+                                                            'estab' => $data['infoTributaria']['estab'],
+                                                            'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
+                                                            'secuencial' =>  $data['infoTributaria']['secuencial'],
+                                                            'tipoDoc' => $data['infoTributaria']['codDoc'],
+                                                            'fechaEmision' => $data['infoTributaria']['fecha_emision'],
+                                                        ];
+                                                        $this->enviar_correo($param);
+                                                    } else {
+                                                        De_Documentos_Electronicos::updateXmlNoAutorizacion($comprobante, $respuestaAutorizacion);
+                                                        Ct_Guia_Remision_Cabecera::updateXmlNoAutorizacion($row->id);
+                                                        $arrayLog = [
+                                                            'id_de_documentos_electronicos' => $id_doc,
+                                                            'descripcion_error' => json_encode($respuestaAutorizacion),
+                                                            'id_documento' => $row->id,
+                                                            'id_usuariomod' => $idUsuario,
+                                                            'id_usuariocrea' =>  $idUsuario,
+                                                            'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                            'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                        ];
+                                                        De_Log_Error::setErrorLog($arrayLog);
+                                                    }
                                                 } else {
                                                     $this->generarXmlRespuesta($respuesta, $data['infoTributaria']['claveAcceso']);
                                                     De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
@@ -589,7 +604,7 @@ class EmisionDocumentosController extends Controller
             return;
         }
     }
-    public function getFactura($dinfo = null, $idUsuario = '0921605895')
+    public function getFactura($dinfo = null, $idUsuario = 'FACELECTRO')
     {
         $data = [];
         $id_doc = 0;
@@ -1116,7 +1131,7 @@ class EmisionDocumentosController extends Controller
                             ]);
                         if (count($formasPagos) > 0) {
                             foreach ($formasPagos as $formaPago) {
-                                $pago['formaPago'] = str_pad($dinfo['pago']['forma_pago'], 2, 0, STR_PAD_LEFT);
+                                $pago['formaPago'] = str_pad($formaPago->codigo, 2, 0, STR_PAD_LEFT);
                                 $pago['total'] = $venta->total_final;
                                 $pago['plazo'] = $venta->dias_plazo;
                                 $pago['unidadTiempo'] = 'dias';
@@ -1165,7 +1180,7 @@ class EmisionDocumentosController extends Controller
                         }
                         $data['detalles'] = $detalles;
                         $campoAdicional['nombre'] = "detalle";
-                        $campoAdicional['valor']  = $venta->nota_electronica != '' ? $venta->nota_electronica : 'No necesita datos adicionales';
+                        $campoAdicional['valor']  = $venta->nota_electronica;
                         $informacion_adicional[0] = $campoAdicional;
                         $infoAdicional['campoAdicional'] = $informacion_adicional;
                         $data['infoAdicional'] = $informacion_adicional;
@@ -1190,7 +1205,7 @@ class EmisionDocumentosController extends Controller
                                 'id_documento' => $venta->id,
                             ];
                             $id_doc = De_Documentos_Electronicos::setDocElectronico($arrayDocElec, 7);
-                            Ct_Guia_Remision_Cabecera::updateSinGenerarXML($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $venta->id, $data['infoTributaria']['claveAcceso']);
+                            Ct_ventas::updateSinGenerarXML($venta->id);
                             $idInsertados .= $id_doc . ',';
                             $arrayLog = [
                                 'id_de_documentos_electronicos' => $id_doc,
@@ -1271,26 +1286,42 @@ class EmisionDocumentosController extends Controller
                                                 $secuancialDocumento = (int)$data['infoTributaria']['secuencial'];
                                                 De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
                                                 //autorzacion sri
+
                                                 $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso, $data['infoTributaria']['ambiente']);
-                                                $this->generarXmlAutorizacion($respuestaAutorizacion);
-                                                De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
-                                                Ct_ventas::updateXmlAutorizacion($venta->id);
-                                                $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
-                                                $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
-                                                $param = [
-                                                    'email' => $venta->email_traslado_destinatario,
-                                                    'nombre' => $venta->razon_social_destinatario,
-                                                    'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
-                                                    'estab' => $data['infoTributaria']['estab'],
-                                                    'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
-                                                    'secuencial' =>  $data['infoTributaria']['secuencial'],
-                                                    'tipoDoc' => $this->tipoDocumento
-                                                ];
-                                                $this->enviar_correo($param);
-                                                $arrayVentaAct = [
-                                                    'numero' => $data['infoTributaria']['secuencial']
-                                                ];
-                                                Ct_ventas::where('id', $venta->id)->update($arrayVentaAct);
+                                                $estadoAutorizacion = $this->generarXmlAutorizacion($respuestaAutorizacion);
+                                                if ($estadoAutorizacion == 'AUTORIZADO') {
+                                                    De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
+                                                    Ct_ventas::updateXmlAutorizacion($venta->id);
+                                                    $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
+                                                    $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
+                                                    $param = [
+                                                        'email' => $venta->email_representante,
+                                                        'nombre' => $venta->nombre,
+                                                        'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
+                                                        'estab' => $data['infoTributaria']['estab'],
+                                                        'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
+                                                        'secuencial' =>  $data['infoTributaria']['secuencial'],
+                                                        'tipoDoc' => $this->tipoDocumento
+                                                    ];
+                                                    $this->enviar_correo($param);
+                                                    $arrayVentaAct = [
+                                                        'numero' => $data['infoTributaria']['secuencial']
+                                                    ];
+                                                    Ct_ventas::where('id', $venta->id)->update($arrayVentaAct);
+                                                } else {
+                                                    De_Documentos_Electronicos::updateXmlNoAutorizacion($comprobante, $respuestaAutorizacion);
+                                                    Ct_ventas::updateXmlNoAutorizacion($venta->id);
+                                                    $arrayLog = [
+                                                        'id_de_documentos_electronicos' => $id_doc,
+                                                        'descripcion_error' => json_encode($respuestaAutorizacion),
+                                                        'id_documento' => $venta->id,
+                                                        'id_usuariomod' => $idUsuario,
+                                                        'id_usuariocrea' =>  $idUsuario,
+                                                        'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                        'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                    ];
+                                                    De_Log_Error::setErrorLog($arrayLog);
+                                                }
                                             } else {
                                                 $this->generarXmlRespuesta($respuesta);
                                                 De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
@@ -1834,7 +1865,7 @@ class EmisionDocumentosController extends Controller
         $erf = ApiFacturacionController::crearComprobante($nfactura, $data, $arr_p, $id_venta, $id_empresa, $total_pagos);
         return true;
     }
-    public function getRetencion($dinfo = null, $idUsuario = '0921605895')
+    public function getRetencion($dinfo = null, $idUsuario = 'FACELECTRO')
     {
         $data = [];
         $id_doc = 0;
@@ -2123,21 +2154,37 @@ class EmisionDocumentosController extends Controller
                                                     De_Info_Tributaria::updateNumDocumento($empresa->id, $numDocumento, $secuancialDocumento, $datosTributarios->id_sucursal, $datosTributarios->id_caja, $datosTributarios->id_maestro_documentos);
                                                     //autorzacion sri
                                                     $respuestaAutorizacion = $this->autorizacion_sri($docAnte->infoTributaria->claveAcceso);
-                                                    $this->generarXmlAutorizacion($respuestaAutorizacion);
-                                                    De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
-                                                    Ct_Retenciones::updateXmlAutorizacion($row->id, $docAnte->infoTributaria->claveAcceso, str_pad($secuancialDocumento, 9, '0', STR_PAD_LEFT));
-                                                    $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
-                                                    $this->generarPdf($docAnte->infoTributaria->claveAcceso);
-                                                    $param = [
-                                                        'email' => $row->email_traslado_destinatario,
-                                                        'nombre' => $row->razon_social_destinatario,
-                                                        'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
-                                                        'estab' => $data['infoTributaria']['estab'],
-                                                        'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
-                                                        'secuencial' =>  $data['infoTributaria']['secuencial'],
-                                                        'tipoDoc' => $this->tipoDocumento
-                                                    ];
-                                                    $this->enviar_correo($param);
+                                                    $estadoAutorizacion = $this->generarXmlAutorizacion($respuestaAutorizacion);
+                                                    if ($estadoAutorizacion == 'AUTORIZADO') {
+                                                        De_Documentos_Electronicos::updateXmlAutorizacion($comprobante, $respuesta);
+                                                        Ct_Retenciones::updateXmlAutorizacion($empresa->id, $data['infoTributaria']['estab'], $data['infoTributaria']['ptoEmi'], $row->id, $docAnte->infoTributaria->claveAcceso, $secuancialDocumento);
+                                                        $claveInsertados .= $data['infoTributaria']['claveAcceso'] . ',';
+                                                        $this->generarPdf($docAnte->infoTributaria->claveAcceso, '', $this->tipoDocumento);
+                                                        $param = [
+                                                            'email' => $row->email_traslado_destinatario,
+                                                            'nombre' => $row->razon_social_destinatario,
+                                                            'claveAcceso' => $docAnte->infoTributaria->claveAcceso,
+                                                            'estab' => $data['infoTributaria']['estab'],
+                                                            'ptoEmi' =>  $data['infoTributaria']['ptoEmi'],
+                                                            'secuencial' =>  $data['infoTributaria']['secuencial'],
+                                                            'tipoDoc' => $data['infoTributaria']['codDoc'],
+                                                            'fechaEmision' => $data['infoTributaria']['fecha_emision'],
+                                                        ];
+                                                        $this->enviar_correo($param);
+                                                    } else {
+                                                        De_Documentos_Electronicos::updateXmlNoAutorizacion($comprobante, $respuestaAutorizacion);
+                                                        Ct_Retenciones::updateXmlNoAutorizacion($row->id);
+                                                        $arrayLog = [
+                                                            'id_de_documentos_electronicos' => $id_doc,
+                                                            'descripcion_error' => json_encode($respuestaAutorizacion),
+                                                            'id_documento' => $row->id,
+                                                            'id_usuariomod' => $idUsuario,
+                                                            'id_usuariocrea' =>  $idUsuario,
+                                                            'ip_creacion' => $_SERVER['REMOTE_ADDR'],
+                                                            'ip_modificacion' =>  $_SERVER['REMOTE_ADDR'],
+                                                        ];
+                                                        De_Log_Error::setErrorLog($arrayLog);
+                                                    }
                                                 } else {
                                                     $this->generarXmlRespuesta($respuesta);
                                                     De_Documentos_Electronicos::updateXmlNoRecepcion($comprobante, $respuesta);
@@ -2217,7 +2264,7 @@ class EmisionDocumentosController extends Controller
             return;
         }
     }
-    public function getNotaCredito($dinfo = null, $idUsuario = '0921605895')
+    public function getNotaCredito($dinfo = null, $idUsuario = 'FACELECTRO')
     {
         $data = [];
         $id_doc = 0;
@@ -2289,6 +2336,7 @@ class EmisionDocumentosController extends Controller
                                 $infoTributaria['claveAcceso'] = $claveObj->clave_acceso;
                                 $data['infoTributaria'] = $infoTributaria;
                                 //Info Nota Credito
+
                                 $infoNotaCredito['fechaEmision'] = $row->fecha;
                                 $sucursal = Ct_Sucursales::where('id_empresa', $empresa->id)
                                     ->where('codigo_sucursal', $infoTributaria['estab'])
@@ -2299,13 +2347,22 @@ class EmisionDocumentosController extends Controller
                                     $infoNotaCredito['dirEstablecimiento'] = $empresa->direccion;
                                 }
                                 $telefonoCliente = '';
-                                $details       = Ct_Detalle_Credito_Clientes::where('id_not_cred', $row->id)->first();
-                                $venta_detalle = Ct_detalle_venta::where('id_ct_ventas', $row->id_factura)->get();
+                                $direccionCliente = '';
+                                $emailCliente = '';
                                 $cliente = Ct_Clientes::getCliente($row->id_cliente);
 
                                 if ($cliente != '') {
-                                    $email = $cliente->email_representante;
-                                    $telefonoCliente = $cliente->telefono1;
+                                    if (isset($cliente->email_representante)) {
+                                        $emailCliente = $cliente->email_representante;
+                                    }
+
+                                    if (isset($cliente->telefono1_representante)) {
+                                        $telefonoCliente = $cliente->telefono1_representante;
+                                    }
+
+                                    if (isset($cliente->direccion_representante)) {
+                                        $direccionCliente = $cliente->direccion_representante;
+                                    }
                                     $infoNotaCredito['tipoIdentificacionComprador'] = str_pad($cliente->tipo, 2, 0, STR_PAD_LEFT);
                                     $infoNotaCredito['razonSocialComprador'] = $cliente->nombre;
                                     $infoNotaCredito['identificacionComprador'] = $cliente->identificacion;
@@ -2325,51 +2382,45 @@ class EmisionDocumentosController extends Controller
                                     $infoNotaCredito['rise'] = $datosFirma->rise; //Opcional
 
                                 $infoNotaCredito['codDocModificado'] = '01';
-
-                                $idFactura = $row->id_factura;
-                                $factura = Ct_ventas::find($idFactura)->first();
-                                if (!is_null($factura)) {
-                                    $infoNotaCredito['fechaEmisionDocSustento'] = $factura->fecha;
-                                }
-
                                 $factura = null;
-                                if (!is_null($idFactura)) {
-                                    $factura = Ct_ventas::find($idFactura)->first();
-                                }
+                                $idFactura = $row->numero_factura; //numero_factura es id_factura cuando es completa; id_factura para parcial
+                                $factura = Ct_ventas::find($idFactura)->first();
 
                                 if (!is_null($factura)) {
-                                    $infoNotaCredito['numDocModificado']  = $factura->nro_comprobante;
                                     $infoNotaCredito['fechaEmisionDocSustento'] = $factura->fecha;
-                                } else {
-                                    $infoNotaCredito['numDocModificado']  = $row->numero_factura;
-                                    $infoNotaCredito['fechaEmisionDocSustento'] = $row->fecha;
+                                    $infoNotaCredito['numDocModificado']  = str_replace('-', '', $factura->nro_comprobante);
+                                    $infoNotaCredito['fechaEmisionDocSustento'] = $factura->fecha;
                                 }
                                 $infoNotaCredito['totalSinImpuestos'] = $row->subtotal0;
-                                $infoNotaCredito['valorModificacion'] = $row->total_final;
-                                $infoNotaCredito['moneda'] = 'Dolar'; //Ct_Divisas::getMoneda();
-
+                                $infoNotaCredito['valorModificacion'] = $row->total_credito;
+                                $divisa = Ct_Divisas::getMoneda($factura->divisas); //Ct_Divisas::where('id',$factura->divisas);
+                                $infoNotaCredito['moneda'] = $divisa;
                                 $totalConImpuestos = [];
                                 $totalConImpuesto = [];
                                 $conImpuesto = 0;
-                                //$impuestos = Ct_Detalle_Rubro_Credito::getDetalles($row->id);
-                                $details       = Ct_Detalle_Credito_Clientes::where('id_not_cred', $row->id)->first();
-                                $venta_detalle = Ct_detalle_venta::where('id_ct_ventas', $row->id_factura)->get();
+                                // $details       = Ct_Detalle_Credito_Clientes::where('id_not_cred', $row->id)->first();
+                                $venta_detalle = Ct_detalle_venta::where('id_ct_ventas', $row->numero_factura)->get();
+
                                 if (count($venta_detalle) > 0) {
                                     foreach ($venta_detalle as $detail) {
-                                        // if ($detail->check_iva == 1)
-                                        //     $codigoImpuesto = De_Codigo_Impuestos::where('id', 1)->first();
-                                        // else
-                                        //     $codigoImpuesto = De_Codigo_Impuestos::where('id', 2)->first();
-
                                         $totalConImpuesto['codigo'] = '2'; //IVA
+                                        /*
+                                                Porcentaje            Codigo
+                                                    0%                  0
+                                                    12%                 2
+                                                    14%                 3
+                                            No Objeto de Impuesto       6
+                                            Exento de IVA               7
+                                        */
                                         if ($detail->check_iva == 1) {
-                                            $totalConImpuesto['codigoPorcentaje'] = '12';
+
+                                            $totalConImpuesto['codigoPorcentaje'] = '2'; //como se cuando son los otros tipos de iva 
                                             $totalConImpuesto['valor'] = $this->getDecimal(($detail->precio * $detail->cantidad) * $detail->porcentaje);
                                         } else {
                                             $totalConImpuesto['codigoPorcentaje'] = '0';
                                             $totalConImpuesto['valor'] = $this->getDecimal(0);
                                         }
-                                        $totalConImpuesto['descuentoAdicional'] = $detail->descuento;
+                                        //$totalConImpuesto['descuentoAdicional'] = $detail->descuento;
                                         $totalConImpuesto['baseImponible'] = ($detail->cantidad * $detail->precio) - $detail->descuento;
 
                                         $totalConImpuestos[$conImpuesto] = $totalConImpuesto;
@@ -2377,18 +2428,15 @@ class EmisionDocumentosController extends Controller
                                     }
                                 }
                                 $infoNotaCredito['totalConImpuestos'] = $totalConImpuestos;
-                                $infoNotaCredito['importeTotal'] = $row->total_final;
-                                $infoNotaCredito['moneda'] = 'Dolar'; //Ct_Divisas::getMoneda();
-
+                                $infoNotaCredito['motivo'] = $row->concepto;
                                 $data['infoNotaCredito'] = $infoNotaCredito;
 
                                 //detalles
                                 $detalle = [];
                                 $detalles = [];
                                 $conDetalle = 0;
-                                $detalleNotaCredito = Ct_Detalle_Rubro_Credito::getDetalles($row->id);
-                                if (count($detalleNotaCredito) > 0) {
-                                    foreach ($detalleNotaCredito as $deta) {
+                                if (count($venta_detalle) > 0) {
+                                    foreach ($venta_detalle as $deta) {
                                         $detalle['p_impuesto'] = $deta->check_iva !== null ? 12 : 0;
                                         $detalle['codigoInterno'] = $deta->id_ct_productos;
                                         $detalle['codigoAdicional'] = $deta->id_ct_productos;
@@ -2396,8 +2444,9 @@ class EmisionDocumentosController extends Controller
                                         $detalle['cantidad'] = $deta->cantidad;
                                         $detalle['precioUnitario'] = $deta->precio;
                                         $detalle['descuento'] = $deta->descuento;
-                                        $detalle['precioTotalSinImpuesto'] = $row->subtotal_0 + $row->subtotal_12;
+                                        $detalle['precioTotalSinImpuesto'] = $row->sub_sin_imp;
                                         $contAdicional = 0;
+
                                         if ($deta->detalle != '') {
                                             $detAdicional = [
                                                 'nombre' => 'detalle',
@@ -2407,11 +2456,28 @@ class EmisionDocumentosController extends Controller
                                         }
                                         if ($deta->adicional != '') {
                                             $detAdicional_ = [
-                                                'nombre' => 'adicional',
+                                                'nombre' => 'adicional1',
                                                 'valor' => $deta->adicional
                                             ];
                                             $contAdicional++;
                                         }
+                                        if ($deta->nombre != '') {
+                                            $detAdicional_ = [
+                                                'nombre' => 'nombre',
+                                                'valor' => $deta->nombre
+                                            ];
+                                            $contAdicional++;
+                                        }
+                                        if ($contAdicional < 3) {
+                                            if ($deta->bodega != '') {
+                                                $detAdicional_ = [
+                                                    'nombre' => 'bodega',
+                                                    'valor' => $deta->bodega
+                                                ];
+                                                $contAdicional++;
+                                            }
+                                        }
+
                                         if ($contAdicional > 0) {
                                             $detallesAdicionales = [isset($detAdicional) ? $detAdicional : [], isset($detAdicional_) ? $detAdicional_ : []];
                                             $detalle['detallesAdicionales'] = $detallesAdicionales;
@@ -2423,27 +2489,27 @@ class EmisionDocumentosController extends Controller
                                 $data['detalles'] = $detalles;
 
                                 $cont = 0;
-                                if (isset($row->nota_electronica) && $row->nota_electronica != '') {
-                                    $campoAdicional['nombre'] = "detalle";
-                                    $campoAdicional['valor'] =  $row->nota_electronica;
-                                    $informacion_adicional[$cont]['campoAdicional'] = $campoAdicional;
+                                if (isset($row->concepto) && $row->concepto != '') {
+                                    $campoAdicional['nombre'] = "concepto";
+                                    $campoAdicional['valor'] =  $row->concepto;
+                                    $informacion_adicional[$cont] = $campoAdicional;
                                     $cont++;
                                 }
-                                if (isset($row->email_cliente) && $row->email_cliente != '') {
+                                if ($emailCliente != '') {
                                     $campoAdicional['nombre'] = "email";
-                                    $campoAdicional['valor']  =  $row->email_cliente;
-                                    $informacion_adicional[$cont]['campoAdicional'] = $campoAdicional;
+                                    $campoAdicional['valor']  =  $emailCliente;
+                                    $informacion_adicional[$cont] = $campoAdicional;
                                     $cont++;
                                 }
-                                $campoAdicional['nombre'] = "telefono";
-                                if (isset($row->telefono_cliente) && $row->telefono_cliente != '') {
-                                    $campoAdicional['valor'] =  $row->telefono_cliente;
-                                } elseif (isset($row->direccion_cliente) && $row->direccion_cliente != '') {
+
+                                if ($telefonoCliente != '') {
+                                    $campoAdicional['nombre'] = "telefono";
+                                    $campoAdicional['valor'] =  $telefonoCliente;
+                                } elseif ($direccionCliente != '') {
                                     $campoAdicional['nombre'] = "direccion";
-                                    $campoAdicional['valor'] =  $row->direccion_cliente;
-                                    $informacion_adicional[$cont]['campoAdicional'] = $campoAdicional;
+                                    $campoAdicional['valor'] =  $direccionCliente;
                                 }
-                                $informacion_adicional[$cont]['campoAdicional'] = $campoAdicional;
+                                $informacion_adicional[$cont] = $campoAdicional;
                                 $infoAdicional['campoAdicional'] = $informacion_adicional;
 
                                 $data['infoAdicional'] = $informacion_adicional;
@@ -2510,9 +2576,11 @@ class EmisionDocumentosController extends Controller
                                 if (is_numeric($id_doc)) {
                                     $idInsertados .= $id_doc . ',';
                                     $comprobante = $this->generarDocElectronicoXml($data);
+                                    //dd($comprobante);
                                     Ct_Nota_Credito_Clientes::updateGenerarXML($row->id, $data['infoTributaria']['claveAcceso']);
                                     if (!empty($comprobante)) {
                                         $docAnte = simplexml_load_string($comprobante);
+                                        //dd($docAnte);
                                         if (!empty($docAnte)) {
                                             //validar xsd
                                             $validacion = $this->validarXmlToXsd($comprobante);
@@ -2721,80 +2789,71 @@ class EmisionDocumentosController extends Controller
                             $infoNotaCredito['direccionComprador'] = null; //Opcional
                         }
                         $infoNotaCredito['totalSinImpuestos'] = $notaCredito->subtotal_0 + $notaCredito->subtotal_12;
-                        $infoNotaCredito['totalConImpuestos'] = $notaCredito->total_final;
+                        $infoNotaCredito['codDocModificado'] = '01';
+                        $factura = null;
+                        $idFactura = $notaCredito->numero_factura; //numero_factura es id_factura cuando es completa; id_factura para parcial
+                        $factura = Ct_ventas::find($idFactura)->first();
+
+                        if (!is_null($factura)) {
+                            $infoNotaCredito['fechaEmisionDocSustento'] = $factura->fecha;
+                            $infoNotaCredito['numDocModificado']  = $factura->nro_comprobante;
+                        }
+                        $infoNotaCredito['totalSinImpuestos'] = $notaCredito->subtotal0;
+                        $infoNotaCredito['valorModificacion'] = $notaCredito->total_final;
+                        $divisa = Ct_Divisas::getMoneda($factura->divisas); //Ct_Divisas::where('id',$factura->divisas);
+                        $infoNotaCredito['moneda'] = $divisa;
                         $totalConImpuestos = [];
                         $totalConImpuesto = [];
                         $conImpuesto = 0;
-                        $impuestos = Ct_detalle_venta::getDetalles($notaCredito->id);
-                        if (count($impuestos) > 0) {
-                            foreach ($impuestos as $impuesto) {
-                                if ($impuesto->check_iva == 1)
-                                    $codigoImpuesto = De_Codigo_Impuestos::where('id', 1)->first();
-                                else
-                                    $codigoImpuesto = De_Codigo_Impuestos::where('id', 2)->first();
-                                $totalConImpuesto['codigo'] = $codigoImpuesto->codigo_impuesto;
-                                $totalConImpuesto['codigoPorcentaje'] = $codigoImpuesto->codigo;
-                                $totalConImpuesto['descuentoAdicional'] = $impuesto->descuento;
-                                $totalConImpuesto['baseImponible'] = ($impuesto->cantidad * $impuesto->precio) - $impuesto->descuento;
-                                if ($impuesto->check_iva == 1)
-                                    $totalConImpuesto['valor'] = $this->getDecimal(($impuesto->precio * $impuesto->cantidad) * $impuesto->porcentaje);
-                                else
+                        // $details       = Ct_Detalle_Credito_Clientes::where('id_not_cred', $notaCredito->id)->first();
+                        $venta_detalle = Ct_detalle_venta::where('id_ct_ventas', $idFactura)->get();
+                        if (count($venta_detalle) > 0) {
+                            foreach ($venta_detalle as $detail) {
+                                $totalConImpuesto['codigo'] = '2'; //IVA
+                                if ($detail->check_iva == 1) {
+                                    $totalConImpuesto['codigoPorcentaje'] = '12';
+                                    $totalConImpuesto['valor'] = $this->getDecimal(($detail->precio * $detail->cantidad) * $detail->porcentaje);
+                                } else {
+                                    $totalConImpuesto['codigoPorcentaje'] = '0';
                                     $totalConImpuesto['valor'] = $this->getDecimal(0);
-                                array_push($totalConImpuestos, $totalConImpuesto);
+                                }
+                                $totalConImpuesto['descuentoAdicional'] = $detail->descuento;
+                                $totalConImpuesto['baseImponible'] = ($detail->cantidad * $detail->precio) - $detail->descuento;
+
+                                $totalConImpuestos[$conImpuesto] = $totalConImpuesto;
                                 $conImpuesto++;
                             }
                         }
-                        $infoFactura['totalConImpuestos'] = $totalConImpuestos;
-                        $infoFactura['propina'] = $this->getDecimal(0);
-                        $infoFactura['importeTotal'] = $notaCredito->total_final;
-                        $infoFactura['moneda'] = Ct_Divisas::getMoneda();
-                        $detallePagos = Ct_detalle_venta::getDetalles($notaCredito->id);
-                        //Formas de pago
-                        $pagos = [];
-                        $pago = [];
-                        $conPagos = 0;
-                        $formasPagos = Ct_Forma_Pago::join('ct_tipo_pago as t', 'ct_forma_pago.tipo', '=', 't.id')
-                            ->where('id_ct_ventas', $notaCredito->id)->get([
-                                't.codigo'
-                            ]);
-                        if (count($formasPagos) > 0) {
-                            foreach ($formasPagos as $formaPago) {
-                                $pago['formaPago'] = str_pad($formaPago->codigo, 2, 0, STR_PAD_LEFT);
-                                $pago['total'] = $notaCredito->total_final;
-                                $pago['plazo'] = $notaCredito->dias_plazo;
-                                $pago['unidadTiempo'] = 'dias';
-                                array_push($pagos, $pago);
-                            }
-                        }
-                        $infoFactura['pagos'] = $pagos;
-                        $data['infoFactura'] = $infoFactura;
+                        $infoNotaCredito['totalConImpuestos'] = $totalConImpuestos;
+                        $infoNotaCredito['motivo'] = $notaCredito->concepto;
+                        $data['infoNotaCredito'] = $infoNotaCredito;
+
                         //detalles
                         $detalle = [];
                         $detalles = [];
                         $conDetalle = 0;
-                        $detalleFactura = Ct_detalle_venta::getDetalles($notaCredito->id);
-                        if (count($detalleFactura) > 0) {
-                            foreach ($detalleFactura as $detaFactura) {
-                                $detalle['p_impuesto'] = $detaFactura->check_iva !== null ? 12 : 0;
-                                $detalle['codigoPrincipal'] = $detaFactura->id_ct_productos;
-                                $detalle['codigoAuxiliar'] = $detaFactura->id_ct_productos;
-                                $detalle['descripcion'] = $detaFactura->nombre;
-                                $detalle['cantidad'] = $detaFactura->cantidad;
-                                $detalle['precioUnitario'] = $detaFactura->precio;
-                                $detalle['descuento'] = $detaFactura->descuento;
-                                $detalle['precioTotalSinImpuesto'] = $notaCredito->subtotal_0 + $notaCredito->subtotal_12;
+                        if (count($venta_detalle) > 0) {
+                            foreach ($venta_detalle as $deta) {
+                                $detalle['p_impuesto'] = $deta->check_iva !== null ? 12 : 0;
+                                $detalle['codigoInterno'] = $deta->id_ct_productos;
+                                $detalle['codigoAdicional'] = $deta->id_ct_productos;
+                                $detalle['descripcion'] = $deta->nombre;
+                                $detalle['cantidad'] = $deta->cantidad;
+                                $detalle['precioUnitario'] = $deta->precio;
+                                $detalle['descuento'] = $deta->descuento;
+                                $detalle['precioTotalSinImpuesto'] = $notaCredito->sub_sin_imp;
                                 $contAdicional = 0;
-                                if ($detaFactura->detalle != '') {
+                                if ($deta->detalle != '') {
                                     $detAdicional = [
                                         'nombre' => 'detalle',
-                                        'valor' => $detaFactura->detalle
+                                        'valor' => $deta->detalle
                                     ];
                                     $contAdicional++;
                                 }
-                                if ($detaFactura->adicional != '') {
+                                if ($deta->adicional != '') {
                                     $detAdicional_ = [
                                         'nombre' => 'adicional',
-                                        'valor' => $detaFactura->adicional
+                                        'valor' => $deta->adicional
                                     ];
                                     $contAdicional++;
                                 }
@@ -2806,14 +2865,17 @@ class EmisionDocumentosController extends Controller
                                 $conDetalle++;
                             }
                         }
-
                         $data['detalles'] = $detalles;
                         $campoAdicional['nombre'] = "detalle";
                         $campoAdicional['valor']  = $notaCredito->nota_electronica;
                         $informacion_adicional[0] = $campoAdicional;
                         $infoAdicional['campoAdicional'] = $informacion_adicional;
                         $data['infoAdicional'] = $informacion_adicional;
+                        echo '<pre>';
+                        print_r($data);
+                        exit;
                         $errores = $this->validarData($data);
+
                         //Creacion XML
                         $arrayLogError = [
                             'id_de_pasos' => 1,
@@ -2963,7 +3025,7 @@ class EmisionDocumentosController extends Controller
             return;
         }
     }
-    public static function getNotaDebito($dinfo = null, $idUsuario = '0921605895')
+    public static function getNotaDebito($dinfo = null, $idUsuario = 'FACELECTRO')
     {
     }
     public static function getLiquidacion()
@@ -3079,12 +3141,10 @@ class EmisionDocumentosController extends Controller
             } else {
                 //InfoFactura
                 //validar si la empresa esta habilitada como facturacion electronica
-                $deEmpresa = De_Empresa::where('id_empresa', $empresa);
+                $deEmpresa = De_Empresa::where('id_empresa', $empresa->id)->first();
+                //dd($deEmpresa,$empresa);
                 if (is_null($deEmpresa)) {
                     $error[$cont] =  "Error: " . ($cont + 1) . ": No se encuentra informacion de facturacion electronica";
-                    $cont++;
-                } elseif ($empresa->electronica != 1 && !is_null($empresa->appid) && !is_null($empresa->appsecret) && !is_null($empresa->url) && !is_null($empresa->establecimiento) && !is_null($empresa->punto_emision)) {
-                    $error[$cont] = "Error " . ($cont + 1) . ": empresa no permite facturacion electronica";
                     $cont++;
                 }
                 //validar ambiente
@@ -3181,7 +3241,8 @@ class EmisionDocumentosController extends Controller
                     $cont++;
                 }
                 //Validar si puede emitir documentos electronicos
-                if ($empresa->electronica != 1) {
+                if ($deEmpresa == '') {
+                    //if ($empresa->electronica != 1) {
                     $error[$cont] = "Error " . ($cont + 1) . ": empresa no permite facturacion electronica";
                     $cont++;
                 }
@@ -4750,7 +4811,8 @@ class EmisionDocumentosController extends Controller
                 }
                 //validar Informacion impuesto
                 if ($codigo != '' && $codigoPorcentaje != '') {
-                    $deCodigo = De_Codigo_Impuestos::where('codigo', $codigoPorcentaje)->first();
+                    $deCodigo = De_Codigo_Impuestos::where('codigo_impuesto', $codigo)->where('codigo', $codigoPorcentaje)->first();
+
                     if ($deCodigo != '') {
                         if ($codigoPorcentaje != $deCodigo->codigo) {
                             $error[$cont] = "Error " . ($cont + 1) . ': el campo codigoPorcentaje del impuesto ' . ($conImp + 1) . ' no puede ser vacio';
@@ -4951,7 +5013,7 @@ class EmisionDocumentosController extends Controller
         try {
             $contDeta = 0;
             foreach ($data as $detalle) {
-                if ($codDoc != '06') {
+                if ($codDoc == '01' || $codDoc == '03') {
                     //validarCodigoPrincipal
                     if (isset($detalle['codigoPrincipal'])) {
                         if ($detalle['codigoPrincipal'] != '') {
@@ -5106,7 +5168,7 @@ class EmisionDocumentosController extends Controller
                 //validarDetallesAdicionales
                 if (isset($detalle['detallesAdicionales'])) {
                     if (count($detalle['detallesAdicionales']) > 0) {
-                        $error = $this->validarDetAdicionales($data['detallesAdicionales'], $cont, $error);
+                        $error = $this->validarDetAdicionales($detalle['detallesAdicionales'], $cont, $error);
                     } else {
                         $error[$cont] = "Error " . ($cont + 1) . ': el campo detallesAdicionales del detalle ' . ($contDeta + 1) . ' no puede estar vacio';
                         $cont++;
@@ -5292,13 +5354,19 @@ class EmisionDocumentosController extends Controller
     }
     private  function getDetalles($xmlDocument, $campos)
     {
+        $codDoc = $campos['infoTributaria']['codDoc'];
         $nodoDetalle = $xmlDocument->createElement('detalles');
         $detalles = $campos["detalles"];
         foreach ($detalles as $detalle) {
             $precioTotalSinImpuesto = $detalle["cantidad"] * $detalle["precioUnitario"];
             $item = $xmlDocument->createElement('detalle');
-            $item->appendChild($xmlDocument->createElement('codigoPrincipal', $detalle["codigoPrincipal"]));
-            $item->appendChild($xmlDocument->createElement('codigoAuxiliar', $detalle["codigoAuxiliar"]));
+            if ($codDoc == '01' || $codDoc == '03') {
+                $item->appendChild($xmlDocument->createElement('codigoPrincipal', $detalle["codigoPrincipal"]));
+                $item->appendChild($xmlDocument->createElement('codigoAuxiliar', $detalle["codigoAuxiliar"]));
+            } elseif ($codDoc == '04' || $codDoc == '06') {
+                $item->appendChild($xmlDocument->createElement('codigoInterno', $detalle["codigoInterno"]));
+                $item->appendChild($xmlDocument->createElement('codigoAdicional', $detalle["codigoAdicional"]));
+            }
             $item->appendChild($xmlDocument->createElement('descripcion', str_replace('&', 'y', $detalle["descripcion"])));
             $item->appendChild($xmlDocument->createElement('cantidad', $this->getDecimal($detalle["cantidad"])));
             $item->appendChild($xmlDocument->createElement('precioUnitario', $this->getDecimal($detalle["precioUnitario"])));
@@ -5403,18 +5471,17 @@ class EmisionDocumentosController extends Controller
         $valor = '';
         $cantidadInfoAdicional = 0;
         $informacionAdicional = $campos['infoAdicional'];
+
         if (count($informacionAdicional) > 0) {
             $cantidadInfoAdicional = count($informacionAdicional);
         }
+
         for ($i = 0; $i < $cantidadInfoAdicional; $i++) {
             if (isset($informacionAdicional[$i]['nombre']))
                 $nombre = $informacionAdicional[$i]['nombre'];
             if (isset($informacionAdicional[$i]['valor']))
                 $valor = $informacionAdicional[$i]['valor'];
-            if ($campos['infoTributaria']['codDoc'] == '06')
-                array_push($detalles, array("nombre" => $nombre, "valor" => str_replace(' ', '', str_replace('(', '', str_replace(')', '', str_replace('-', '', $valor))))));
-            else
-                array_push($detalles, array("nombre" => $nombre, "valor" => $valor));
+            array_push($detalles, array("nombre" => $nombre, "valor" => str_replace(' ', '', str_replace('(', '', str_replace(')', '', str_replace('-', '', $valor))))));
             $nodoDetalle = $xmlDocument->createElement('infoAdicional');
         }
         foreach ($detalles as $item) {
@@ -5528,7 +5595,6 @@ class EmisionDocumentosController extends Controller
             $root->appendChild($infoAdicional);
         } else {
         }
-
         if ($this->tipoDocumento != '') {
             //Guarda XML
             $xml->appendChild($root);
@@ -5564,7 +5630,7 @@ class EmisionDocumentosController extends Controller
                     $xsd = base_path() . '/storage/app/facturaelectronica/SriXsd/ComprobanteRetencion_V1.0.0.xsd';
                     break;
                 case 'notaCredito': //1.1.0
-                    $xsd = base_path() . '/storage/app/facturaelectronica/SriXsd/.xsd';
+                    $xsd = base_path() . '/storage/app/facturaelectronica/SriXsd/NotaCredito_V1.1.0.xsd';
                     break;
                 case 'notaDebito': //1.0.0
                     $xsd = base_path() . '/storage/app/facturaelectronica/SriXsd/.xsd';
@@ -5850,6 +5916,9 @@ class EmisionDocumentosController extends Controller
             $estado = $xmlRespuesta['estado'];
             $mensajes = [];
             $nombreArchivo = "noName";
+            echo '<pre>';
+            print_r($xmlRespuesta);
+            exit;
             if ($estado == 'DEVUELTA') {
                 $mensajes = $xmlRespuesta['mensajesWs'];
                 $estado = $xml->createElement('estado', $xmlRespuesta['estado']);
@@ -5938,7 +6007,7 @@ class EmisionDocumentosController extends Controller
                 $xml->save($ruta);
             }
         } catch (Exception $ex) {
-            //throw $th;
+            return json_encode(['Error: ' => $ex->getMessage(), 'Linea: ' => $ex->getLine()]);
         }
     }
     public function getMensajes($xmlDocument, $mensajes)
@@ -6002,7 +6071,8 @@ class EmisionDocumentosController extends Controller
                 $nodoAutorizacion->appendChild($xml->createElement('fechaAutorizacion', $autorizacion->fechaAutorizacion));
                 $nodoAutorizacion->appendChild($xml->createElement('ambiente', $autorizacion->ambiente));
                 $nodoAutorizacion->appendChild($xml->createElement('comprobante', $autorizacion->comprobante));
-                if (is_null($autorizacion->mensajes)) {
+
+                if (!is_null($autorizacion->mensajes)) {
                     $nodoMensajes = $this->getMensajesAutorizacion($xml, $autorizacion->mensajes);
                     $nodoAutorizacion->appendChild(($nodoMensajes));
                 } else {
@@ -6019,7 +6089,7 @@ class EmisionDocumentosController extends Controller
             $this->crearcarpeta($r_);
             $ruta = $r_ . $nombreArchivo . '_' . $estado . '.xml';
             $xml->save($ruta);
-            return $comprobante;
+            return $estado;
         } catch (Exception $ex) {
             echo $ex->getMessage();
             echo '<br/>' . $ex->getLine();
@@ -6076,7 +6146,6 @@ class EmisionDocumentosController extends Controller
     public function getMensajesAutorizacion($xmlDocument, $mensajes)
     {
         $nodoMensajes = $xmlDocument->createElement('mensajes');
-
         foreach ($mensajes as $mensaje) {
             $nodoMensaje = $xmlDocument->createElement('mensaje');
             $nodoMensaje->appendChild($xmlDocument->createElement('Identificador',  $mensaje->identificador));
@@ -6228,7 +6297,7 @@ class EmisionDocumentosController extends Controller
     {
         $moneda = 'DOLAR';
         $nodoDetalle = $xmlDocument->createElement('infoNotaCredito');
-        $nodoDetalle->appendChild($xmlDocument->createElement('fechaEmision', $campos['infoNotaCredito']['fecha_emision']));
+        $nodoDetalle->appendChild($xmlDocument->createElement('fechaEmision',  $this->getDate($campos['infoNotaCredito']['fechaEmision'])));
         $nodoDetalle->appendChild($xmlDocument->createElement('dirEstablecimiento', $campos['infoNotaCredito']['dirEstablecimiento']));
         $nodoDetalle->appendChild($xmlDocument->createElement('tipoIdentificacionComprador', $campos['infoNotaCredito']['tipoIdentificacionComprador']));
         $nodoDetalle->appendChild($xmlDocument->createElement('razonSocialComprador', $campos['infoNotaCredito']['razonSocialComprador']));
@@ -6236,15 +6305,15 @@ class EmisionDocumentosController extends Controller
         if ($campos['infoNotaCredito']['contribuyenteEspecial']) $nodoDetalle->appendChild($xmlDocument->createElement('contribuyenteEspecial', $campos['infoNotaCredito']['contribuyenteEspecial']));
         $nodoDetalle->appendChild($xmlDocument->createElement('obligadoContabilidad', $campos['infoNotaCredito']['obligadoContabilidad']));
         if ($campos['infoNotaCredito']['rise']) $nodoDetalle->appendChild($xmlDocument->createElement('rise', $campos['infoNotaCredito']['rise']));
-        $nodoDetalle->appendChild($xmlDocument->createElement('codDocModificado', $this->getDate($campos['infoNotaCredito']['codDocModificado'])));
-        $nodoDetalle->appendChild($xmlDocument->createElement('numDocModificado', $this->getDate($campos['infoNotaCredito']['numDocModificado'])));
-        $nodoDetalle->appendChild($xmlDocument->createElement('fechaEmisionDocSustento', $campos['infoNotaCredito']['fechaEmisionDocSustento']));
+        $nodoDetalle->appendChild($xmlDocument->createElement('codDocModificado', $campos['infoNotaCredito']['codDocModificado']));
+        $nodoDetalle->appendChild($xmlDocument->createElement('numDocModificado', $campos['infoNotaCredito']['numDocModificado']));
+        $nodoDetalle->appendChild($xmlDocument->createElement('fechaEmisionDocSustento', $this->getDate($campos['infoNotaCredito']['fechaEmisionDocSustento'])));
         $nodoDetalle->appendChild($xmlDocument->createElement('totalSinImpuestos', $campos['infoNotaCredito']['totalSinImpuestos']));
         $nodoDetalle->appendChild($xmlDocument->createElement('valorModificacion', $campos['infoNotaCredito']['valorModificacion']));
         $nodoDetalle->appendChild($xmlDocument->createElement('moneda', $moneda));
         $totalConImpuestos = $campos['infoNotaCredito']['totalConImpuestos'];
-        $nodoDetalle->appendChild('totalConImpuestos', $this->totalConImpuestos($xmlDocument, $totalConImpuestos));
-        $nodoDetalle->appendChild('motivo', $campos['infoNotaCredito']['motivo']);
+        $nodoDetalle->appendChild($this->totalConImpuestos($xmlDocument, $totalConImpuestos));
+        $nodoDetalle->appendChild($xmlDocument->createElement('motivo', $campos['infoNotaCredito']['motivo']));
         return $nodoDetalle;
     }
     public function getInfoNotaDebito($xmlDocument, $campos)
@@ -6346,7 +6415,7 @@ class EmisionDocumentosController extends Controller
             $nodoTotalImpuesto->appendChild($xmlDocument->createElement('unidadTiempo', $totalImpuesto['unidadTiempo']));*/
             $nodoTotalImpuesto->appendChild($xmlDocument->createElement('codigo', $totalImpuesto["codigo"]));
             $nodoTotalImpuesto->appendChild($xmlDocument->createElement('codigoPorcentaje', $totalImpuesto["codigoPorcentaje"]));
-            $nodoTotalImpuesto->appendChild($xmlDocument->createElement('descuentoAdicional', $totalImpuesto["descuentoAdicional"]));
+            if (isset($totalImpuesto["descuentoAdicional"])) $nodoTotalImpuesto->appendChild($xmlDocument->createElement('descuentoAdicional', $totalImpuesto["descuentoAdicional"]));
             $nodoTotalImpuesto->appendChild($xmlDocument->createElement('baseImponible', $totalImpuesto["baseImponible"]));
             $nodoTotalImpuesto->appendChild($xmlDocument->createElement('valor', $this->getDecimal($totalImpuesto["valor"], '2')));
             $nodoTotalConImpuestos->appendChild($nodoTotalImpuesto);

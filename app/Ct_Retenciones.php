@@ -122,4 +122,12 @@ class Ct_Retenciones extends Model
         Ct_Retenciones::where('id', $idG)->first()
             ->update($arrayDoc);
     }
+    public static function updateXmlNoAutorizacion($id)
+    {
+        $arrayDoc = [
+            'estado' => 10,
+        ];
+        Ct_Retenciones::where('id', $id)
+            ->update($arrayDoc);
+    }
 }

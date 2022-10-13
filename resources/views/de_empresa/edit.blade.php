@@ -95,7 +95,6 @@ $empresa= Sis_medico\Empresa::find($id_empresa);
                             @endif
                         </div>
                     </div>
-
                     <div class="form-group col-xs-12{{ $errors->has('ambiente') ? ' has-error' : '' }}">
                         <label for="ambiente" class="col-md-2 control-label">{{trans('DeEmpresa.Ambiente')}}</label>
                         <div class="col-md-7">
