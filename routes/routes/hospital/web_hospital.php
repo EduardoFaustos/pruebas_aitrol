@@ -230,7 +230,7 @@ Route::get('hospital/detalle/cuartopaso', 'hospital\HospitalController@cuarto_pa
 
 //formulario 005
 Route::get('hospital/form_005/index/{id_solicitud}', 'hospital\Formulario005Controller@index_005')->name('formulario005.index_005');
-Route::get('hospital/formu_0051/f5_evolucion/{id}', 'hospital\Formulario005Controller@f5_evolucion')->name('formulario005.f5_evolucion');
+Route::match(['get', 'post'],'hospital/formu_0051/f5_evolucion/{id}', 'hospital\Formulario005Controller@f5_evolucion')->name('formulario005.f5_evolucion');
 
 Route::match(['get', 'post'],'hospital/formu_005/guardar_evolucion/{id_evol}','hospital\Formulario005Controller@guardar_evolucion')->name('formulario005.guardar_evolucion');
 
