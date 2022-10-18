@@ -254,7 +254,7 @@
     <div class="row row-cols-12" >
         <div class="col-md-5">
          
-             <div class="panel card-img"  style="height:340px;border-radius:10px;margin:5px;">
+             <div class="panel card-img"  style="height:340px;border-radius:10px;margin:17px;">
               <div>
                 <h5 style="border-bottom: 1px solid blue; margin-top: 25px" class="card-title"><img src="{{asset('/')}}hc4/img/bt_ca2.png" style="width:5%; margin-left: 5%"> AGENDA DE QUIR&Oacute;FANO DEL D&Iacute;A</h5>
                 <p class="card-text" style="margin-left: 15%">{{trans('hospital.CALENDARIODEAGENDA')}}</p>
