@@ -23,6 +23,9 @@
     color: blue;
   }
 
+  h5,
+  p {}
+
   span b {
     font-size: 50px;
   }
@@ -68,10 +71,9 @@
   }
 
   .card-img {
-    background: url({{asset('/hc4/img/agenda_quirofano.png')}});
-  no-repeat: center fixed;
-  background-size: cover;
-  object-fit: cover;
+    background: url({{asset('/hc4/img/agenda_quirofano.png')}}) no-repeat center center fixed;
+    background-size: cover;
+    object-fit: cover;
   }
 
   .label1 {
@@ -253,11 +255,10 @@
   <div class="card card-solid">
     <div class="row row-cols-12">
       <div class="col-md-5">
-
-        <div class="panel card-img" style="height:340px;border-radius:10px;margin:5px;">
+        <div class="panel card-img" style="height:345px;border-radius:10px;margin:17px;">
           <div>
-            <h5 style="border-bottom: 1px solid blue; margin-top: 25px" class="card-title"><img src="{{asset('/')}}hc4/img/bt_ca2.png" style="width:5%; margin-left: 5%"> AGENDA DE QUIR&Oacute;FANO DEL D&Iacute;A</h5>
-            <p class="card-text" style="margin-left: 15%">{{trans('hospital.CALENDARIODEAGENDA')}}</p>
+            <h5 style="border-bottom: 1px solid blue; margin-top: 25px" class="card-title"><img src="{{asset('/')}}hc4/img/icono recepcion.png" style="width:5%; margin-left: 5%">RECEPCION</h5>
+            <p class="card-text" style="margin-left: 15%"></p>
             <div class="row">
               <div class="col-12">
                 <div class="row">
@@ -298,7 +299,7 @@
               </span>
             </div>
             <p style="margin-left: 60px">
-              {{$totales}} {{trans('hospital.OPERACIONESPROGRAMADAS')}}
+              
             </p>
           </div>
         </div>
@@ -314,6 +315,7 @@
                 </div>
                 <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center">
                   <p class="text_2" style="font-size: 15px"><b>@lang('hospital.Emergencia')</b></p>
+
                 </div>
               </div>
             </a>
