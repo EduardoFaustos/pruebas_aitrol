@@ -2,6 +2,10 @@
 @section('content')
 
 <style type="text/css">
+  .oculto{
+    display: none;
+   }
+ 
   @media screen and (max-width:640px) {
 
     /* reglas CSS */
@@ -419,6 +423,119 @@
         </div>
 
 
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-solid">
+    <div class="row row-cols-12">
+      <div class="container-fluid" id="info" style="padding-left: 0px; padding-right: 0px;">
+        <div class="col-md-12" style="margin-top: 5px; padding: 10px; border-radius: 8px; margin-bottom: 10px">
+          <form method="POST" id="form_buscador" action="{{route('historia_clinica.reporte_hc')}}">
+            {{ csrf_field() }}
+            <div class="row">
+              <div class="col-lg-3 col-12">
+                <h1 style="font-size: 15px; margin:0; position: relative;top: 25%;">
+                  <img style="width: 49px;" src="{{asset('/')}}hc4/img/hc_ima.png">
+                  <b>HISTORIA CL&Iacute;NICA POR PACIENTE</b>
+                </h1>
+              </div>
+              <div class="col-lg-8 col-12">
+                <div class="row" style="padding-top: 5px">
+                  <div class="col-lg-6 col-12" >
+                      <div class="row">
+                        <div class=" col-md-6 " >
+                          <div class="row">
+                            <div class="col-3 "><label for="fecha" class="col-md-10 control-label" style="padding:0px;">Desde</label></div>
+                            <div class="col-9">
+                              <input type="date" class="form-control" name="desde_inicio" id="desde_inicio">
+                              
+                            </div>
+                          </div>
+                        </div>
+                        <div class=" col-md-6 " >
+                          <div class="row">
+                            <div class="col-3"><label for="fecha" class="col-md-10 control-label" style="padding:0px;">Hasta</label></div>
+                            <div class="col-9">
+                              <input type="date" class="form-control" name="hasta_fin" id="hasta_fin">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  
+                  <div class="col-lg-6 col-12" >
+                    <div class="row">
+                      
+                      <div class="form-group col-lg-8 col-md-6 col-xs-6" >
+                        <div class="row">
+                          <label for="espid" class="col-lg-4 col-md-3 control-label">Especialidad</label>
+                          <div class="col-md-8">
+                            <select class="form-control form-control-sm input-sm" name="espid" id="espid" onchange="">
+                              <option value="">Todos ...</option>
+                            @foreach($especialidades as $especialidad)
+                              <option @if($especialidad->id==$id_especialidad) selected @endif value="{{$especialidad->id}}">{{$especialidad->nombre}}</option>
+                            @endforeach
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-lg-3 col-md-6 col-xs-6" >
+                    <div class="row">
+                      <label for="id_doctor1" class="col-md-3 control-label">Doctor</label>
+                      <div class="col-lg-9 col-md-8">
+                        <select class="form-control form-control-sm input-sm" name="id_doctor1" id="id_doctor1" onchange="">
+                          <option value="">Seleccione ...</option>
+                        @foreach($doctores as $doctor)
+                          <option @if($doctor->id==$id_doctor1) selected @endif value="{{$doctor->id}}">{{$doctor->apellido1}} {{$doctor->apellido2}} {{$doctor->nombre1}}</option>
+                        @endforeach
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-lg-3 col-md-6 col-xs-6" >
+                    <div class="row">
+                      <label for="id_seguro" class="col-md-3 control-label">Seguro</label>
+                      <div class="col-lg-9 col-md-8">
+                        <select class="form-control form-control-sm input-sm" name="id_seguro" id="id_seguro" onchange="">
+                          <option value="">Seleccione ...</option>
+                        @foreach($seguros as $seguro)
+                          <option @if($seguro->id==$id_seguro) selected @endif value="{{$seguro->id}}">{{$seguro->nombre}}</option>
+                        @endforeach
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-6 form-group" >
+                    <div class="input-group">
+                      <input value="{{$request->apellidos}}" type="text" class="form-control form-control-sm " name="apellidos" id="apellidos"   placeholder="Apellidos" style="text-transform:uppercase;" onkeypress="" >
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-6 form-group" >
+                    <div class="input-group">
+                      <input value="{{$request->nombres}}" type="text" class="form-control form-control-sm " name="nombres" id="nombres"   placeholder="Nombres " style="text-transform:uppercase;" onkeypress=""  >
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 col-md-4 form-group col-xs-4" >
+                    <button type="button" onclick="" class="btn btn-danger" style="color:white; background-color: #124574; border-radius: 5px; border: 2px solid;"> <i class="fa fa-search" aria-hidden="true">
+                    </i> &nbsp;BUSCAR&nbsp;</button>
+
+                    <button type="button" onclick="" id="exp_rev" class="oculto" >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="box box" style="border-radius: 8px;" id="area_trabajo">
+
+        </div>
       </div>
     </div>
   </div>

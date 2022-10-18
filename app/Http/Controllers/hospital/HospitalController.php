@@ -44,6 +44,7 @@ use Sis_medico\hc_cie10;
 use Sis_medico\Cie_10_3;
 use Sis_medico\Cie_10_4;
 use Sis_medico\Empresa;
+use Sis_medico\Especialidad;
 use Sis_medico\hc_child_pugh;
 use Sis_medico\Hc_Evolucion;
 use Sis_medico\Hc_Log;
@@ -83,7 +84,7 @@ class HospitalController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
+    public function index(Request $request)
     {
         $opcion = '1';
         if ($this->rol_new($opcion)) {
@@ -113,7 +114,11 @@ class HospitalController extends Controller
         //dd($nombres);
         //$inicio = CamaPaciente::all();
         $totales = AgendaQ::where('estado', '=', '1')->where('fecha_total', '=', $fechahoy)->count();
-        return view('hospital/index', ['totales' => $totales, 'nombres' => $nombres]);
+
+        $doctores       = User::where('id_tipo_usuario', 3)->where('estado', 1)->orderby('apellido1')->get();
+        $seguros        = Seguro::where('inactivo', '1')->get();
+        $especialidades = Especialidad::where('estado', '1')->get();
+        return view('hospital/index', ['totales' => $totales, 'nombres' => $nombres, 'doctores' => $doctores, 'seguros' => $seguros, 'especialidades' => $especialidades, 'id_especialidad' => null, 'id_doctor1' => null, 'id_seguro' => null, 'request' => $request]);
     }
     public function farmacia()
     {

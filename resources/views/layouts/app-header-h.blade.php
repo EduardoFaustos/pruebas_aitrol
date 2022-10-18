@@ -195,10 +195,14 @@ $id_empresa = "0992704152001";
             </ul>
         </div>
         <div class="shadow-bottom"></div>
-        
-        <div class="navbar-container main-menu-content" data-menu="menu-container">
 
-            <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
+        <div class="navbar-container main-menu-content" data-menu="menu-container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 style="text-align: center;"><img src="{{asset('/')}}hc4/img/art_doc.png" style="width: 36px;"> &nbsp;&nbsp;<b>&Aacute;REA M&Eacute;DICA</b></h1>
+                </div>
+            </div>
+            <!-- <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
 
                 <li class="dropdown nav-item col-md-2 col-xs-12"><a class="nav-link dropdown-toggle d-flex align-items-center" href="#"><i data-feather="layers"></i><span>Procedimientos</span></a>
                     <ul class="dropdown-menu">
@@ -394,7 +398,7 @@ $id_empresa = "0992704152001";
                 <li class="nav-item col-md-2 col-xs-12"><a class="nav-link d-flex align-items-center" href="{{route('hospital.gcuartos')}}"><i class="fa fa-calendar"></i><span data-i18n="Pages">Recepcion</span></a>
                 </li>
 
-            </ul>
+            </ul> -->
         </div>
     </div>
 </div>
