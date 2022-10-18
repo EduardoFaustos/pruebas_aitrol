@@ -71,7 +71,7 @@
   }
 
   .card-img {
-    background: url({{asset('/hc4/img/agenda_quirofano.png')}}) no-repeat center center fixed;
+    background: url({{asset('/hc4/img/agenda_quirofano.png')}}) no-repeat center ;
     background-size: cover;
     object-fit: cover;
   }
@@ -255,7 +255,7 @@
   <div class="card card-solid">
     <div class="row row-cols-12">
       <div class="col-md-5">
-        <div class="panel card-img" style="height:345px;border-radius:10px;margin:17px;">
+        <div class="panel card-img" style="height:345px;border-radius:10px;margin:17px;" >
           <div>
             <h5 style="border-bottom: 1px solid blue; margin-top: 25px" class="card-title"><img src="{{asset('/')}}hc4/img/icono recepcion.png" style="width:5%; margin-left: 5%">RECEPCION</h5>
             <p class="card-text" style="margin-left: 15%"></p>
