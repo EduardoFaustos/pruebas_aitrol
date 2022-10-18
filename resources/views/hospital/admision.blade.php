@@ -281,6 +281,8 @@ $fecha_actual = date("Y-m-d H:i:s");
 
                     </div>
 
+                                       
+
                     <div class="card-footer">
                         <div class="row">
                             <button type="button" onclick="guardar();" class="btn btn-primary ml-3 mr-2"><i class="far fa-save"></i>{{trans('emergencia.Guardar')}}</button>

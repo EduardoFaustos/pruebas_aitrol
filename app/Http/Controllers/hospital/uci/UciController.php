@@ -24,4 +24,10 @@ class UciController extends Controller
 
         return view('hospital/uci/index',['salas' =>$salas]);;
     }
+
+    public function index_uci(){
+
+        
+        return view('hospital/uci/index_uci');
+    }
 }

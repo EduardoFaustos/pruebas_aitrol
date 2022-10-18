@@ -23,9 +23,6 @@
     color: blue;
   }
 
-  h5,
-  p {}
-
   span b {
     font-size: 50px;
   }
@@ -146,8 +143,8 @@
 <link rel="stylesheet" href="{{ asset ("/librerias/tempusdominus-bootstrap-4.min.css")}}" />
 <link rel="stylesheet" href="{{ asset('hc4/awesome/css/font-awesome.css')}}">
 <section class="content">
-  <br> <br>
-  <div class="card card-solid">
+
+  <!-- <div class="card card-solid">
     <div class="row">
       <div class="col-md-12">
         <div class="row">
@@ -226,7 +223,8 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+
   <div class="card card-solid">
     <div id="navbar" class="row" style="z-index: 99999">
       <div class="col-lg-12 col-md-12">
@@ -290,7 +288,7 @@
           <div class="col-lg-8 col-sm-12 col-12">
             <div class="row">
               <div class="col-sm-3 col-6" style="padding: 5px 2px;">
-                <a onclick="" class="boton" style="  height: 110px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                <a href="{{route('hospital.index_modulos',['id_paso' => '5'])}}" class="boton" style="  height: 110px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
                   <div class="row" style="text-align: center;">
                     <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
                       <img class="image_baner" src="{{asset('/')}}hc4/img/lab2.png" style="width: 95px;">
@@ -314,7 +312,7 @@
               </div>
 
               <div class="col-sm-3 col-6" style="padding: 5px 2px;">
-                <a onclick="" class="boton" style="  height: 110px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                <a href="{{route('hospital.index_modulos',['id_paso' => '4'])}}" class="boton" style="  height: 110px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
                   <div class="row" style="text-align: center;">
                     <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
                       <img class="image_baner" src="{{asset('/')}}hc4/img/lab2.png" style="width: 95px;">
@@ -325,7 +323,7 @@
                     </div>
                   </div>
                 </a>
-                <a onclick="" class="boton" style="margin-top: 5px;  height: 112px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                <a href="{{route('hospital.index_modulos',['id_paso' => '7'])}}" class="boton" style="margin-top: 5px;  height: 112px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
                   <div class="row plantilla" style="text-align: center;">
                     <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
                       <img class="image_baner" src="{{asset('/')}}hc4/img/exams_favoritos.png" style="width: 75px;">
@@ -361,7 +359,7 @@
               </div>
 
               <div class="col-sm-3 col-6" style="padding: 5px 2px;">
-                <a onclick="" class="boton" style="  height: 110px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                <a href="{{route('hospital.index_modulos',['id_paso' => '2'])}}" class="boton" style="  height: 110px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
                   <div class="row" style="text-align: center;">
                     <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
                       <img class="image_baner" src="{{asset('/')}}hc4/img/lab2.png" style="width: 95px;">
@@ -372,7 +370,7 @@
                     </div>
                   </div>
                 </a>
-                <a onclick="" class="boton" style="margin-top: 5px;  height: 112px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+                <a href="{{route('hospital.index_modulos',['id_paso' => '3'])}}" class="boton" style="margin-top: 5px;  height: 112px; color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
                   <div class="row plantilla" style="text-align: center;">
                     <div class="col-md-5 col-xs-6" style="width: 100%;padding-left: 0;padding-right: 5px;">
                       <img class="image_baner" src="{{asset('/')}}hc4/img/exams_favoritos.png" style="width: 75px;">
@@ -448,6 +446,6 @@
 
   });
 
- 
+  
 </script>
 @endsection

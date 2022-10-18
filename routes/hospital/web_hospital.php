@@ -346,7 +346,11 @@ Route::match(['get', 'post'],'ag_hospitalizacion/{id_sala}','hospital\CuartoCont
 Route::post('guardar/alergia/paciente','hospital\QuirofanoController@guardar_alergia')->name('quirofano.guardar_alergia');
 // uci
 Route::match(['get', 'post'],'hospital/uci/index', 'hospital\uci\UciController@index')->name('uci.index');
+Route::match(['get', 'post'],'hospital/uci/index_uci', 'hospital\uci\UciController@index_uci')->name('uci.index_uci');
 //ingreso por cualquier modulo
 Route::match(['get', 'post'],'hospital/ingreso/modulos', 'hospital\HospitalController@ingreso_modulos')->name('hospital.ingreso_modulos');
 Route::match(['get', 'post'],'hospital/ingreso/admision/{id_paso}', 'hospital\HospitalController@admision')->name('hospital.admision');
+
+//principal modulos
+Route::match(['get', 'post'],'hospital/modulos/index/{id_paso}', 'hospital\HospitalController@index_modulos')->name('hospital.index_modulos');
 

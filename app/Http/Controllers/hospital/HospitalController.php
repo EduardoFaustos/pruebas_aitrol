@@ -1692,4 +1692,12 @@ class HospitalController extends Controller
             return ['respuesta' => 'error', 'msj' => $e->getMessage()];
         }
     }
+    
+    public function index_modulos($id_paso){
+        $fecha_desde = date('Y-m-d');
+        $fecha_hasta = date('Y-m-d');
+
+        $salas = Sala::where('estado','1')->where('id_hospital','5')->get();
+        return view('hospital/modulos/index',['id_paso' => $id_paso, 'salas' => $salas]);
+    }
 }

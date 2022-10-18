@@ -195,11 +195,11 @@ $id_empresa = "0992704152001";
             </ul>
         </div>
         <div class="shadow-bottom"></div>
-        <!-- Horizontal menu content-->
+        
         <div class="navbar-container main-menu-content" data-menu="menu-container">
-            
+
             <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
-                
+
                 <li class="dropdown nav-item col-md-2 col-xs-12"><a class="nav-link dropdown-toggle d-flex align-items-center" href="#"><i data-feather="layers"></i><span>Procedimientos</span></a>
                     <ul class="dropdown-menu">
                         <li data-menu=""><a class="dropdown-item d-flex align-items-center" href="{{route('hospital.quirofano',['tipo' => 1])}}" data-toggle="dropdown" data-i18n="Email"><i class="fa fa-stethoscope"></i><span data-i18n="Email">Cirugia</span></a>
