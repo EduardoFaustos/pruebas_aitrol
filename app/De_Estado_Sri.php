@@ -23,10 +23,47 @@ class De_Estado_Sri extends Model
 
     public static function getEstado()
     {
+        /*  $estado = '';
+      try {
+            $sri = De_Estado_Sri::get()->first();
+            if(count($sri)==0){
+                $arraySRI = [
+                    'valor' => 1,
+                    'estado' => 1,
+                    'id_usuariomod' => 'FACELECTRO',
+                    'id_usuariocrea' => 'FACELECTRO',
+                    'ip_creacion' => '::1',
+                    'ip_modificacion' => '::1',
+                ];
+                De_Estado_Sri::insertGetId($arraySRI);
+                $estado = 1;
+            }
+            else{
+                $estado = $sri->valor;
+            }
+        } catch (Exception $e) {
+            $estado = '2';
+        }
+        return $estado;*/
         $estado = '';
         try {
-            $sri = De_Estado_Sri::get()->first();
-            $estado = $sri->valor;
+            $sri = De_Estado_Sri::all();
+            if(count($sri)==0){
+                $arraySRI = [
+                    'valor' => 1,
+                    'estado' => 1,
+                    'id_usuariomod' => 'FACELECTRO',
+                    'id_usuariocrea' => 'FACELECTRO',
+                    'ip_creacion' => '::1',
+                    'ip_modificacion' => '::1',
+                ];
+                DB::enableQueryLog();
+                De_Estado_Sri::insert($arraySRI);
+                $estado = 1;
+            }
+            else{
+                $estado = $sri->valor;
+            }
         } catch (Exception $e) {
             $estado = '2';
         }

@@ -39,7 +39,6 @@ class Ct_Nota_Credito_Clientes extends Model
             'ct_nota_credito_clientes.id',
             'ct_nota_credito_clientes.id_empresa',
             'ct_nota_credito_clientes.created_at',
-            'ct_nota_credito_clientes.numero_factura',
             'sucursal',
             'punto_emision',
             'secuencia',
@@ -59,6 +58,7 @@ class Ct_Nota_Credito_Clientes extends Model
             'id_factura',
             'id_cliente',
             'observacion',
+            'concepto',
         ]);
     }
     public static function updateSinGenerarXML($id)

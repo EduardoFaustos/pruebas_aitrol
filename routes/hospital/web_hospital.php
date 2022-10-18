@@ -338,13 +338,15 @@ Route::post('hospital/prioridad_emergencia/guardar', 'hospital\PrioridadEmergenc
 Route::match(['get', 'post'],'hospital/prioridad_emergencia/editar/{id}','hospital\PrioridadEmergenciaController@editar')->name('prioridademergencia.editar');
 Route::match(['get', 'post'],'hospital/prioridad/actualizar','hospital\PrioridadEmergenciaController@actualizar_pri')->name('prioridad.actualizar_pri');
 Route::match(['get', 'post'],'hospital/prioridad_emergencia/eliminar/prioridade/{id_tipo}','hospital\PrioridadEmergenciaController@eliminar_prioridade')->name('prioridademergencia.eliminar_prioridad');
-
 //guardarImagen
 Route::post('guardar/imagen/infermeria/{id}','hospital\Formulario005Controller@guardarimagen')->name('tipoemergencia.guardarimagen');
 Route::get('ver/pdf/evolucion/{id}','hospital\Formulario005Controller@verpdf')->name('tipoemergencia.verpdf');
 Route::match(['get', 'post'],'ag_hospitalizacion/{id_sala}','hospital\CuartoController@agenda_hospital')->name('cuarto.agenda_hospital');
-
 //guardar alergia
 Route::post('guardar/alergia/paciente','hospital\QuirofanoController@guardar_alergia')->name('quirofano.guardar_alergia');
-
+// uci
+Route::match(['get', 'post'],'hospital/uci/index', 'hospital\uci\UciController@index')->name('uci.index');
+//ingreso por cualquier modulo
+Route::match(['get', 'post'],'hospital/ingreso/modulos', 'hospital\HospitalController@ingreso_modulos')->name('hospital.ingreso_modulos');
+Route::match(['get', 'post'],'hospital/ingreso/admision/{id_paso}', 'hospital\HospitalController@admision')->name('hospital.admision');
 

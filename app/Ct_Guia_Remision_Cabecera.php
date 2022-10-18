@@ -165,6 +165,14 @@ class Ct_Guia_Remision_Cabecera extends Model
             ->where('id', $idG)
             ->update($arrayDoc);
     }
+    public static function updateXmlNoAutorizacion($id)
+    {
+        $arrayDoc = [
+            'estado' => 10,
+        ];
+        Ct_Guia_Remision_Cabecera::where('id', $id)
+            ->update($arrayDoc);
+    }
     public static function getGuiaCabecera()
     {
         //DB::enableQueryLog();

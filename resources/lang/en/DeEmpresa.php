@@ -21,5 +21,5 @@ return [
     'Produccion' => 'PRODUCTION',
     'Rimpe_Emprendedor' => 'Rimpe Entrepreneur',
     'Rimpe_Popular' => 'Rimpe Popular',
-    'Regiman_General' => 'General Regime'
+    'Regimen_General' => 'General Regime'
 ];

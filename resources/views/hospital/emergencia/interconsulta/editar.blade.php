@@ -328,8 +328,8 @@ $('#cie10').autocomplete({
             datatype: 'json',
             data:  $("#interconsulta{{$interconsulta->id}}").serialize(),
             success: function(data){
-                alert("Guardado");
-
+                $("#content").html(data);
+                    return Swal.fire(`{{trans('proforma.GuardadoCorrectamente')}}`);
             },
             error: function(data){
                 alert('error al cargar');
