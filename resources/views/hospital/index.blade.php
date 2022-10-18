@@ -62,7 +62,7 @@
     margin: 1em;
     align-items: center;
     height: 160px;
-    width: calc(100% / 6);
+    width: 20%;
 }
 
   .box {
@@ -322,7 +322,7 @@
                   <div class="col-md-5 col-xs-6" style="margin-top:6px;padding-right: 5px;position: relative;margin-lef:0;margin-right:0">
                     <img class="image_baner" src="{{asset('/')}}hc4/img/icono cirugia.png" style="width: 95px;">
                     </div>
-                    <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center">
+                    <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center;text-align:end">
                       <p style="font-size: 13px" class="text_2"><b>@lang('hospital.Cirugia')</b></p>
                   </div>
                 </div>
@@ -346,7 +346,7 @@
                    <img class="image_baner" src="{{asset('/')}}hc4/img/icono farmacia.png" style="width: 95px;">
                     </div>
                    <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center">
-                      <p style="font-size: 13px" class="text_2"><b>@lang('hospital.Farmacia')</b></p>
+                      <p style="font-size: 13px;margin-left:27px;" class="text_2"><b>@lang('hospital.Farmacia')</b></p>
                   </div>
                 </div>
             </div>
@@ -368,8 +368,8 @@
                     <div class="col-md-5 col-xs-6" style="margin-top:6px;padding-right: 5px;position: relative;margin-lef:0;margin-right:0">
                    <img class="image_baner" src="{{asset('/')}}hc4/img/icono UCIN.png" style="width: 95px;">
                     </div>
-                    <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center">
-                      <p style="font-size: 13px" class="text_2"><b>&nbsp;&nbsp;&nbsp;&nbsp;@lang('hospital.UCIN')</b></p>
+                    <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center;">
+                      <p style="font-size: 13px;margin-left:27px;" class="text_2"><b>@lang('hospital.UCIN')</b></p>
                   </div>
                 </div>
             </div>
@@ -380,22 +380,12 @@
                      <img class="image_baner" src="{{asset('/')}}hc4/img/icono UCI.png" style="width: 95px;">
                 </div>
                 <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center">
-                  <p style="font-size: 13px" class="text_2"><b>&nbsp;&nbsp;@lang('hospital.UCI')</b></p>
+                  <p style="font-size: 13px;margin-left:27px;" class="text_2"><b>&nbsp;&nbsp;@lang('hospital.UCI')</b></p>
                   </div>
                 </div>
             </div>
 
-             <div  style="color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
-                <div class="row">
-                    <div class="col-md-5 col-xs-6" style="margin-top:6px;padding-right: 5px;position: relative;margin-lef:0;margin-right:0">
-                    <img class="image_baner" src="{{asset('/')}}hc4/img/icono recepcion.png" style="width: 95px;">
-                  </div>
-                  <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center">
-                    <p class="text_2" style="font-size: 15px"><b>@lang('hospital.Recepcion')</b></p>
-       
-                  </div>
-                </div>
-            </div>
+           
 
              <div  style="color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
                 <div class="row">
@@ -405,18 +395,6 @@
                   <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center">
                     <p class="text_2" style="font-size: 15px"><b>@lang('hospital.Hospitalizacion')</b></p>
                   
-                  </div>
-                </div>
-            </div>
-
-             <div  style="color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
-                <div class="row">
-                    <div class="col-md-5 col-xs-6" style="margin-top:6px;padding-right: 5px;position: relative;margin-lef:0;margin-right:0">
-                    <img class="image_baner" src="{{asset('/')}}hc4/img/icono_omni.png" style="width: 95px;">
-                  </div>
-                  <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center">
-                    <p class="text_2" style="font-size: 15px"><b>Omni</b></p>
-                    <!-- <p class="text_2" style="font-size: 15px"><b></b> @lang('hc4.ordenes')</p> -->
                   </div>
                 </div>
             </div>
