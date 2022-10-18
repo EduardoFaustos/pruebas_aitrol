@@ -71,7 +71,7 @@
   }
 
   .card-img {
-    background: url({{asset('/hc4/img/agenda_quirofano.png')}}) no-repeat center ;
+    background: url({{asset('/hc4/img/agenda_quirofano.png')}}) no-repeat center;
     background-size: cover;
     object-fit: cover;
   }
@@ -255,53 +255,55 @@
   <div class="card card-solid">
     <div class="row row-cols-12">
       <div class="col-md-5">
-        <div class="panel card-img" style="height:345px;border-radius:10px;margin:17px;" >
-          <div>
-            <h5 style="border-bottom: 1px solid blue; margin-top: 25px" class="card-title"><img src="{{asset('/')}}hc4/img/icono recepcion.png" style="width:5%; margin-left: 5%">RECEPCION</h5>
-            <p class="card-text" style="margin-left: 15%"></p>
-            <div class="row">
-              <div class="col-12">
-                <div class="row">
-                  <span>
-                    <b style="margin-left: 75px">{{date('d')}}</b>
-                  </span>
-                  <span>
-                    <p style="margin-left: 75px">
-                      @if(date('m') == 1) Enero
-                      @elseif(date('m') == 2) Febrero
-                      @elseif(date('m') == 3) Marzo
-                      @elseif(date('m') == 4) Abril
-                      @elseif(date('m') == 5) Mayo
-                      @elseif(date('m') == 6) Junio
-                      @elseif(date('m') == 7) Julio
-                      @elseif(date('m') == 8) Agosto
-                      @elseif(date('m') == 9) Septiembre
-                      @elseif(date('m') == 10) Octubre
-                      @elseif(date('m') == 11) Noviembre
-                      @elseif(date('m') == 12) Diciembre
-                      @endif {{date('Y')}}
-                    </p>
-                  </span>
+        <div class="panel card-img" style="height:345px;border-radius:10px;margin:17px;">
+          <a href="{{route('hospital.gcuartos')}}" class="">
+            <div>
+              <h5 style="border-bottom: 1px solid blue; margin-top: 25px" class="card-title"><img src="{{asset('/')}}hc4/img/icono recepcion.png" style="width:5%; margin-left: 5%">RECEPCION</h5>
+              <p class="card-text" style="margin-left: 15%"></p>
+              <div class="row">
+                <div class="col-12">
+                  <div class="row">
+                    <span>
+                      <b style="margin-left: 75px">{{date('d')}}</b>
+                    </span>
+                    <span>
+                      <p style="margin-left: 75px">
+                        @if(date('m') == 1) Enero
+                        @elseif(date('m') == 2) Febrero
+                        @elseif(date('m') == 3) Marzo
+                        @elseif(date('m') == 4) Abril
+                        @elseif(date('m') == 5) Mayo
+                        @elseif(date('m') == 6) Junio
+                        @elseif(date('m') == 7) Julio
+                        @elseif(date('m') == 8) Agosto
+                        @elseif(date('m') == 9) Septiembre
+                        @elseif(date('m') == 10) Octubre
+                        @elseif(date('m') == 11) Noviembre
+                        @elseif(date('m') == 12) Diciembre
+                        @endif {{date('Y')}}
+                      </p>
+                    </span>
+                  </div>
                 </div>
+                <span>
+                  <p style="margin-left: 75px">
+                    @if(date('N') == 1)
+                    Lunes @elseif(date('N') == 2)
+                    Martes @elseif(date('N') == 3)
+                    Miercoles @elseif(date('N') == 4)
+                    Jueves @elseif(date('N') == 5)
+                    Viernes @elseif(date('N') == 6)
+                    Sabado @elseif(date('N') == 7)
+                    Domingo
+                    @endif
+                  </p>
+                </span>
               </div>
-              <span>
-                <p style="margin-left: 75px">
-                  @if(date('N') == 1)
-                  Lunes @elseif(date('N') == 2)
-                  Martes @elseif(date('N') == 3)
-                  Miercoles @elseif(date('N') == 4)
-                  Jueves @elseif(date('N') == 5)
-                  Viernes @elseif(date('N') == 6)
-                  Sabado @elseif(date('N') == 7)
-                  Domingo
-                  @endif
-                </p>
-              </span>
+              <p style="margin-left: 60px">
+
+              </p>
             </div>
-            <p style="margin-left: 60px">
-              
-            </p>
-          </div>
+          </a>
         </div>
 
       </div>
@@ -334,7 +336,7 @@
           </div>
 
           <div style="color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
-            <a href="" class="">
+            <a href="{{route('hospital_laboratorio.index')}}" class="">
               <div class="row">
                 <div class="col-md-5 col-xs-6" style="margin-top:6px;padding-right: 5px;position: relative;margin-lef:0;margin-right:0">
                   <img class="image_baner" src="{{asset('/')}}hc4/img/icono laboratorio.png" style="width: 95px;">
@@ -348,7 +350,7 @@
           </div>
 
           <div style="color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
-            <a href="" class="">
+            <a href="{{route('hospital.master_farmacia')}}" class="">
               <div class="row">
                 <div class="col-md-5 col-xs-6" style="margin-top:6px;padding-right: 5px;position: relative;margin-lef:0;margin-right:0">
                   <img class="image_baner" src="{{asset('/')}}hc4/img/icono farmacia.png" style="width: 95px;">
