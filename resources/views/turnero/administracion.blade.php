@@ -109,7 +109,7 @@ $eleccion = Session::get('session');
                             <thead>
                                 <tr>
 
-                                    <th style="width: 14,28%;">{{trans('turnerof.hour')}}</th>
+                                    <th style="width: 14,28%;">{{trans('turnerof.hour')}}sssssssssss</th>
                                     <th style="width: 14,28%;">{{trans('turnerof.number')}}</th>
                                     <th style="width: 14,28%;">Seguro</th>
                                     <th style="width: 14,28%;">{{trans('turnerof.patient')}}</th>
