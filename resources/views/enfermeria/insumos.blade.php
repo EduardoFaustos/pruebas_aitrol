@@ -292,7 +292,7 @@
 
 
 
-                <form id="codigo_enviar{{$contador}}" onsubmit="return false;">
+                <!--<form id="codigo_enviar{{$contador}}" onsubmit="return false;">
                   <a id="redirigir{{$contador}}" href="{{route('enfermeria.insumos',['id'=>$agenda->id])}}#recibir" class="oculto"></a>
                   <input type="hidden" id="id_hc_procedimientos" name="id_hc_procedimientos" value="{{$value->id}}">
                   <input type="hidden" id="id_agenda" name="id_agenda" value="{{$agenda->id}}">
@@ -312,7 +312,7 @@
                     </td>
                     @endif
                   </tr>
-                </form>
+                </form>-->
               </tbody>
             </table>
 
