@@ -279,37 +279,37 @@
                 @php
                 switch($producto->movimiento->producto->tipo){
                 case 1 :
-                  $arrayH.push($producto);
+                  array_push($arrayH,$producto);
                   break;
                 case 2 :
-                    $arrayM.push($producto);
+                    array_push($arrayM,$producto);
                     break;
                     
                 case 3 :
-                    $arrayI.push($producto);
+                    array_push($arrayI,$producto);
                     break;
 
                 case 4 :
-                    $arrayL.push($producto);
+                    array_push($arrayL,$producto);
                     break;
 
                 case 5 :
-                    $arrayG.push($producto);
+                    array_push($arrayG,$producto);
                     break;
 
                 case 6 :
-                    $arrayIm.push($producto);
+                    array_push($arrayIm,$producto);
                     break;
 
                 case 7 :
-                    $arraySi.push($producto);
+                    array_push($arraySi,$producto);
                     break; 
                     
                 case 8 :
-                    $arrayEe.push($producto);
+                    array_push($arrayEe,$producto);
                     break;     
                 default:
-                    $arrayOtr.push($producto);
+                   array_push($arrayOtr,$producto);
                    
                 }
 
