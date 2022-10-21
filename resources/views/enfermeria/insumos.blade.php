@@ -263,8 +263,9 @@
               </thead>
               <tbody>
                 <!--Array de Productos-->
-                @php $resumen = array(); @endphp
-                @foreach($productos as $producto)
+                <?php 
+                $resumen = array(); 
+                foreach($productos as $producto)
 
                 if(isset($producto->movimiento) and !isset($resumen[$producto->movimiento->producto->nombre]) ) {
                 $resumen[$producto->movimiento->producto->nombre] = 1;
@@ -274,11 +275,7 @@
                 }
                 }
                 $cont_checks++;
-
-                @endphp
-                <?php
-
-
+                
                 $eliminar = '';
                 if (Auth::user()->id_tipo_usuario == 1 && Auth::user()->id_tipo_usuario == 7) {
                   $eliminar = '<input class="eliminar_producto' . $check_eliminado . '" type="checkbox" value="' . $producto->id . '" />';
