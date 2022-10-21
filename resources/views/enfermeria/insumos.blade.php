@@ -278,12 +278,12 @@
 
                 switch($producto->movimiento->producto->tipo){
 
-                case 1 :
+                case 0 :
                     dd("hola");
                   break;
                   
                 default:
-
+                  dd("adasdasd");
                 }
 
                 if(isset($producto->movimiento) and !isset($resumen[$producto->movimiento->producto->nombre]) ) {
