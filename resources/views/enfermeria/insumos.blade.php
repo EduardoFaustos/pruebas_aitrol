@@ -282,7 +282,7 @@
                     case 0:
                       $tr .= '<tr>
                     <td>HONORARIOS MEDICOS</td>
-                    <td>' . isset($producto->movimiento->producto->nombre)?$producto->movimiento->producto->nombre :''. '</td>
+                    <td>' . $producto->movimiento->producto->nombre!=''?$producto->movimiento->producto->nombre :''. '</td>
                     </tr>';
                       break;
                   }
