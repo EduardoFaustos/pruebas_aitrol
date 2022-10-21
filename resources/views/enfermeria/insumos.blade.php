@@ -294,7 +294,6 @@
                       <td>' . $producto->usuario_crea->apellido1 . ' ' . $producto->usuario_crea->nombre1 . '</td>
                       <td><a onclick="eliminar_producto(\'' . $producto->id . '\')" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
                       ' . $eliminar . '                        
-                        @endif
                       </td>
                     </tr>';
                     break;
