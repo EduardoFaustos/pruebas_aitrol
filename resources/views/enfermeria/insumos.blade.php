@@ -130,6 +130,7 @@
                   </td>
                 </tr>
                 @endforeach
+                <h1>asdasdasd</h1>
                 <form id="codigo_enviar" onsubmit="return false;">
                   <input type="hidden" name="id_historia" value="{{$hcid}}">
 

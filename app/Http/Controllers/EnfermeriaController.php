@@ -246,7 +246,7 @@ class EnfermeriaController extends Controller
         $cabecera = InvCabMovimientos::where('id_agenda', $id_agenda)->first();
 
         $planilla = Planilla::where('id_agenda', $agenda->id)->first();
-        dd($planilla);
+       
         if (!is_null($planilla)) {
             if ($planilla->aprobado == 1 ) {
                 return view('enfermeria/insumos_aprobados', ['procedimientos' => $procedimientos, 'agenda' => $agenda, 'equipos' => $equipos, 'hcid' => $hcid, 'bodegas' => $bodegas, 'cabecera' => $cabecera]);
