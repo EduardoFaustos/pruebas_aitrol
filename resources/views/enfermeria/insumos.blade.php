@@ -280,19 +280,19 @@
                 switch($producto->movimiento->producto->tipo){
                 case 1 :
                   <label for="">HONORARIOS MEDICOS</label>
-                    <tr>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->serie}} @endif</td>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
-                      <td>{{$producto->created_at}}</td>
-                      <td>{{$producto->cantidad}}</td>
-                      <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
-                      <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
-                        @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
-                        <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
-                        @endif
-                      </td>
-                      </td>
-                    </tr>
+                  <tr>
+                    <td>{{ isset($producto->movimiento)?$producto->movimiento->serie:'' }}</td>
+                    <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
+                    <td>{{$producto->created_at}}</td>
+                    <td>{{$producto->cantidad}}</td>
+                    <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
+                    <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
+                      @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
+                      <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
+                      @endif
+                    </td>
+                    </td>
+                  </tr>
                   break;
                 case 2 :
                   <label for="">MEDICINAS VALOR AL ORIGEN</label>
