@@ -284,7 +284,7 @@
                   $eliminar = '<input class="eliminar_producto' . $check_eliminado . '" type="checkbox" value="' . $producto->id . '" />';
                 }
                 switch ($producto->movimiento->producto->tipo) {
-                  case 1:
+                  case 0:
                     echo '<label for="">HONORARIOS MEDICOS</label>
                     <tr>
                       <td>' . isset($producto->movimiento) ? $producto->movimiento->serie : '' . '</td>
