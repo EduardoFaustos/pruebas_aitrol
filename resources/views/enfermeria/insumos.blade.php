@@ -277,8 +277,8 @@
 
                 @endphp
                 @php
-                @switch($producto->movimiento->producto->tipo){
-                @case 1 :
+                switch($producto->movimiento->producto->tipo){
+                case 1 :
                   <label for="">HONORARIOS MEDICOS</label>
                   <tr>
                     <td>{{ isset($producto->movimiento)?$producto->movimiento->serie:'' }}</td>
