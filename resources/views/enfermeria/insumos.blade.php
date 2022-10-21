@@ -310,7 +310,7 @@
                     break;     
                 default:
                     $arrayOtr.push($producto);
-                    break;
+                   
                 }
 
                 if(isset($producto->movimiento) and !isset($resumen[$producto->movimiento->producto->nombre]) ) {
