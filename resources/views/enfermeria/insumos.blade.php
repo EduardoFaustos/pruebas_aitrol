@@ -287,7 +287,7 @@
                   case 0:
                     echo `<label for="">HONORARIOS MEDICOS</label>
                     <tr>
-                      <td>' . isset($producto->movimiento) ? $producto->movimiento->serie : '' . '</td>
+                      <td>` . isset($producto->movimiento) ? $producto->movimiento->serie : '' . `</td>
                       <td>' . isset($producto->movimiento) ? $producto->movimiento->producto->nombre : '' . '</td>
                       <td>' . $producto->created_at . '</td>
                       <td>' . $producto->cantidad . '</td>
