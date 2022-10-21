@@ -285,8 +285,8 @@
                 }
                 switch ($producto->movimiento->producto->tipo) {
                   case 0:
-                    echo '<label>HONORARIOS MEDICOS</label>
-                    <tr>
+                    echo '<tr>
+                    <td><label>HONORARIOS MEDICOS</label></td>
                       <td>' . isset($producto->movimiento) ? $producto->movimiento->serie : '' . '</td>
                       <td>' . isset($producto->movimiento) ? $producto->movimiento->producto->nombre : '' . '</td>
                       <td>' . $producto->created_at . '</td>
