@@ -265,26 +265,9 @@
                 <!--Array de Productos-->
                 <?php $resumen = array();
                 foreach ($productos as $producto) {
-                  if (isset($producto->movimiento) and !isset($resumen[$producto->movimiento->producto->nombre])) {
-                    $resumen[$producto->movimiento->producto->nombre] = 1;
-                  } else {
-                    if (isset($producto->movimiento->producto)) {
-                      $resumen[$producto->movimiento->producto->nombre] += 1;
-                    }
-                  }
-                  $cont_checks++;
-                  $eliminar = '';
-                  if (Auth::user()->id_tipo_usuario == 1 && Auth::user()->id_tipo_usuario == 7) {
-                    $eliminar = '<input class="eliminar_producto' . $check_eliminado . '" type="checkbox" value="' . $producto->id . '" />';
-                  }
-                  switch ($producto->movimiento->producto->tipo) {
-                    case 0:
-                      echo '<tr>
-                    <td><label>HONORARIOS MEDICOS</label></td>
-                    <td>' . isset($producto->movimiento) ? $producto->movimiento->serie : '' . '</td>
-                    </tr>';
-                      break;
-                  }
+                  echo '<tr>
+                  <td>hrfhfh</td>
+                  </tr>';
                 }
                 ?>
 
