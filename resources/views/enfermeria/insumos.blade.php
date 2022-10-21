@@ -282,7 +282,7 @@
                     case 0:
                       $tr .= '<tr>
                     <td>HONORARIOS MEDICOS</td>
-                    <td>djkfgjfgf</td>
+                    <td>' . $producto->movimiento->producto->nombre . '</td>
                     </tr>';
                       break;
                   }
