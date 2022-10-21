@@ -276,28 +276,12 @@
                 $cont_checks++;
 
                 @endphp
-                @php
+                <?php
                 switch($producto->movimiento->producto->tipo){
-                case 1 :
-                  <label for="">HONORARIOS MEDICOS</label>
-                  <tr>
-                    <td>{{ isset($producto->movimiento)?$producto->movimiento->serie:'' }}</td>
-                    <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
-                    <td>{{$producto->created_at}}</td>
-                    <td>{{$producto->cantidad}}</td>
-                    <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
-                    <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
-                      @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
-                      <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
-                      @endif
-                    </td>
-                    </td>
-                  </tr>
-                  break;
-                case 2 :
-                  <label for="">MEDICINAS VALOR AL ORIGEN</label>
+                  case 1 :
+                    echo '<label for="">HONORARIOS MEDICOS</label>
                     <tr>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->serie}} @endif</td>
+                      <td>'.isset($producto->movimiento)?$producto->movimiento->serie:''.'</td>
                       <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
                       <td>{{$producto->created_at}}</td>
                       <td>{{$producto->cantidad}}</td>
@@ -308,128 +292,10 @@
                         @endif
                       </td>
                       </td>
-                    </tr>
+                    </tr>';
                     break;
-                    
-                case 3 :
-                  <label for="">INSUMOS - VALOR AL ORIGEN</label>
-                    <tr>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->serie}} @endif</td>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
-                      <td>{{$producto->created_at}}</td>
-                      <td>{{$producto->cantidad}}</td>
-                      <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
-                      <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
-                        @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
-                        <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
-                        @endif
-                      </td>
-                      </td>
-                    </tr>
-                    break;
-
-                case 4 :
-                  <label for="">LABORATORIO</label>
-                    <tr>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->serie}} @endif</td>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
-                      <td>{{$producto->created_at}}</td>
-                      <td>{{$producto->cantidad}}</td>
-                      <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
-                      <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
-                        @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
-                        <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
-                        @endif
-                      </td>
-                      </td>
-                    </tr>
-                    break;
-
-                case 5 :
-                  <label for="">GASTOS ADMINISTRATIVOS</label>
-                    <tr>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->serie}} @endif</td>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
-                      <td>{{$producto->created_at}}</td>
-                      <td>{{$producto->cantidad}}</td>
-                      <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
-                      <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
-                        @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
-                        <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
-                        @endif
-                      </td>
-                      </td>
-                    </tr>
-                    break;
-
-                case 6 :
-                  <label for="">IMAGEN (*)</label>
-                    <tr>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->serie}} @endif</td>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
-                      <td>{{$producto->created_at}}</td>
-                      <td>{{$producto->cantidad}}</td>
-                      <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
-                      <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
-                        @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
-                        <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
-                        @endif
-                      </td>
-                      </td>
-                    </tr>
-                    break;
-
-                case 7 :
-                  <label for="">SERVICIOS INSTITUCIONALES</label>
-                    <tr>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->serie}} @endif</td>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
-                      <td>{{$producto->created_at}}</td>
-                      <td>{{$producto->cantidad}}</td>
-                      <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
-                      <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
-                        @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
-                        <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
-                        @endif
-                      </td>
-                      </td>
-                    </tr>
-                    break; 
-                    
-                case 8 :
-                  <label for="">EQUIPOS ESPECIALES</label>
-                    <tr>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->serie}} @endif</td>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
-                      <td>{{$producto->created_at}}</td>
-                      <td>{{$producto->cantidad}}</td>
-                      <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
-                      <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
-                        @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
-                        <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
-                        @endif
-                      </td>
-                      </td>
-                    </tr>
-                    break;     
-                default:
-                <label for="">OTROS</label>
-                    <tr>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->serie}} @endif</td>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
-                      <td>{{$producto->created_at}}</td>
-                      <td>{{$producto->cantidad}}</td>
-                      <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
-                      <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
-                        @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
-                        <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
-                        @endif
-                      </td>
-                      </td>
-                    </tr>
-                   
                 }
-                @endphp
+                                ?>
 
              
                 @endforeach
