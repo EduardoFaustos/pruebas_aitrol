@@ -130,7 +130,7 @@
                   </td>
                 </tr>
                 @endforeach
-               
+
                 <form id="codigo_enviar" onsubmit="return false;">
                   <input type="hidden" name="id_historia" value="{{$hcid}}">
 
@@ -165,7 +165,7 @@
 
       @php
       $contador = 0;
-      $procedimientosx=[]; 
+      $procedimientosx=[];
       $procd =[];
       $cont_checks = 0;
       $check_eliminado = 0;
@@ -173,7 +173,7 @@
       }
       @endphp
       @foreach($procedimientos as $value)
-      @php 
+      @php
       $adicionales = \Sis_medico\Hc_Procedimiento_Final::where('id_hc_procedimientos', $value->id)->get();
 
       $mas = true;
@@ -181,20 +181,20 @@
 
       foreach($adicionales as $value2)
       {
-        if($mas == true){
-          $texto = $texto.$value2->procedimiento->nombre ;
-          $mas = false;
-        }
-        else{
-          $texto = $texto.' + '. $value2->procedimiento->nombre ;
-        }
+      if($mas == true){
+      $texto = $texto.$value2->procedimiento->nombre ;
+      $mas = false;
       }
-        $data['id']=$value->id;
-        $data['nombre']=$texto;
-        if($texto==null){
-        $data['nombre']= $value->nombre_general;
-        }
-        array_push($procedimientosx,$data);
+      else{
+      $texto = $texto.' + '. $value2->procedimiento->nombre ;
+      }
+      }
+      $data['id']=$value->id;
+      $data['nombre']=$texto;
+      if($texto==null){
+      $data['nombre']= $value->nombre_general;
+      }
+      array_push($procedimientosx,$data);
       @endphp
       @endforeach
       @foreach($procedimientos as $value)
@@ -207,13 +207,13 @@
 
       foreach($adicionales as $value2)
       {
-        if($mas == true){
-          $texto = $texto.$value2->procedimiento->nombre ;
-          $mas = false;
-        }
-        else{
-          $texto = $texto.' + '. $value2->procedimiento->nombre ;
-        }
+      if($mas == true){
+      $texto = $texto.$value2->procedimiento->nombre ;
+      $mas = false;
+      }
+      else{
+      $texto = $texto.' + '. $value2->procedimiento->nombre ;
+      }
       }
       /* $data['id']=$value->id;
       $data['nombre']=$texto;
@@ -277,27 +277,34 @@
 
                 @endphp
                 <?php
-                switch($producto->movimiento->producto->tipo){
-                  case 1 :
+
+use Illuminate\Support\Facades\Auth;
+
+                $eliminar = '';
+                if (Auth::user()->id_tipo_usuario == 1 && Auth::user()->id_tipo_usuario == 7) {
+                  $eliminar = '<input class="eliminar_producto' . $check_eliminado . '" type="checkbox" value="' . $producto->id . '" />';
+                }
+                switch ($producto->movimiento->producto->tipo) {
+                  case 1:
                     echo '<label for="">HONORARIOS MEDICOS</label>
                     <tr>
-                      <td>'.isset($producto->movimiento)?$producto->movimiento->serie:''.'</td>
-                      <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
-                      <td>{{$producto->created_at}}</td>
-                      <td>{{$producto->cantidad}}</td>
-                      <td>{{$producto->usuario_crea->apellido1}} {{$producto->usuario_crea->nombre1}}</td>
-                      <td><a onclick="eliminar_producto({{$producto->id}})" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
-                        @if(Auth::user()->id_tipo_usuario == 1 or Auth::user()->id_tipo_usuario == 7)
-                        <input class="eliminar_producto{{$check_eliminado}}" type="checkbox" value="{{$producto->id}}" />
+                      <td>' . isset($producto->movimiento) ? $producto->movimiento->serie : '' . '</td>
+                      <td>' . isset($producto->movimiento) ? $producto->movimiento->producto->nombre : '' . '</td>
+                      <td>' . $producto->created_at . '</td>
+                      <td>' . $producto->cantidad . '</td>
+                      <td>' . $producto->usuario_crea->apellido1 . ' ' . $producto->usuario_crea->nombre1 . '</td>
+                      <td><a onclick="eliminar_producto(\'' . $producto->id . '\'}" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>
+                      ' . $eliminar . '
+                        
                         @endif
                       </td>
                       </td>
                     </tr>';
                     break;
                 }
-                                ?>
+                ?>
 
-             
+
                 @endforeach
                 <form id="codigo_enviar{{$contador}}" onsubmit="return false;">
                   <a id="redirigir{{$contador}}" href="{{route('enfermeria.insumos',['id'=>$agenda->id])}}#recibir" class="oculto"></a>
@@ -333,24 +340,24 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    
-                  <div class="row"> 
-                    <div class="col-md-4">
-                      <label>{{trans('eenfermeria.SeleccioneProcedimiento')}}</label>
+
+                    <div class="row">
+                      <div class="col-md-4">
+                        <label>{{trans('eenfermeria.SeleccioneProcedimiento')}}</label>
+                      </div>
+                      <div class="col-md-8">
+                        <select name="modal_hc_procedimientos_{{$value->id}}" id="modal_hc_procedimientos_{{$value->id}}" class="form-control select2">
+                          @foreach($procedimientosx as $p)
+                          <option value="{{$p['id']}}">{{$p['nombre']}}</option>
+                          @endforeach
+                        </select>
+                      </div>
                     </div>
-                    <div class="col-md-8">
-                      <select name="modal_hc_procedimientos_{{$value->id}}" id="modal_hc_procedimientos_{{$value->id}}" class="form-control select2">
-                        @foreach($procedimientosx as $p)
-                        <option value="{{$p['id']}}">{{$p['nombre']}}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-          
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">{{trans('eenfermeria.Cancelar')}}</button>
-                    <button type="button" class="btn btn-primary" onclick="moverChecks({{$check_eliminado}}, {{$value->id}})" >{{trans('eenfermeria.Mover')}}</button>
+                    <button type="button" class="btn btn-primary" onclick="moverChecks({{$check_eliminado}}, {{$value->id}})">{{trans('eenfermeria.Mover')}}</button>
                   </div>
                 </div>
               </div>
@@ -520,50 +527,50 @@
           </div>
           <div class="col-md-2">
             <button type="button" class="btn btn-success" onclick="mostrar_planilla();"> {{trans('erol.Buscar')}}</button>
-            <input type="hidden" id="id_plantilla_2" name="id_plantilla_2" >
-          </div> --}}
-        <div class="input-group input-group col-md-4">
-          <input type="hidden" id="id_plantilla" name="id_plantilla">
-          <input type="hidden" id="id_plantilla_2" name="id_plantilla_2">
-          <input type="text" class="form-control" id="nom_plantilla" name="nom_plantilla" required>
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-info btn-flat" onclick="mostrar_planilla();">{{trans('erol.Buscar')}}</button>
-          </span>
-        </div>
-        <br>
-        <div class="input-group input-group col-md-12">
-          <center>
-            <button type="button" onclick="guardar_plantilla_basica()" class="btn btn-success">{{trans('econtrolsintomas.Guardar')}}</button>
-          </center>
-        </div>
-        <div class="col-md-12" id="detalle"></div>
+        <input type="hidden" id="id_plantilla_2" name="id_plantilla_2">
+      </div> --}}
+      <div class="input-group input-group col-md-4">
+        <input type="hidden" id="id_plantilla" name="id_plantilla">
+        <input type="hidden" id="id_plantilla_2" name="id_plantilla_2">
+        <input type="text" class="form-control" id="nom_plantilla" name="nom_plantilla" required>
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-info btn-flat" onclick="mostrar_planilla();">{{trans('erol.Buscar')}}</button>
+        </span>
       </div>
+      <br>
+      <div class="input-group input-group col-md-12">
+        <center>
+          <button type="button" onclick="guardar_plantilla_basica()" class="btn btn-success">{{trans('econtrolsintomas.Guardar')}}</button>
+        </center>
+      </div>
+      <div class="col-md-12" id="detalle"></div>
     </div>
+  </div>
 
 
-    {{-- <div class="col-md-12">
+  {{-- <div class="col-md-12">
         <div class="row">
               <div class="col-xs-3">
                 <select class="form-control" id="id_insumo" name="id_insumo">
                   <option value="428">{{trans('eenfermeria.DERMABOND')}}</option>
-                  <option value="188">{{trans('eenfermeria.BIO-GLO10%')}}</option>
-                  <option value="97">{{trans('eenfermeria.EPINEFRINA1GR')}}</option>
-                </select>
-              </div>
-              <div class="input-group input-group col-xs-4">
-                <input type="text" class="form-control" id="cantidad" name="cantidad" value="1">
-                    <span class="input-group-btn">
-                      <button type="button" class="btn btn-info btn-flat">{{trans('eenfermeria.Cargar')}}</button>
-                    </span>
-              </div>
-        </div>
-      </div> --}}
+  <option value="188">{{trans('eenfermeria.BIO-GLO10%')}}</option>
+  <option value="97">{{trans('eenfermeria.EPINEFRINA1GR')}}</option>
+  </select>
+  </div>
+  <div class="input-group input-group col-xs-4">
+    <input type="text" class="form-control" id="cantidad" name="cantidad" value="1">
+    <span class="input-group-btn">
+      <button type="button" class="btn btn-info btn-flat">{{trans('eenfermeria.Cargar')}}</button>
+    </span>
+  </div>
+  </div>
+  </div> --}}
 
   </div>
   </div>
   <!-- /.box-body -->
 
-  
+
 
 </section>
 <!-- /.content -->
@@ -574,72 +581,71 @@
 <script src="{{ asset ('/js/calendario/moment.min.js') }}"></script>
 <script src="{{ asset ("/js/bootstrap-datetimepicker.js") }}"></script>
 <script type="text/javascript">
+  $(document).ready(function() {
 
-$( document ).ready(function() { 
+  });
 
-});
-  
-function moverChecks(id, id_hc_proc) { 
-var respuesta = false;
-Swal.fire({
-  title: 'Esta seguro que desea mover estos registros',
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  confirmButtonText: 'Si'
-}).then((result) => {
-  if (result.isConfirmed) {
-    ejecutaMoverCheck(id, id_hc_proc);
-  }
-})
-
-return respuesta;
-}
-
-function ejecutaMoverCheck (id, id_hc_proc) {
-  let checks = document.querySelectorAll(".eliminar_producto" + id);
-  let contCheck = 0;
-  let contChecksExito = 0;
-  let contChecksError = 0;
-  var id_hc_procedimiento =  $("#modal_hc_procedimientos_"+id_hc_proc).val(); 
-  for (let i = 0; i < checks.length; i++) {
-    if (checks[i].checked) {
-      contCheck++;
-      $.ajax({
-        type: 'get',
-        url: "{{asset('enfermeria/uso/paciente_insumo/mover')}}/" + checks[i].value+"/"+id_hc_procedimiento,
-        headers: {
-          'X-CSRF-TOKEN': $('input[name=_token]').val()
-        },
-        datatype: 'json',
-        data: '',
-        success: function(data) {
-          if (data == 'ok') {
-            contChecksExito++;
-          } else {
-            contChecksError++;
-          }
-        },
-        error: function(data) {
-          console.log(data);
-        }
-      });
-    }
-  }
-  if (contCheck > 0) {
+  function moverChecks(id, id_hc_proc) {
+    var respuesta = false;
     Swal.fire({
-      icon: 'success',
-      title: `Exito..`,
-      text: `Se movieron los registros correctamente`,
-    });
-    setTimeout(() => {
-      window.location.reload();
-    }, 2500)
+      title: 'Esta seguro que desea mover estos registros',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        ejecutaMoverCheck(id, id_hc_proc);
+      }
+    })
+
+    return respuesta;
   }
 
+  function ejecutaMoverCheck(id, id_hc_proc) {
+    let checks = document.querySelectorAll(".eliminar_producto" + id);
+    let contCheck = 0;
+    let contChecksExito = 0;
+    let contChecksError = 0;
+    var id_hc_procedimiento = $("#modal_hc_procedimientos_" + id_hc_proc).val();
+    for (let i = 0; i < checks.length; i++) {
+      if (checks[i].checked) {
+        contCheck++;
+        $.ajax({
+          type: 'get',
+          url: "{{asset('enfermeria/uso/paciente_insumo/mover')}}/" + checks[i].value + "/" + id_hc_procedimiento,
+          headers: {
+            'X-CSRF-TOKEN': $('input[name=_token]').val()
+          },
+          datatype: 'json',
+          data: '',
+          success: function(data) {
+            if (data == 'ok') {
+              contChecksExito++;
+            } else {
+              contChecksError++;
+            }
+          },
+          error: function(data) {
+            console.log(data);
+          }
+        });
+      }
+    }
+    if (contCheck > 0) {
+      Swal.fire({
+        icon: 'success',
+        title: `Exito..`,
+        text: `Se movieron los registros correctamente`,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 2500)
+    }
 
-}
+
+  }
 
 
   $(".oculto").hide();
@@ -896,13 +902,13 @@ function ejecutaMoverCheck (id, id_hc_proc) {
   function mostrar_planilla() {
     var plantilla = document.getElementById("id_plantilla").value;
     var plantilla = document.getElementById("id_plantilla").value;
-    if (plantilla=="") {
+    if (plantilla == "") {
       Swal.fire({
-            icon: 'error',
-            title: 'Mensaje!!',
-            text: 'Digite la planilla que desea agregar',
-          });
-        return;
+        icon: 'error',
+        title: 'Mensaje!!',
+        text: 'Digite la planilla que desea agregar',
+      });
+      return;
     }
     $.ajax({
       type: 'get',
@@ -1020,7 +1026,7 @@ function ejecutaMoverCheck (id, id_hc_proc) {
 
 
   }
-  
+
 
   const verificarChecks = (e, id) => {
     e.preventDefault();
@@ -1095,7 +1101,7 @@ function ejecutaMoverCheck (id, id_hc_proc) {
 
 {{-- clinico / protocolo / anestecia [ reimpresion ] --}}
 
-{{-- 
+{{--
 Fecha: 2022-03-04 18:00:00
 
 0922729587-FAUSTOS NIVELO EDUARDO FAUSTOS --}}
