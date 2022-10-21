@@ -149,7 +149,7 @@
 
       <div class="box box-info">
         <div class="box-header">
-          <b>{{trans('eenfermeria.Observaciones')}}</b>sfd
+          <b>{{trans('eenfermeria.Observaciones')}}</b>
         </div>
         <div class="box-body">
           <form id="hc_observacion">
@@ -265,6 +265,7 @@
                 @php $resumen = array(); @endphp
                 @foreach($productos as $producto)
                 @php
+                dd($producto);
                 if(isset($producto->movimiento) and !isset($resumen[$producto->movimiento->producto->nombre]) ) {
                 $resumen[$producto->movimiento->producto->nombre] = 1;
                 } else {
