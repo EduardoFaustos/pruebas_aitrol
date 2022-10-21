@@ -262,10 +262,30 @@
                 </tr>
               </thead>
               <tbody>
+                <!--Array de Productos-->
+                $arrayH = [];
+                $arrayM = [];
+                $arrayI = [];
+                $arrayL = [];
+                $arrayG = [];
+                $arrayIm = [];
+                $arraySi = [];
+                $arrayEe = [];
+
                 @php $resumen = array(); @endphp
                 @foreach($productos as $producto)
                 @php
-                dd($producto->movimiento->producto);
+
+                switch($producto->movimiento->producto->tipo){
+
+                case 1 :
+                    dd("hola");
+                  break;
+                  
+                default:
+
+                }
+
                 if(isset($producto->movimiento) and !isset($resumen[$producto->movimiento->producto->nombre]) ) {
                 $resumen[$producto->movimiento->producto->nombre] = 1;
                 } else {
