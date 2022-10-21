@@ -278,11 +278,12 @@
                   if (Auth::user()->id_tipo_usuario == 1 && Auth::user()->id_tipo_usuario == 7) {
                     $eliminar = '<input class="eliminar_producto' . $check_eliminado . '" type="checkbox" value="' . $producto->id . '" />';
                   }
+                  $nombreProducto = $producto->movimiento->producto->nombre != '' ? $producto->movimiento->producto->nombre : '';
                   switch ($producto->movimiento->producto->tipo) {
                     case 0:
                       $tr .= '<tr>
                     <td>HONORARIOS MEDICOS</td>
-                    <td>' . $producto->movimiento->producto->nombre!=''?$producto->movimiento->producto->nombre :''. '</td>
+                    <td>' . $nombreProducto . '</td>
                     </tr>';
                       break;
                   }
