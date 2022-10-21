@@ -263,6 +263,7 @@
               </thead>
               <tbody>
                 <!--Array de Productos-->
+                @php
                 $arrayH = [];
                 $arrayM = [];
                 $arrayI = [];
@@ -271,19 +272,45 @@
                 $arrayIm = [];
                 $arraySi = [];
                 $arrayEe = [];
-
+                $arrayOtr = [];
+                @endphp
                 @php $resumen = array(); @endphp
                 @foreach($productos as $producto)
                 @php
-
                 switch($producto->movimiento->producto->tipo){
-
-                case 0 :
-                    dd("hola");
+                case 1 :
+                  $arrayH.push($producto);
                   break;
-                  
+                case 2 :
+                    $arrayM.push($producto);vvv
+                    break;
+                    
+                case 3 :
+                    $arrayI.push($producto);
+                    break;
+
+                case 4 :
+                    $arrayL.push($producto);
+                    break;
+
+                case 5 :
+                    $arrayG.push($producto);
+                    break;
+
+                case 6 :
+                    $arrayIm.push($producto);
+                    break;
+
+                case 7 :
+                    $arraySi.push($producto);
+                    break; 
+                    
+                case 8 :
+                    $arrayEe.push($producto);
+                    break;     
                 default:
-                  dd("adasdasd");
+                    $arrayOtr.push($producto);
+                    break;
                 }
 
                 if(isset($producto->movimiento) and !isset($resumen[$producto->movimiento->producto->nombre]) ) {
@@ -296,6 +323,7 @@
                 $cont_checks++;
 
                 @endphp
+                <label for="">HONORARIOS MEDICOS</label>
                 <tr>
                   <td>@if(isset($producto->movimiento)) {{$producto->movimiento->serie}} @endif</td>
                   <td>@if(isset($producto->movimiento)) {{$producto->movimiento->producto->nombre}}@endif</td>
@@ -309,6 +337,8 @@
                   </td>
                   </td>
                 </tr>
+
+
                 @endforeach
                 <form id="codigo_enviar{{$contador}}" onsubmit="return false;">
                   <a id="redirigir{{$contador}}" href="{{route('enfermeria.insumos',['id'=>$agenda->id])}}#recibir" class="oculto"></a>
