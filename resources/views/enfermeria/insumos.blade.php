@@ -278,7 +278,6 @@
                 @endphp
                 <?php
 
-use Illuminate\Support\Facades\Auth;
 
                 $eliminar = '';
                 if (Auth::user()->id_tipo_usuario == 1 && Auth::user()->id_tipo_usuario == 7) {
