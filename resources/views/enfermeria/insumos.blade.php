@@ -284,6 +284,7 @@
                       $tr .= '<tr>
                     <td>HONORARIOS MEDICOS</td>
                     <td>' . $nombreProducto . '</td>
+                    <td>' . $producto->created_at . '</td>
                     </tr>';
                       break;
                   }
