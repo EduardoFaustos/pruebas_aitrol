@@ -281,10 +281,12 @@
                   $nombreProducto = $producto->movimiento->producto->nombre != '' ? $producto->movimiento->producto->nombre : '';
                   switch ($producto->movimiento->producto->tipo) {
                     case 0:
-                      $tr .= '<tr>
-                    <td>HONORARIOS MEDICOS</td>
+
+                      $tr .= '<label>HONORARIOS MEDICOS</label><tr>
+                  
                     <td>' . $nombreProducto . '</td>
                     <td>' . $producto->created_at . '</td>
+                    <td>' . $producto->cantidad . '</td>
                     </tr>';
                       break;
                   }
