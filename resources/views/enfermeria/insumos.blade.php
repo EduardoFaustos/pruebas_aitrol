@@ -282,7 +282,6 @@
                     case 0:
                       $tr .= '<tr>
                     <td>HONORARIOS MEDICOS</td>
-                    <td>' . isset($producto->movimiento) ? $producto->movimiento->serie : '' . '</td>
                     </tr>';
                       break;
                   }
