@@ -287,6 +287,7 @@
                   case 0:
                     echo '<tr>
                     <td><label>HONORARIOS MEDICOS</label></td>
+                    <td>'.isset($producto->movimiento)?$producto->movimiento->serie:''.'</td>
                     </tr>';
                     break;
                 }
