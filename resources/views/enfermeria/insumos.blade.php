@@ -264,6 +264,7 @@
               <tbody>
                 <!--Array de Productos-->
                 <?php $resumen = array();
+                $tr = '';
                 foreach ($productos as $producto) {
                   if (isset($producto->movimiento) && !isset($resumen[$producto->movimiento->producto->nombre])) {
                     $resumen[$producto->movimiento->producto->nombre] = 1;
@@ -279,13 +280,14 @@
                   }
                   switch ($producto->movimiento->producto->tipo) {
                     case 0:
-                      echo '<tr>
+                      $tr .= '<tr>
                     <td>HONORARIOS MEDICOS</td>
                     <td>' . isset($producto->movimiento) ? $producto->movimiento->serie : '' . '</td>
                     </tr>';
                       break;
                   }
                 }
+                echo $tr;
                 ?>
 
 
