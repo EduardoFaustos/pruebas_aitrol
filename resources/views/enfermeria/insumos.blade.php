@@ -282,7 +282,7 @@
                   $arrayH.push($producto);
                   break;
                 case 2 :
-                    $arrayM.push($producto);vvv
+                    $arrayM.push($producto);
                     break;
                     
                 case 3 :
