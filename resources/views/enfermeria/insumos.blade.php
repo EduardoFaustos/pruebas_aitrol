@@ -282,6 +282,7 @@
                     case 0:
                       $tr .= '<tr>
                     <td>HONORARIOS MEDICOS</td>
+                    <td>djkfgjfgf</td>
                     </tr>';
                       break;
                   }
