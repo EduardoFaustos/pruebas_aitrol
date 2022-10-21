@@ -223,7 +223,7 @@ class EnfermeriaController extends Controller
 
     public function insumos($id_agenda)
     {
-        // dd("EPA");
+         dd("EPA");
         // $exitencia = ceil((8 / 1)); dd($exitencia);
         if ($this->rol()) {
             return response()->view('errors.404');

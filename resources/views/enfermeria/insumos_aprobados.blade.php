@@ -78,7 +78,7 @@
 
   <div class="box">
 
-sdfsdfsdf
+
     <div class="col-md-12 p-10" style="padding: 20px; z-index:  1;" >
       <center>
         <label class="label label-danger " style="font-size: 18px;"> {{trans('eenfermeria.PLANILLAGUARDADA')}}</label>
