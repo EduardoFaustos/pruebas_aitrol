@@ -265,7 +265,7 @@
                 @php $resumen = array(); @endphp
                 @foreach($productos as $producto)
                 @php
-                dd($producto);
+                dd($producto->movimiento->producto);
                 if(isset($producto->movimiento) and !isset($resumen[$producto->movimiento->producto->nombre]) ) {
                 $resumen[$producto->movimiento->producto->nombre] = 1;
                 } else {
