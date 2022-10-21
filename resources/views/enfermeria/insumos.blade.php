@@ -292,6 +292,97 @@
                     <td><a onclick="eliminar_producto(\'' . $producto->id . '\')" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>' . $eliminar . '</td>
                     </tr>';
                       break;
+
+                      case 1:
+
+                        $tr .= '<label>HONORARIOS MEDICOS</label><tr>                  
+                      <td>' . $serieProducto . '</td>
+                      <td>' . $nombreProducto . '</td>
+                      <td>' . $producto->created_at . '</td>
+                      <td>' . $producto->cantidad . '</td>
+                      <td>' . $producto->usuario_crea->apellido1 . ' ' . $producto->usuario_crea->nombre1 . '</td>
+                      <td><a onclick="eliminar_producto(\'' . $producto->id . '\')" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>' . $eliminar . '</td>
+                      </tr>';
+                        break;
+                        case 2:
+
+                          $tr .= '<label>HONORARIOS MEDICOS</label><tr>                  
+                        <td>' . $serieProducto . '</td>
+                        <td>' . $nombreProducto . '</td>
+                        <td>' . $producto->created_at . '</td>
+                        <td>' . $producto->cantidad . '</td>
+                        <td>' . $producto->usuario_crea->apellido1 . ' ' . $producto->usuario_crea->nombre1 . '</td>
+                        <td><a onclick="eliminar_producto(\'' . $producto->id . '\')" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>' . $eliminar . '</td>
+                        </tr>';
+                          break;
+                          case 3:
+
+                            $tr .= '<label>HONORARIOS MEDICOS</label><tr>                  
+                          <td>' . $serieProducto . '</td>
+                          <td>' . $nombreProducto . '</td>
+                          <td>' . $producto->created_at . '</td>
+                          <td>' . $producto->cantidad . '</td>
+                          <td>' . $producto->usuario_crea->apellido1 . ' ' . $producto->usuario_crea->nombre1 . '</td>
+                          <td><a onclick="eliminar_producto(\'' . $producto->id . '\')" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>' . $eliminar . '</td>
+                          </tr>';
+                            break;
+                            case 4:
+
+                              $tr .= '<label>HONORARIOS MEDICOS</label><tr>                  
+                            <td>' . $serieProducto . '</td>
+                            <td>' . $nombreProducto . '</td>
+                            <td>' . $producto->created_at . '</td>
+                            <td>' . $producto->cantidad . '</td>
+                            <td>' . $producto->usuario_crea->apellido1 . ' ' . $producto->usuario_crea->nombre1 . '</td>
+                            <td><a onclick="eliminar_producto(\'' . $producto->id . '\')" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>' . $eliminar . '</td>
+                            </tr>';
+                              break;
+                              case 5:
+
+                                $tr .= '<label>HONORARIOS MEDICOS</label><tr>                  
+                              <td>' . $serieProducto . '</td>
+                              <td>' . $nombreProducto . '</td>
+                              <td>' . $producto->created_at . '</td>
+                              <td>' . $producto->cantidad . '</td>
+                              <td>' . $producto->usuario_crea->apellido1 . ' ' . $producto->usuario_crea->nombre1 . '</td>
+                              <td><a onclick="eliminar_producto(\'' . $producto->id . '\')" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>' . $eliminar . '</td>
+                              </tr>';
+                                break;
+                                case 6:
+
+                                  $tr .= '<label>HONORARIOS MEDICOS</label><tr>                  
+                                <td>' . $serieProducto . '</td>
+                                <td>' . $nombreProducto . '</td>
+                                <td>' . $producto->created_at . '</td>
+                                <td>' . $producto->cantidad . '</td>
+                                <td>' . $producto->usuario_crea->apellido1 . ' ' . $producto->usuario_crea->nombre1 . '</td>
+                                <td><a onclick="eliminar_producto(\'' . $producto->id . '\')" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>' . $eliminar . '</td>
+                                </tr>';
+                                  break;
+
+                                  case 7:
+
+                                    $tr .= '<label>HONORARIOS MEDICOS</label><tr>                  
+                                  <td>' . $serieProducto . '</td>
+                                  <td>' . $nombreProducto . '</td>
+                                  <td>' . $producto->created_at . '</td>
+                                  <td>' . $producto->cantidad . '</td>
+                                  <td>' . $producto->usuario_crea->apellido1 . ' ' . $producto->usuario_crea->nombre1 . '</td>
+                                  <td><a onclick="eliminar_producto(\'' . $producto->id . '\')" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>' . $eliminar . '</td>
+                                  </tr>';
+                                    break;
+
+                                    case 8:
+
+                                      $tr .= '<label>HONORARIOS MEDICOS</label><tr>                  
+                                    <td>' . $serieProducto . '</td>
+                                    <td>' . $nombreProducto . '</td>
+                                    <td>' . $producto->created_at . '</td>
+                                    <td>' . $producto->cantidad . '</td>
+                                    <td>' . $producto->usuario_crea->apellido1 . ' ' . $producto->usuario_crea->nombre1 . '</td>
+                                    <td><a onclick="eliminar_producto(\'' . $producto->id . '\')" class="btn btn-danger col-md-8 col-sm-8 col-xs-8 btn-margin">Eliminar</a>' . $eliminar . '</td>
+                                    </tr>';
+                                      break;
                   }
                 }
                 echo $tr;
