@@ -136,7 +136,49 @@
             </div>
         </div>
 
-        
+        <!-- <div class="col-md-6">
+            <div class="card h-80">
+                <div class="card-header bg bg-primary colorbasic">
+                    <div class="d-flex align-items-center"> <span class="sradio">3</span>
+                        &nbsp;
+                        <h4 class="card-title ml-10 colorbasic">
+                            {{trans('hospitalizacion.Medicamentos')}}
+                        </h4>
+                    </div>
+                    <div class="col-md-2 align-items-right">
+                        <button class="btn btn-primary btn-xs" type="button" id="btn_evolucion" onclick="medicamentos();"> <i class="fa fa-plus"></i> </button>
+                    </div>
+                </div>
+
+                <div class="card-body" style="min-height: 250px;">
+                    @php 
+                        $agenda = $log->agenda; 
+                        $historia = $agenda->historia_clinica;
+                        $receta = $historia->recetas->last();
+                    @endphp
+                    <br>
+                    <div class="row">
+                        
+                        <div class="col-md-12">
+                            <b> {{trans('hospitalizacion.Fecha')}}</b>
+                        </div>
+                        <div class="col-md-12">
+                            <span>{{$historia->created_at}} </span>
+                        </div>
+                        <div class="col-md-12">
+                            <b> {{trans('hospitalizacion.Medicamentos')}}</b>
+                        </div>
+                        <div class="col-md-12">
+                        
+                            @foreach($receta->detalles as $detalle)
+                                <span>* {{$detalle->nombre}}: cantidad {{$detalle->cantidad}} - {{substr($detalle->dosis, 0, 10)}}...</span><br>   
+                            @endforeach 
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div> -->
       
       
         <div class="col-md-6">
@@ -275,7 +317,7 @@
         <div class="col-md-6">
             <div class="card h-80">
                 <div class="card-header bg bg-primary colorbasic">
-                    <div class="d-flex align-items-center"> <span class="sradio">7</span>
+                    <div class="d-flex align-items-center"> <span class="sradio">6</span>
                         &nbsp;
                         <h4 class="card-title ml-10 colorbasic">
                             {{trans('Evolución Enfermeria')}}
