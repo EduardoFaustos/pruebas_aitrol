@@ -225,7 +225,7 @@ class Formulario005Controller extends Controller
             'id_usuariocrea'        => $idusuario,
             'id_usuariomod'         => $idusuario,
         ];
-
+        //dd($arr_receta_evolucion);
         $receta_evolucion = ho_hc_receta_evolucion::create($arr_receta_evolucion);
         
         
