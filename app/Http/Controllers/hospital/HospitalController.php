@@ -1691,7 +1691,7 @@ class HospitalController extends Controller
             Ho_Log_Solicitud::create($sol_log);
 
             DB::commit();
-            return ['respuesta' => 'success', 'msj' => 'Guardado con Exito', 'id_agenda' => $id_agenda];
+            return ['respuesta' => 'success', 'msj' => 'Guardado con Exito', 'id_agenda' => $id_agenda, 'id_solicitud' => $ho_solicitud, 'paso' =>$id_paso];
         } catch (\Exception $e) {
             DB::rollBack();
             return ['respuesta' => 'error', 'msj' => $e->getMessage()];
@@ -1702,7 +1702,9 @@ class HospitalController extends Controller
         $fecha_desde = date('Y-m-d');
         $fecha_hasta = date('Y-m-d');
 
+        $solicitudes = Ho_solicitud::where('estado_paso', $id_paso)->get();
+
         $salas = Sala::where('estado','1')->where('id_hospital','5')->get();
-        return view('hospital/modulos/index',['id_paso' => $id_paso, 'salas' => $salas]);
+        return view('hospital/modulos/index',['id_paso' => $id_paso, 'salas' => $salas, 'fecha_desde' => $fecha_desde, 'fecha_hasta' => $fecha_hasta, 'solicitudes' => $solicitudes]);
     }
 }

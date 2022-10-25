@@ -321,6 +321,15 @@ $fecha_actual = date("Y-m-d H:i:s");
         return validar;
     }
 
+    function alertas(icon, title, msj) {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            html: msj
+        })
+    }
+
+
     function guardar() {
         if (!validar_campos()) {
             $.ajax({
@@ -332,13 +341,19 @@ $fecha_actual = date("Y-m-d H:i:s");
                 datatype: 'json',
                 data: $("#form_emergencia").serialize(),
                 success: function(data) {
-                    console.log(data);
-
+                
+                    alertas(data.respuesta, data.respuesta, data.msj)
+                    setTimeout(function() {
+                        window.location.href = "{{url('hospital/modulos/index')}}/"+data.paso;
+                    }, 1500)
+                    
                 },
                 error: function(data) {
-                    console.log(data);
+                
                 }
             });
+        }else{
+            alertas('error', 'ERROR', `{{trans('proforma.camposvacios')}}`)
         }
 
     }
@@ -355,7 +370,7 @@ $fecha_actual = date("Y-m-d H:i:s");
                 },
                 success: function(data) {
                     response(data);
-                    console.log("hola");
+                    
                 }
             });
         },
