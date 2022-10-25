@@ -57,7 +57,7 @@ use Sis_medico\Hospital;
 use Sis_medico\Ho_Solicitud;
 use Sis_medico\HoEstadoPaso;
 use Sis_medico\Http\Requests\Request as RequestsRequest;
-use Sis_medico\Log_agenda;
+use Sis_medico\Log_Agenda;
 use Sis_medico\Log_usuario;
 use Sis_medico\Medicina;
 use Sis_medico\Sala;
