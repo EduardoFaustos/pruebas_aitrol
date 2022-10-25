@@ -15,7 +15,7 @@ use Sis_medico\Opcion_Usuario;
 use Sis_medico\Hospital_Log_Movimiento;
 use Sis_medico\Habitacion;
 use Illuminate\Pagination\Paginator;
-use Sis_medico\agenda;
+use Sis_medico\Agenda;
 use Sis_medico\Ingreso_emer_008;
 use Sis_medico\Cama;
 use Sis_medico\Piso;
@@ -1561,7 +1561,7 @@ class HospitalController extends Controller
                 'id_usuariomod'   => $id_doctor,
             ];
 
-            $id_agenda = agenda::insertGetId($input_agenda);
+            $id_agenda = Agenda::insertGetId($input_agenda);
 
 
             $consulta_crear_new = [
