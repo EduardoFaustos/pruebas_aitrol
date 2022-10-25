@@ -1591,7 +1591,7 @@ class HospitalController extends Controller
                 'ip_creacion'     => $ip_cliente,
             ];
 
-            Log_agenda::create($input_log);
+            Log_Agenda::create($input_log);
 
             $input_historia = [
 
