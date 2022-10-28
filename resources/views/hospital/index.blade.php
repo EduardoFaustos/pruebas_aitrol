@@ -66,7 +66,7 @@
     margin: 1em;
     align-items: center;
     height: 160px;
-    width: 20%;
+    width: 17%;
   }
 
   .box {
@@ -258,7 +258,7 @@
 
   <div class="card card-solid">
     <div class="row row-cols-12">
-      <div class="col-md-5">
+      <div class="col-md-4">
         <div class="panel card-img" style="height:345px;border-radius:10px;margin:17px;">
           <a href="{{route('hospital.gcuartos')}}" class="">
             <div>
@@ -311,7 +311,7 @@
         </div>
 
       </div>
-      <div class="col-md-7">
+      <div class="col-md-8">
         <div class="flexbox">
           <div style="color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
             <a href="{{route('hospital.index_modulos',['id_paso' => '2'])}}" class="">
@@ -420,6 +420,20 @@
               </div>
             </a>
           </div>
+
+          <div style="color: #124574; background-image: linear-gradient(to right, #FFFFFF,#FFFFFF,#d1d1d1);border-radius: 10px;">
+            <a href="" class="">
+              <div class="row">
+                <div class="col-md-5 col-xs-6" style="margin-top:6px;padding-right: 5px;position: relative;margin-lef:0;margin-right:0">
+                  <img class="image_baner" src="{{asset('/')}}hc4/img/icono farmacia.png" style="width: 95px;">
+                </div>
+                <div class="col-md-7 col-xs-6" style="color: #124574;display:flex;flex-direction:column;justify-content:center">
+                  <p style="font-size: 13px;margin-left:27px;" class="text_2"><b>@lang('hospital.Compras')</b></p>
+                </div>
+              </div>
+            </a>
+          </div>
+          
         </div>
 
 
