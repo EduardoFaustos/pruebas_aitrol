@@ -67,5 +67,6 @@ return [
     'UCIN'        => 'UCIN',
     'Cirugia'        => 'Cirugia',
     'UCI'        => 'UCI',
+    'Compras' => 'Compras',
 
 ];

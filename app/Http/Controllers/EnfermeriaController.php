@@ -224,7 +224,7 @@ class EnfermeriaController extends Controller
 
     public function insumos($id_agenda)
     {
-        // dd("EPA");
+     
         // $exitencia = ceil((8 / 1)); dd($exitencia);
         if ($this->rol()) {
             return response()->view('errors.404');
@@ -247,7 +247,7 @@ class EnfermeriaController extends Controller
         $cabecera = InvCabMovimientos::where('id_agenda', $id_agenda)->first();
 
         $planilla = Planilla::where('id_agenda', $agenda->id)->first();
-
+       
         if (!is_null($planilla)) {
             if ($planilla->aprobado == 1 ) {
                 return view('enfermeria/insumos_aprobados', ['procedimientos' => $procedimientos, 'agenda' => $agenda, 'equipos' => $equipos, 'hcid' => $hcid, 'bodegas' => $bodegas, 'cabecera' => $cabecera]);

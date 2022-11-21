@@ -15,6 +15,7 @@ use Sis_medico\Opcion_Usuario;
 use Sis_medico\Hospital_Log_Movimiento;
 use Sis_medico\Habitacion;
 use Illuminate\Pagination\Paginator;
+use Sis_medico\Agenda;
 use Sis_medico\Ingreso_emer_008;
 use Sis_medico\Cama;
 use Sis_medico\Piso;
@@ -42,10 +43,25 @@ use Sis_medico\Hospital_Salas;
 use Sis_medico\hc_cie10;
 use Sis_medico\Cie_10_3;
 use Sis_medico\Cie_10_4;
+use Sis_medico\Empresa;
+use Sis_medico\Especialidad;
+use Sis_medico\hc_child_pugh;
+use Sis_medico\Hc_Evolucion;
+use Sis_medico\Hc_Log;
+use Sis_medico\hc_procedimientos;
+use Sis_medico\hc_receta;
+use Sis_medico\Historiaclinica;
+use Sis_medico\Ho_Datos_Paciente;
+use Sis_medico\Ho_Log_Solicitud;
 use Sis_medico\Hospital;
 use Sis_medico\Ho_Solicitud;
+use Sis_medico\HoEstadoPaso;
 use Sis_medico\Http\Requests\Request as RequestsRequest;
+use Sis_medico\Log_Agenda;
+use Sis_medico\Log_usuario;
 use Sis_medico\Medicina;
+use Sis_medico\Sala;
+use Sis_medico\User_espe;
 
 class HospitalController extends Controller
 {
@@ -68,7 +84,7 @@ class HospitalController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
+    public function index(Request $request)
     {
         $opcion = '1';
         if ($this->rol_new($opcion)) {
@@ -98,7 +114,11 @@ class HospitalController extends Controller
         //dd($nombres);
         //$inicio = CamaPaciente::all();
         $totales = AgendaQ::where('estado', '=', '1')->where('fecha_total', '=', $fechahoy)->count();
-        return view('hospital/index', ['totales' => $totales, 'nombres' => $nombres]);
+
+        $doctores       = User::where('id_tipo_usuario', 3)->where('estado', 1)->orderby('apellido1')->get();
+        $seguros        = Seguro::where('inactivo', '1')->get();
+        $especialidades = Especialidad::where('estado', '1')->get();
+        return view('hospital/index', ['totales' => $totales, 'nombres' => $nombres, 'doctores' => $doctores, 'seguros' => $seguros, 'especialidades' => $especialidades, 'id_especialidad' => null, 'id_doctor1' => null, 'id_seguro' => null, 'request' => $request]);
     }
     public function farmacia()
     {
@@ -1303,7 +1323,7 @@ class HospitalController extends Controller
     {
         return view('hospital.quintopaso');
     }
-    
+
     public function genericos(Request $request)
     {
         $genericos = [];
@@ -1316,5 +1336,375 @@ class HospitalController extends Controller
     {
         $porSi = "";
         return $id;
+    }
+
+    public function admision($id_paso){
+
+        $fecha = date('Y-m-d');
+        $seguros = Seguro::where('inactivo', '1')->get();      
+
+        return view('hospital/admision',['seguros' => $seguros, 'fecha' => $fecha, 'id_paso' => $id_paso]);
+    }
+
+    public function ingreso_modulos(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $ip_cliente   = $_SERVER["REMOTE_ADDR"];
+            $idusuario    = Auth::user()->id;
+            $id_doctor    = Auth::user()->id;
+            $id_paciente = $request['cedula'];
+            $paciente = paciente::find($id_paciente);
+            $user = User::find($id_paciente);
+            $datos_paciente = Ho_Datos_Paciente::Where('id_paciente', $id_paciente)->first();
+            $id_paso = $request['id_paso'];
+            $estado_paso = HoEstadoPaso::find($id_paso);
+
+            $input_pac = [
+                'id'                 => $id_paciente,
+                'id_usuario'         => $id_paciente,
+                'nombre1'            => strtoupper($request['nombre1']),
+                'nombre2'            => strtoupper($request['nombre2']),
+                'apellido1'          => strtoupper($request['apellido1']),
+                'apellido2'          => strtoupper($request['apellido2']),
+                'fecha_nacimiento'   => $request['f_nacimiento'],
+                'sexo'               => $request['sexo'],
+                'ciudad'             => $request['ciudad'],
+                'direccion'          => $request['direccion'],
+                'telefono1'          => $request['telefono1'],
+                'telefono2'          => $request['telefono2'],
+                'nombre1familiar'    => strtoupper($request['nombre1']),
+                'nombre2familiar'    => strtoupper($request['nombre2']),
+                'apellido1familiar'  => strtoupper($request['apellido1']),
+                'apellido2familiar'  => strtoupper($request['apellido2']),
+                'telefono_llamar'    => $request['telefono_llamar'],
+                'ocupacion'          => $request['ocupacion'],
+                'parentesco'         => 'Principal',
+                'parentescofamiliar' => 'Principal',
+                'referido'           => $request['referido'],
+                'tipo_documento'     => 1,
+                'id_seguro'          => 1,
+                'imagen_url'         => ' ',
+                'menoredad'          => 0,
+                'ip_creacion'        => $ip_cliente,
+                'ip_modificacion'    => $ip_cliente,
+                'id_usuariocrea'     => $idusuario,
+                'id_usuariomod'      => $idusuario,
+            ];
+    
+            $input_pac_upd = [
+                'id'                 => $id_paciente,
+                'id_usuario'         => $id_paciente,
+                'nombre1'            => strtoupper($request['nombre1']),
+                'nombre2'            => strtoupper($request['nombre2']),
+                'apellido1'          => strtoupper($request['apellido1']),
+                'apellido2'          => strtoupper($request['apellido2']),
+                'fecha_nacimiento'   => $request['f_nacimiento'],
+                'sexo'               => $request['sexo'],
+                'ciudad'             => $request['ciudad'],
+                'direccion'          => $request['direccion'],
+                'telefono1'          => $request['telefono1'],
+                'telefono2'          => $request['telefono2'],
+                'nombre1familiar'    => strtoupper($request['nombre1']),
+                'nombre2familiar'    => strtoupper($request['nombre2']),
+                'apellido1familiar'  => strtoupper($request['apellido1']),
+                'apellido2familiar'  => strtoupper($request['apellido2']),
+                'parentescofamiliar' => $request['parentesco'],
+                'telefono3'          => $request['telefono_llamar'],
+                'ocupacion'          => $request['ocupacion'],
+                'referido'           => $request['referido'],
+                'ip_modificacion'    => $ip_cliente,
+                'id_usuariomod'      => $idusuario,
+            ];
+    
+            $input_usu_c = [
+                'id'               => $id_paciente,
+                'nombre1'          => strtoupper($request['nombre1']),
+                'nombre2'          => strtoupper($request['nombre2']),
+                'apellido1'        => strtoupper($request['apellido1']),
+                'apellido2'        => strtoupper($request['apellido2']),
+                'fecha_nacimiento' => $request['fecha_nacimiento'],
+                'telefono1'        => $request['telefono1'],
+                'telefono2'        => $request['telefono2'],
+                'id_tipo_usuario'  => 2,
+                'email'            => $request['id'] . '@mail.com',
+                'password'         => bcrypt($request['id']),
+                'tipo_documento'   => 1,
+                'estado'           => 1,
+                'imagen_url'       => ' ',
+                'ip_creacion'      => $ip_cliente,
+                'ip_modificacion'  => $ip_cliente,
+                'id_usuariocrea'   => $idusuario,
+                'id_usuariomod'    => $idusuario,
+            ];
+    
+            $input_usu_up = [
+                'id'               => $id_paciente,
+                'nombre1'          => strtoupper($request['nombre1']),
+                'nombre2'          => strtoupper($request['nombre2']),
+                'apellido1'        => strtoupper($request['apellido1']),
+                'apellido2'        => strtoupper($request['apellido2']),
+                'fecha_nacimiento' => $request['fecha_nacimiento'],
+                'telefono1'        => $request['telefono1'],
+                'telefono2'        => $request['telefono2'],
+                'id_tipo_usuario'  => 2,
+                'ip_modificacion'  => $ip_cliente,
+                'id_usuariomod'    => $idusuario,
+            ];
+    
+            $arr_ho_pac = [
+                'id_paciente'        => $id_paciente,
+                'barrio'             => $request['barrio'],
+                'parroquia'          => $request['parroquia'],
+                'canton'             => $request['canton'],
+                'provincia'          => $request['provincia'],
+                'zona_ur'            => $request['zona'],
+                'grupo_cultural'     => $request['grupo_cultural'],
+                'edad'               => $request['edad'],
+                'direccion_familiar' => $request['direccion_familiar'],
+                'forma_llegada'      => $request['forma_llegada'],
+                'fuente_informacion'     => $request['fuente_informacion'],
+                'telefono_inst_per_paci' => $request['telefono_inst_per_paci'],
+                'instruccion'            => $request['instruccion'],
+                'empresa_trabajo'        =>$request['empresa'],
+                'llamar_a'               => $request['llamar_a'],
+                'nacionalidad'           => $request['nacionalidad'],
+                'ip_creacion'            => $ip_cliente,
+                'ip_modificacion'        => $ip_cliente,
+                'id_usuariocrea'         => $idusuario,
+                'id_usuariomod'          => $idusuario,
+                'parentesco_afinidad'    => $request['parentesco'],
+            ];
+    
+            $arr_ho_pac_up = [
+                'id_paciente'        => $id_paciente,
+                'barrio'             => $request['barrio'],
+                'parroquia'          => $request['parroquia'],
+                'canton'             => $request['canton'],
+                'provincia'          => $request['provincia'],
+                'zona_ur'            => $request['zona'],
+                'grupo_cultural'     => $request['grupo_cultural'],
+                'edad'               => $request['edad'],
+                'direccion_familiar' => $request['direccion_familiar'],
+                'forma_llegada'      => $request['forma_llegada'],
+                'fuente_informacion'     => $request['fuente_informacion'],
+                'telefono_inst_per_paci' => $request['telefono_inst_per_paci'],
+                'instruccion'            => $request['instruccion'],
+                'empresa_trabajo'        =>$request['empresa'],
+                'llamar_a'               => $request['llamar_a'],
+                'nacionalidad'           => $request['nacionalidad'],
+                'parentesco_afinidad'    => $request['parentesco'],
+                'ip_modificacion'        => $ip_cliente,
+                'id_usuariomod'          => $idusuario,
+            ];
+    
+    
+            if (is_null($paciente)) {
+    
+                if (!is_null($user)) {
+                    $user->update($input_usu_up);
+                } else {
+                    User::create($input_usu_c);
+                }
+    
+                paciente::create($input_pac);
+    
+                $input_log = [
+                    'id_usuario'  => $idusuario,
+                    'ip_usuario'  => $ip_cliente,
+                    'descripcion' => "CREA NUEVO PACIENTE",
+                    'dato_ant1'   => $id_paciente,
+                    'dato1'       => strtoupper($request['nombre1'] . " " . $request['nombre2'] . " " . $request['apellido1'] . " " . $request['apellido2']),
+                    'dato2'       => 'Hospital',
+                ];
+    
+                Log_usuario::create($input_log);
+            } else {
+                $paciente->update($input_pac_upd);
+                if (!is_null($datos_paciente)) {
+                    $datos_paciente->update($arr_ho_pac_up);
+                }
+            }
+    
+            if (is_null($datos_paciente)) {
+                Ho_Datos_Paciente::create($arr_ho_pac);
+            } else {
+                $datos_paciente->update($arr_ho_pac_up);
+            }
+    
+            $id_sala= Sala::where('nombre_sala', 'like', $estado_paso->descripcion)->first();
+            $especialidad = User_espe::where('usuid', $id_doctor)->get()->first();
+            $empresa = Empresa::where('prioridad', '2')->where('estado','1')->first();
+
+            if (!is_null($especialidad)) {
+                $espid = $especialidad->espid;
+            } else {
+                $espid = '4';
+            }
+
+            $input_agenda = [
+                'fechaini'        => Date('Y-m-d H:i:s'),
+                'fechafin'        => Date('Y-m-d H:i:s'),
+                'id_paciente'     => $id_paciente,
+                'id_doctor1'      => $id_doctor,
+                'proc_consul'     => '1',
+                'estado_cita'     => '1',
+                'id_empresa'      => $empresa->id,
+                'espid'           => $espid,
+                'observaciones'   => 'EVOLUCION CREADA POR HOSPITAL',
+                'id_seguro'       => $paciente->id_seguro,
+                'estado'          => '1',
+                'id_sala'         => $id_sala->id,
+                'ip_creacion'     => $ip_cliente,
+                'ip_modificacion' => $ip_cliente,
+                'id_usuariocrea'  => $id_doctor,
+                'id_usuariomod'   => $id_doctor,
+            ];
+
+            $id_agenda = Agenda::insertGetId($input_agenda);
+
+
+            $consulta_crear_new = [
+                'anterior'        => 'CONSULTA: -> El Dr. creo nueva consulta -> id_agenda: ' . $id_agenda,
+                'nuevo'           => 'CONSULTA: -> El Dr. creo nueva consulta -> id_agenda: ' . $id_agenda,
+                'id_paciente'     => $id_paciente,
+                'id_usuariomod'   => $id_doctor,
+                'id_usuariocrea'  => $id_doctor,
+                'ip_modificacion' => $ip_cliente,
+                'ip_creacion'     => $ip_cliente,
+            ];
+            Hc_Log::create($consulta_crear_new);
+
+            $input_log = [
+                'id_agenda'       => $id_agenda,
+                'estado_cita_ant' => '1',
+                'estado_cita'     => '1',
+                'fechaini'        => Date('Y-m-d H:i:s'),
+                'fechafin'        => Date('Y-m-d H:i:s'),
+                'estado'          => '4',
+                'observaciones'   => 'EVOLUCION CREADA POR EL DOCTOR',
+                'id_doctor1'      => $id_doctor,
+                'descripcion'     => 'EVOLUCION CREADA POR EL DOCTOR',
+                'id_usuariomod'   => $id_doctor,
+                'id_usuariocrea'  => $id_doctor,
+                'ip_modificacion' => $ip_cliente,
+                'ip_creacion'     => $ip_cliente,
+            ];
+
+            Log_Agenda::create($input_log);
+
+            $input_historia = [
+
+                'parentesco'      => $paciente->parentesco,
+                'id_usuario'      => $paciente->id_usuario,
+                'id_agenda'       => $id_agenda,
+                'id_paciente'     => $id_paciente,
+                'id_seguro'       => $paciente->id_seguro,
+                'id_doctor1'      => $id_doctor,
+                'id_usuariocrea'  => $id_doctor,
+                'ip_modificacion' => $ip_cliente,
+                'id_usuariomod'   => $id_doctor,
+                'ip_creacion'     => $ip_cliente,
+
+            ];
+
+            $id_procedimiento_completo = '40';
+
+            $id_historia = Historiaclinica::insertGetId($input_historia);
+
+            $input_hc_procedimiento = [
+                'id_hc'                     => $id_historia,
+                'id_seguro'                 => $paciente->id_seguro,
+                'id_procedimiento_completo' => $id_procedimiento_completo,
+                'ip_modificacion'           => $ip_cliente,
+                'id_usuariocrea'            => $idusuario,
+                'id_usuariomod'             => $idusuario,
+                'ip_creacion'               => $ip_cliente,
+
+            ];
+
+            $id_hc_procedimiento = hc_procedimientos::insertGetId($input_hc_procedimiento);
+
+            $input_hc_evolucion = [
+                'hc_id_procedimiento' => $id_hc_procedimiento,
+                'hcid'                => $id_historia,
+                'secuencia'           => '0',
+                'fecha_ingreso'       => ' ',
+                'ip_modificacion'     => $ip_cliente,
+                'id_usuariomod'       => $idusuario,
+                'id_usuariocrea'      => $idusuario,
+                'ip_creacion'         => $ip_cliente,
+
+            ];
+            $id_evolucion    = Hc_Evolucion::insertGetId($input_hc_evolucion);
+
+            $input_child_pugh = [
+                'id_hc_evolucion'       => $id_evolucion,
+                'ip_modificacion'       => $ip_cliente,
+                'id_usuariocrea'        => $idusuario,
+                'id_usuariomod'         => $idusuario,
+                'ip_creacion'           => $ip_cliente,
+                'examen_fisico'         => 'ESTADO CABEZA Y CUELLO:
+                                                            ESTADO TORAX:
+                                                            ESTADO ABDOMEN:
+                                                            ESTADO MIEMBROS SUPERIORES:
+                                                            ESTADO MIEMBROS INFERIORES:
+                                                            OTROS: ',
+            ];
+
+            $id_child = hc_child_pugh::create($input_child_pugh);
+
+            $input_hc_receta = [
+                'id_hc'           => $id_historia,
+                'ip_modificacion' => $ip_cliente,
+                'id_usuariocrea'  => $idusuario,
+                'id_usuariomod'   => $idusuario,
+                'ip_creacion'     => $ip_cliente,
+
+            ];
+            hc_receta::insert($input_hc_receta);
+
+
+            $arr_solicitud = [
+                'id_paciente'           => $request['cedula'],
+                'id_agenda'             => $id_agenda,
+                'id_seguro'             => $request['id_seguro'],
+                'fecha_ingreso'         => date('Y-m-d H:i:s'),
+                'estado_paso'           => $id_paso,
+                'ip_creacion'           => $ip_cliente,
+                'ip_modificacion'       => $ip_cliente,
+                'id_usuariocrea'        => $idusuario,
+                'id_usuariomod'         => $idusuario,
+            ];
+
+            $ho_solicitud = Ho_solicitud::insertGetId($arr_solicitud);
+
+            $sol_log = [
+                'id_ho_solicitud'       => $ho_solicitud,
+                'estado_paso'           => $id_paso,
+                'id_agenda'             => $id_agenda,
+                'fecha_ingreso'         => date('Y-m-d'),
+                'ip_creacion'           => $ip_cliente,
+                'ip_modificacion'       => $ip_cliente,
+                'id_usuariocrea'        => $idusuario,
+            ];
+            Ho_Log_Solicitud::create($sol_log);
+
+            DB::commit();
+            return ['respuesta' => 'success', 'msj' => 'Guardado con Exito', 'id_agenda' => $id_agenda, 'id_solicitud' => $ho_solicitud, 'paso' =>$id_paso];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ['respuesta' => 'error', 'msj' => $e->getMessage()];
+        }
+    }
+    
+    public function index_modulos($id_paso){
+        $fecha_desde = date('Y-m-d');
+        $fecha_hasta = date('Y-m-d');
+
+        $solicitudes = Ho_solicitud::where('estado_paso', $id_paso)->get();
+
+        $salas = Sala::where('estado','1')->where('id_hospital','5')->get();
+        return view('hospital/modulos/index',['id_paso' => $id_paso, 'salas' => $salas, 'fecha_desde' => $fecha_desde, 'fecha_hasta' => $fecha_hasta, 'solicitudes' => $solicitudes]);
     }
 }

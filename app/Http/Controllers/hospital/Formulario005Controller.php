@@ -81,13 +81,19 @@ class Formulario005Controller extends Controller
         $evoluciones = Hc_Evolucion::where('hc_id_procedimiento', $solicitud->id_hcproc)->Orderby('created_at', 'DESC')->get();
         //dd($evoluciones);
         $historia = $solicitud->agenda->historia_clinica;
+        //dd($historia);
         //dd($request->all());
-        //$recetas = hc_receta::where('id_hc', $historia->hcid)->orderby('created_at', 'DESC')->get();
-        $hc_receta_evolucion = Ho_Hc_Receta_Evolucion::where('id_evolucion', $hc_receta_evolucion->evolucion->id)->get();
 
-        $receta = $hc_receta_evolucion->id_receta;
-        
-        return view('hospital.formulario_005.evolucion', ['solicitud' => $solicitud, 'evoluciones' => $evoluciones, 'recetas' => $recetas]);
+        //$recetas = hc_receta::where('id_hc', $historia->hcid)->orderby('created_at', 'DESC')->get();
+        //$hc_receta_evolucion = Ho_Hc_Receta_Evolucion::where('id_evolucion', $hc_receta_evolucion->evolucion->id)->get();
+
+        //$receta = $hc_receta_evolucion->id_receta;
+        $receta = hc_receta::where('id_hc', $historia->hcid)->first();
+        //dd($receta);
+        $detalles = $receta->detalles;
+        //dd($detalles);
+
+        return view('hospital.formulario_005.evolucion', ['solicitud' => $solicitud, 'evoluciones' => $evoluciones, 'receta' => $receta, 'detalles'=>$detalles]);
     }
 
     public function guardar_evolucion(Request $request, $id_evol)
@@ -207,19 +213,19 @@ class Formulario005Controller extends Controller
             'id_usuariomod'         => $idusuario,
         ];
 
-        $receta = hc_receta::create($arr_receta);
+        $receta = hc_receta::insertGetId($arr_receta);
 
         //$recetas = hc_receta::where('id_hc', $historia->hcid)->orderby('created_at', 'DESC')->get();
         $arr_receta_evolucion =[
-            'id_receta'             => $arr_receta->id,
-            'id_evolucion'          => $arr_evolucion->id,
+            'id_receta'             => $receta->id,
+            'id_evolucion'          => $evolucion->id,
             'estado'                => 1,
             'ip_creacion'           => $ip_cliente,
             'ip_modificacion'       => $ip_cliente,
             'id_usuariocrea'        => $idusuario,
             'id_usuariomod'         => $idusuario,
         ];
-
+        //dd($arr_receta_evolucion);
         $receta_evolucion = ho_hc_receta_evolucion::create($arr_receta_evolucion);
         
         

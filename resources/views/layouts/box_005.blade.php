@@ -136,10 +136,8 @@
             </div>
         </div>
 
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
             <div class="card h-80">
-                <!---->
-                <!---->
                 <div class="card-header bg bg-primary colorbasic">
                     <div class="d-flex align-items-center"> <span class="sradio">3</span>
                         &nbsp;
@@ -179,16 +177,14 @@
                     </div>
 
                 </div>
-                <!---->
-                <!---->
             </div>
-        </div>
+        </div> -->
       
       
         <div class="col-md-6">
             <div class="card h-80">
                 <div class="card-header bg bg-primary colorbasic">
-                    <div class="d-flex align-items-center"> <span class="sradio">4</span>
+                    <div class="d-flex align-items-center"> <span class="sradio">3</span>
                         &nbsp;
                         <h4 class="card-title ml-10 colorbasic">
                             {{trans('hospitalizacion.SolicituddeExámenes')}}
@@ -249,7 +245,7 @@
         <div class="col-md-6">
             <div class="card h-80">
                 <div class="card-header bg bg-primary colorbasic">
-                    <div class="d-flex align-items-center"> <span class="sradio">5</span>
+                    <div class="d-flex align-items-center"> <span class="sradio">4</span>
                         &nbsp;
                         <h4 class="card-title ml-10 colorbasic">
                             {{trans('hospitalizacion.DescargoEnfermeria')}}
@@ -288,7 +284,7 @@
         <div class="col-md-6">
             <div class="card h-80">
                 <div class="card-header bg bg-primary colorbasic">
-                    <div class="d-flex align-items-center"> <span class="sradio">6</span>
+                    <div class="d-flex align-items-center"> <span class="sradio">5</span>
                         &nbsp;
                         <h4 class="card-title ml-10 colorbasic">
                             {{trans('hospitalizacion.ResultadodeExamenes')}}
@@ -321,7 +317,7 @@
         <div class="col-md-6">
             <div class="card h-80">
                 <div class="card-header bg bg-primary colorbasic">
-                    <div class="d-flex align-items-center"> <span class="sradio">7</span>
+                    <div class="d-flex align-items-center"> <span class="sradio">6</span>
                         &nbsp;
                         <h4 class="card-title ml-10 colorbasic">
                             {{trans('Evolución Enfermeria')}}
