@@ -82,7 +82,7 @@
          <input type="hidden" id="codigo" name="codigo">
          </div>
          <div class="form-group col-md-6">
-         <button class="btn btn-success btn-sm col-md-2" onClick="enviar();"><span class="glyphicon glyphicon-plus"> {{trans('ecamilla.Agregar')}}</span></button>
+         <!-- <button class="btn btn-success btn-sm col-md-2" onClick="enviar();"><span class="glyphicon glyphicon-plus"> {{trans('ecamilla.Agregar')}}</span></button> -->
          </div>
         </div>
       </div>
@@ -93,7 +93,7 @@
               <b>{{trans('eenfermeria.Observaciones')}}</b>
               </div>
               <div class="col-md-6" style="text-align: right;">
-               <a class="btn btn-info btn-xs" href="{{route('anestesiologia.mostrar',['id'=>$id_proc])}}"> <i class="fa fa-medkit"></i> {{trans('eenfermeria.RécordAnestésico')}}</a>
+               <!-- <a class="btn btn-info btn-xs" href="{{route('anestesiologia.mostrar',['id'=>$id_proc])}}"> <i class="fa fa-medkit"></i> {{trans('eenfermeria.RécordAnestésico')}}</a> -->
               </div>
             </div>
 
@@ -102,9 +102,9 @@
           <div class="box-body">
             <form id="hc_observacion">
               <input type="hidden" name="id_historia2" value="{{$hcid}}">
-              <textarea name="observaciones_enfermeria" id="observaciones_enfermeria" onchange="guardar_observacion();" style="width: 100%">{{$agenda->historia_clinica->observaciones_enfermeria}}</textarea>
+              <p name="observaciones_enfermeria" id="observaciones_enfermeria" onchange="guardar_observacion();" style="width: 100%">{{$agenda->historia_clinica->observaciones_enfermeria}}</p>
             </form>
-            <button class="btn btn-success btn-xs" onclick="guardar_msn();"><span class="glyphicon glyphicon-floppy-disk">&nbsp;</span>Guardar</button>
+            <!-- <button class="btn btn-success btn-xs" onclick="guardar_msn();"><span class="glyphicon glyphicon-floppy-disk">&nbsp;</span>Guardar</button> -->
           </div>
 
       </div>
@@ -135,11 +135,11 @@
         </div>
       </div>
       <div class="col-md-2">
-        <button type="button" class="btn btn-success" onclick="mostrar_planilla();"> {{trans('erol.Buscar')}}</button>
+        <!-- <button type="button" class="btn btn-success" onclick="mostrar_planilla();"> {{trans('erol.Buscar')}}</button> -->
         <input type="hidden" id="id_plantilla_2" name="id_plantilla_2" >
       </div>
       <div class="col-md-2">
-        <button type="button" onclick="guardar_plantilla_basica()" class="btn btn-success oculto">{{trans('econtrolsintomas.Guardar')}}</button>
+        <!-- <button type="button" onclick="guardar_plantilla_basica()" class="btn btn-success oculto">{{trans('econtrolsintomas.Guardar')}}</button> -->
       </div>
       <div class="col-md-12" id="detalle"></div>
     </div>

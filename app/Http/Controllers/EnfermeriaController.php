@@ -39,6 +39,7 @@ use Sis_medico\Tipo;
 use Sis_medico\TransitoController;
 use Sis_medico\User;
 use Session;
+use Sis_medico\Planilla_Cabecera_Labs;
 
 class EnfermeriaController extends Controller
 {
@@ -562,6 +563,10 @@ class EnfermeriaController extends Controller
             $hcid   = "";
         }
         $equipos = Equipo_Historia::where('hcid', $hcid)->get();
+        $planilla = Planilla::where("id_agrenda")->first();
+        if($planilla->aprobado == 1){
+            return view('enfermeria/selec_prod2', ['procedimientos' => $procedimientos, 'agenda' => $agenda, 'equipos' => $equipos, 'hcid' => $hcid, 'tipos' => $tipos, 'id_proc' => $id]);
+        }
         //dd($agenda);
         //return $equipos;
 

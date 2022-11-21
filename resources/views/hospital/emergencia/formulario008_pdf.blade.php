@@ -389,7 +389,7 @@
                         <td width="15%" class="texto altura2" scope="col">CAUSA G. OBSTETRICA</td>
                         <td width="5%" class="texto altura2" scope="col">@if($form008->c_obstetrica=='1') X @else @endif</td>
                         <td width="15%" class="texto altura2" scope="col">CAUSA QUIRURGICA</td>
-                        <td width="5%" class="texto altura2" scope="col">@if($form008->c_obstetrica=='1') X @else @endif</td>
+                        <td width="5%" class="texto altura2" scope="col">@if($form008->c_quirurgica=='1') X @else @endif</td>
                         <td rowspan="2" width="10%" class="texto altura2" scope="col">GRUPO SANGUINEO Y FACTOR Rh</td>
                         <td rowspan="2" width="10%" class="texto altura2" scope="col"> @if($paciente->gruposanguineo=='O+' )O+ @endif
                             @if($paciente->gruposanguineo=='O-') O- @else @endif
