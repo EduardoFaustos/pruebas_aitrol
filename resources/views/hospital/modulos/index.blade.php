@@ -5,7 +5,7 @@
       <div class="row">
           <div class="col-md-9 col-sm-9">
               <h3>
-                  {{trans('hospitalizacion.MasterUci')}}
+                  MASTER
               </h3>
           </div>
           
@@ -85,6 +85,9 @@
 								</tr>
 							</thead>
 							<tbody>
+								@php
+									$paso = Sis_medico\HoEstadoPaso::find($id_paso);
+								@endphp
 								@foreach ($solicitudes as $solicitud)
                                     <tr>
                                         <td>{{substr($solicitud->agenda->fechaini,0,10)}}</td>
@@ -93,7 +96,9 @@
                                         <td>Dr. {{$solicitud->agenda->doctor1->apellido1}} {{$solicitud->agenda->doctor1->nombre1}}</td>
                                         <td></td>
                                         <td>
-                                            <a href="" class="btn btn-info" type="button"><i class="fa fa-file"></i> Ver Detalle</a>
+											@if(!is_null($paso->ruta))
+                                            <a href="{{route($paso->ruta , ['id_solicitud' => $solicitud->id])}}" class="btn btn-info" type="button"><i class="fa fa-file"></i> Ver Detalle</a>
+											@endif
                                         </td>
                                     </tr>
                                 @endforeach
