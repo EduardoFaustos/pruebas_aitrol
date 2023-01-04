@@ -97,7 +97,14 @@
                                         <td></td>
                                         <td>
 											@if(!is_null($paso->ruta))
-                                            <a href="{{route($paso->ruta , ['id_solicitud' => $solicitud->id])}}" class="btn btn-info" type="button"><i class="fa fa-file"></i> Ver Detalle</a>
+												@if($id_paso == 4)
+													<a href="{{route($paso->ruta , ['tipo' => 1,'id_solicitud' => $solicitud->id])}}" class="btn btn-info" type="button"><i class="fa fa-file"></i> Ver Detalle</a>
+												@elseif($id_paso == 5)
+													<a href="{{route($paso->ruta , ['tipo' => 0,'id_solicitud' => $solicitud->id])}}" class="btn btn-info" type="button"><i class="fa fa-file"></i> Ver Detalle</a>
+												@else
+													<a href="{{route($paso->ruta , ['id_solicitud' => $solicitud->id])}}" class="btn btn-info" type="button"><i class="fa fa-file"></i> Ver Detalle</a>
+												@endif
+                                            
 											@endif
                                         </td>
                                     </tr>
